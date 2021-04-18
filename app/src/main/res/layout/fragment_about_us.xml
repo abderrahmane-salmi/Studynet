@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="4dp"
+    tools:context=".Fragments.AboutUsFragment"
+    tools:viewBindingIgnore="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_us"
+            android:textSize="18sp"
+            android:textColor="@color/primary_text_color"
+            android:fontFamily="@font/tabularasa_medium"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Studynet. Your own school planner. Easily manage your timetable, homeworks, subjects, and more."
+            android:fontFamily="@font/tabularasa_regular"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Developed by:"
+            android:fontFamily="@font/tabularasa_regular"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Salmi Abderrahmane"
+            android:fontFamily="@font/tabularasa_medium"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bouchlaghem Abdelghani Yanis"
+            android:fontFamily="@font/tabularasa_medium"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Report bugs and request new features:"
+            android:fontFamily="@font/tabularasa_regular"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/btnContactDeveloper1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/developer_email1"
+            android:textColor="@color/primary_color"
+            android:fontFamily="@font/tabularasa_regular"
+            android:textSize="16sp"
+            android:layout_marginTop="2dp"/>
+
+        <TextView
+            android:id="@+id/btnContactDeveloper2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/developer_email2"
+            android:textColor="@color/primary_color"
+            android:fontFamily="@font/tabularasa_regular"
+            android:textSize="16sp"
+            android:layout_marginTop="2dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/btnCloseAboutUs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/close"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/primary_color"
+                android:fontFamily="@font/tabularasa_regular"
+                android:textSize="15sp"
+                android:layout_marginTop="16dp"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

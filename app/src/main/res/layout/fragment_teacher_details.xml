@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Fragments.TeacherDetailsFragment"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/tabularasa_regular"
+        android:text="@string/teacher_details"
+        android:textColor="@color/primary_text_color"
+        android:textSize="20sp" />
+
+    <!--    Middle-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_person"
+                app:tint="@color/secondary_text_color" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/teacher"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/tabularasa_regular" />
+
+                <TextView
+                    android:id="@+id/txtTeacherName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mohammed Benchikh"
+                    android:textColor="@color/secondary_text_color"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/tabularasa_regular" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_section"
+                app:tint="@color/secondary_text_color" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/subject"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/tabularasa_regular" />
+
+                <TextView
+                    android:id="@+id/txtTeacherSubject"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Base de données"
+                    android:textColor="@color/secondary_text_color"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/tabularasa_regular" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_email"
+                app:tint="@color/secondary_text_color" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/email"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/tabularasa_regular" />
+
+                <TextView
+                    android:id="@+id/txtTeacherEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="mohammed.benchikh@usthb.dz"
+                    android:textColor="@color/secondary_text_color"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/tabularasa_regular" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+<!--    Bottom-->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnContactTeacher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"
+        android:text="@string/contact"
+        android:fontFamily="@font/tabularasa_regular"
+        android:paddingStart="48dp"
+        android:paddingEnd="48dp"
+        android:textColor="@color/primary_text_color"
+        android:backgroundTint="@color/white"
+        app:strokeColor="@color/my_purple"
+        app:strokeWidth="0.7dp"
+        android:stateListAnimator="@null"
+        android:paddingTop="8.5dp"
+        android:paddingBottom="8.5dp"/>
+
+</LinearLayout>

@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.ClassDetailsActivity"
+    android:orientation="vertical">
+
+    <!--    Header-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:paddingTop="24dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="24dp">
+
+        <ImageView
+            android:id="@+id/btnClose"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:padding="4dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_close_x"
+            app:tint="@color/primary_text_color" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/tabularasa_medium"
+            android:text="Class Details"
+            android:textColor="@color/primary_text_color"
+            android:textSize="22sp" />
+
+    </RelativeLayout>
+
+    <!--    Middle-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_section"
+                app:tint="@color/secondary_text_color" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="8dp">
+
+                <TextView
+                    android:id="@+id/classSubject"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Base de données"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/tabularasa_regular" />
+
+                <TextView
+                    android:id="@+id/classType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TD"
+                    android:textColor="@color/secondary_text_color"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/tabularasa_regular" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_time"
+                app:tint="@color/secondary_text_color" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="8dp">
+
+                <TextView
+                    android:id="@+id/classDay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="19 avril 2021"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/tabularasa_regular" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/classStartHour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/tabularasa_regular"
+                        android:text="8:00 AM"
+                        android:textColor="@color/secondary_text_color"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/tabularasa_medium"
+                        android:text=" - "
+                        android:textColor="@color/secondary_text_color"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/classEndHour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/tabularasa_regular"
+                        android:text="9:30 AM"
+                        android:textColor="@color/secondary_text_color"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_list"
+                app:tint="@color/secondary_text_color" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="8dp">
+
+                <TextView
+                    android:id="@+id/classSection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="L3 ISIL B"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/tabularasa_regular" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Group "
+                        android:textColor="@color/secondary_text_color"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/tabularasa_regular" />
+
+                    <TextView
+                        android:id="@+id/classGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        android:textColor="@color/secondary_text_color"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/tabularasa_regular" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:id="@+id/link_icon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_meeting_link"
+                app:tint="@color/secondary_text_color" />
+
+            <LinearLayout
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/link_icon"
+                android:layout_toStartOf="@id/btnCopyMeetingLink"
+                android:id="@+id/middle_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/meeting_link"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/tabularasa_regular" />
+
+                <TextView
+                    android:id="@+id/classMeetingLink"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="https://facultydz.webex.com/facultydz/j.php?MTID=m275c959d1786501ca18107725f7f883d"
+                    android:textColor="@color/secondary_text_color"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/tabularasa_regular" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/btnCopyMeetingLink"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_copy"
+                app:tint="@color/secondary_text_color" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:id="@+id/num_icon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_meeting_num"
+                app:tint="@color/secondary_text_color" />
+
+            <LinearLayout
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/num_icon"
+                android:layout_toStartOf="@id/btnCopyMeetingNumber"
+                android:id="@+id/middle_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/meeting_number"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/tabularasa_regular" />
+
+                <TextView
+                    android:layout_marginEnd="16dp"
+                    android:id="@+id/classMeetingNumber"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="957 867 485"
+                    android:textColor="@color/secondary_text_color"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/tabularasa_regular" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/btnCopyMeetingNumber"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_copy"
+                app:tint="@color/secondary_text_color" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:id="@+id/password_icon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_meeting_password"
+                app:tint="@color/secondary_text_color" />
+
+            <LinearLayout
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/password_icon"
+                android:layout_toStartOf="@id/btnCopyMeetingPassword"
+                android:id="@+id/middle_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/meeting_password"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/tabularasa_regular" />
+
+                <TextView
+                    android:layout_marginEnd="16dp"
+                    android:id="@+id/classMeetingPassword"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="mfgUdkOp"
+                    android:textColor="@color/secondary_text_color"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/tabularasa_regular" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/btnCopyMeetingPassword"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_copy"
+                app:tint="@color/secondary_text_color" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
