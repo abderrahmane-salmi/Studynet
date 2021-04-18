@@ -90,4 +90,5 @@
     <string name="email_msg2">Please enter a valid email address</string>
     <string name="department">Department</string>
     <string name="year">Year</string>
+    <string name="homework_title">Homework Title</string>
 </resources>

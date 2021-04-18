@@ -52,7 +52,7 @@
             android:layout_height="25dp"
             android:layout_marginStart="24dp"
             android:src="@drawable/ic_section"
-            app:layout_constraintBottom_toTopOf="@+id/textInputLayout2"
+            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textInputLayout1"
             app:tint="@color/secondary_text_color"
