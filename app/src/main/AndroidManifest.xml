@@ -10,11 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Studynet">
         <activity android:name="com.salmi.bouchelaghem.studynet.Activities.SplashActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name="com.salmi.bouchelaghem.studynet.Activities.OnboardingActivity" />
         <activity android:name="com.salmi.bouchelaghem.studynet.Activities.AddHomeworkActivity" />
@@ -25,7 +20,11 @@
         <activity android:name="com.salmi.bouchelaghem.studynet.Activities.ResetPasswordActivity" />
         <activity android:name="com.salmi.bouchelaghem.studynet.Activities.SignUpActivity" />
         <activity android:name="com.salmi.bouchelaghem.studynet.Activities.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

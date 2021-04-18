@@ -1,10 +1,10 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityAddClassBinding;
@@ -37,13 +37,11 @@ public class AddClassActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!otherMeetingFields){
                     otherMeetingFields = true;
-//                    binding.meetingNumberLayout.setVisibility(View.VISIBLE);
-//                    binding.meetingPasswordLayout.setVisibility(View.VISIBLE);
+                    binding.meetingFieldsGroup.setVisibility(View.VISIBLE);
                     binding.btnShowOtherMeetingFields.setImageResource(R.drawable.ic_arrow_up);
                 } else {
                     otherMeetingFields = false;
-//                    binding.meetingNumberLayout.setVisibility(View.GONE);
-//                    binding.meetingPasswordLayout.setVisibility(View.GONE);
+                    binding.meetingFieldsGroup.setVisibility(View.GONE);
                     binding.btnShowOtherMeetingFields.setImageResource(R.drawable.ic_arrow_down);
                 }
             }

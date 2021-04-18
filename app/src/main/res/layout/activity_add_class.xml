@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Activities.AddClassActivity">
+    tools:context=".Activities.AddClassActivity"
+    android:scrollbars="none">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-<!--        Header-->
+        <!--        Header-->
 
         <ImageView
             android:id="@+id/btnClose"
@@ -19,7 +20,7 @@
             android:layout_height="24dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="24dp"
             android:padding="4dp"
             android:src="@drawable/ic_close_x"
             app:layout_constraintBottom_toBottomOf="@id/textView1"
@@ -40,18 +41,18 @@
             android:textSize="22sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
-<!--        Fields-->
+        <!--        Fields-->
 
-<!--        Section-->
+        <!--        Section-->
         <ImageView
             android:id="@+id/imageView1"
             android:layout_width="25dp"
             android:layout_height="25dp"
+            android:layout_marginStart="24dp"
             android:src="@drawable/ic_section"
             app:layout_constraintBottom_toTopOf="@+id/textInputLayout2"
-            app:layout_constraintEnd_toStartOf="@+id/textInputLayout1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textInputLayout1"
             app:tint="@color/secondary_text_color"
@@ -62,12 +63,12 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="54dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="24dp"
             android:textColorHint="@color/secondary_text_color"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView1"
             app:layout_constraintTop_toBottomOf="@+id/textView1">
 
             <AutoCompleteTextView
@@ -81,17 +82,17 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-<!--        Group-->
+        <!--        Group-->
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="22dp"
             android:layout_height="22dp"
+            android:layout_marginStart="24dp"
             android:src="@drawable/ic_group"
-            app:tint="@color/secondary_text_color"
             app:layout_constraintBottom_toBottomOf="@+id/textInputLayout2"
-            app:layout_constraintEnd_toStartOf="@+id/textInputLayout2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textInputLayout2"
+            app:tint="@color/secondary_text_color"
             tools:ignore="ContentDescription" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -99,12 +100,12 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/secondary_text_color"
-            android:layout_marginStart="54dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="24dp"
+            android:textColorHint="@color/secondary_text_color"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout1">
 
             <AutoCompleteTextView
@@ -118,16 +119,17 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-<!--        Class Type-->
+        <!--        Class Type-->
         <ImageView
+            android:id="@+id/imageView4"
             android:layout_width="22dp"
             android:layout_height="22dp"
+            android:layout_marginStart="24dp"
             android:src="@drawable/ic_class_type"
-            app:tint="@color/secondary_text_color"
             app:layout_constraintBottom_toBottomOf="@+id/textInputLayout3"
-            app:layout_constraintEnd_toStartOf="@+id/textInputLayout3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textInputLayout3"
+            app:tint="@color/secondary_text_color"
             tools:ignore="ContentDescription" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -135,12 +137,12 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/secondary_text_color"
-            android:layout_marginStart="54dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="24dp"
+            android:textColorHint="@color/secondary_text_color"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView4"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
 
             <AutoCompleteTextView
@@ -154,16 +156,17 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-<!--        Subject-->
+        <!--        Subject-->
         <ImageView
+            android:id="@+id/imageView5"
             android:layout_width="22dp"
             android:layout_height="22dp"
+            android:layout_marginStart="24dp"
             android:src="@drawable/ic_book"
-            app:tint="@color/secondary_text_color"
             app:layout_constraintBottom_toBottomOf="@+id/textInputLayout4"
-            app:layout_constraintEnd_toStartOf="@+id/textInputLayout4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textInputLayout4"
+            app:tint="@color/secondary_text_color"
             tools:ignore="ContentDescription" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -171,12 +174,12 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/secondary_text_color"
-            android:layout_marginStart="54dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="24dp"
+            android:textColorHint="@color/secondary_text_color"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView5"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout3">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -191,29 +194,30 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-<!--        Class Day-->
+        <!--        Class Day-->
         <ImageView
+            android:id="@+id/imageView6"
             android:layout_width="22dp"
             android:layout_height="22dp"
+            android:layout_marginStart="24dp"
             android:src="@drawable/ic_calendar2"
-            app:tint="@color/secondary_text_color"
             app:layout_constraintBottom_toBottomOf="@+id/textInputLayout5"
-            app:layout_constraintEnd_toStartOf="@+id/textInputLayout5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textInputLayout5"
-            tools:ignore="ContentDescription"/>
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout5"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/secondary_text_color"
-            android:layout_marginStart="54dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="24dp"
+            android:textColorHint="@color/secondary_text_color"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView6"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout4">
 
             <AutoCompleteTextView
@@ -227,23 +231,25 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-<!--        Start and end time-->
+        <!--        Start and end time-->
         <ImageView
+            android:id="@+id/imageView7"
             android:layout_width="22dp"
             android:layout_height="22dp"
+            android:layout_marginStart="24dp"
             android:src="@drawable/ic_time"
-            app:tint="@color/secondary_text_color"
             app:layout_constraintBottom_toBottomOf="@+id/btnSelectStartTime"
-            app:layout_constraintEnd_toStartOf="@+id/btnSelectStartTime"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/btnSelectStartTime"
-            tools:ignore="ContentDescription"/>
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSelectStartTime"
             android:layout_width="0dp"
             android:layout_height="63dp"
-            app:layout_constraintWidth_percent="0.4"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
             android:fontFamily="@font/tabularasa_regular"
             android:letterSpacing="0"
             android:stateListAnimator="@null"
@@ -252,21 +258,19 @@
             android:textColor="@color/secondary_text_color"
             android:textSize="15sp"
             app:backgroundTint="@color/background_color"
+            app:layout_constraintEnd_toStartOf="@+id/btnSelectEndTime"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imageView7"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout5"
             app:strokeColor="#969696"
-            app:strokeWidth="1dp"
-            android:layout_marginStart="54dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout5"/>
+            app:strokeWidth="1dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSelectEndTime"
             android:layout_width="0dp"
             android:layout_height="63dp"
-            app:layout_constraintWidth_percent="0.4"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="24dp"
             android:fontFamily="@font/tabularasa_regular"
             android:letterSpacing="0"
             android:stateListAnimator="@null"
@@ -277,27 +281,27 @@
             app:backgroundTint="@color/background_color"
             app:layout_constraintBottom_toBottomOf="@id/btnSelectStartTime"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@id/btnSelectStartTime"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/btnSelectStartTime"
             app:layout_constraintTop_toTopOf="@id/btnSelectStartTime"
             app:strokeColor="#969696"
             app:strokeWidth="1dp" />
 
-<!--        Meeting Info-->
-<!--        Meeting Link-->
+        <!--        Meeting Info-->
+        <!--        Meeting Link-->
         <ImageView
             android:id="@+id/ic_link"
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
+            android:layout_marginStart="24dp"
             android:src="@drawable/ic_meeting_link"
-            app:tint="@color/secondary_text_color"
             app:layout_constraintBottom_toBottomOf="@+id/txtNewMeetingLink"
-            app:layout_constraintEnd_toStartOf="@+id/txtNewMeetingLink"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/txtNewMeetingLink"
-            tools:ignore="ContentDescription"/>
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/txtNewMeetingLink"
@@ -305,14 +309,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
             android:layout_toStartOf="@id/btnShowOtherMeetingFields"
             android:layout_toEndOf="@id/ic_link"
             android:textColorHint="@color/secondary_text_color"
-            android:layout_marginStart="54dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btnShowOtherMeetingFields"
+            app:layout_constraintStart_toEndOf="@+id/ic_link"
             app:layout_constraintTop_toBottomOf="@+id/btnSelectStartTime">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -332,37 +336,46 @@
             android:layout_height="16dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="24dp"
             android:src="@drawable/ic_arrow_down"
-            app:tint="@color/secondary_text_color"
-            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/txtNewMeetingLink"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/txtNewMeetingLink"
-            app:layout_constraintBottom_toBottomOf="@id/txtNewMeetingLink"
+            app:tint="@color/secondary_text_color"
             tools:ignore="ContentDescription" />
 
-<!--        Meeting Number-->
+<!--        Other Meeting info-->
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/meetingFieldsGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:constraint_referenced_ids="imageView8, textInputLayout6, imageView10, textInputLayout7" />
+
+        <!--        Meeting Number-->
         <ImageView
+            android:id="@+id/imageView8"
             android:layout_width="22dp"
             android:layout_height="22dp"
+            android:layout_marginStart="24dp"
             android:src="@drawable/ic_meeting_num"
-            app:tint="@color/secondary_text_color"
             app:layout_constraintBottom_toBottomOf="@+id/textInputLayout6"
-            app:layout_constraintEnd_toStartOf="@+id/textInputLayout6"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textInputLayout6"
-            tools:ignore="ContentDescription"/>
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout6"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/secondary_text_color"
-            android:layout_marginStart="54dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="24dp"
+            android:textColorHint="@color/secondary_text_color"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView8"
             app:layout_constraintTop_toBottomOf="@+id/txtNewMeetingLink">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -376,29 +389,30 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-<!--        Meeting Password-->
+        <!--        Meeting Password-->
         <ImageView
+            android:id="@+id/imageView10"
             android:layout_width="22dp"
             android:layout_height="22dp"
+            android:layout_marginStart="24dp"
             android:src="@drawable/ic_meeting_password"
-            app:tint="@color/secondary_text_color"
             app:layout_constraintBottom_toBottomOf="@+id/textInputLayout7"
-            app:layout_constraintEnd_toStartOf="@+id/textInputLayout7"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textInputLayout7"
-            tools:ignore="ContentDescription"/>
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout7"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/secondary_text_color"
-            android:layout_marginStart="54dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="24dp"
+            android:textColorHint="@color/secondary_text_color"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imageView10"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout6">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -428,12 +442,12 @@
             android:text="@string/save"
             android:textColor="@color/secondary_text_color"
             app:backgroundTint="@color/background_color"
-            app:strokeColor="#969696"
-            app:strokeWidth="0.9dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout7"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout7"
+            app:strokeColor="#969696"
+            app:strokeWidth="0.9dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
