@@ -37,13 +37,13 @@ public class AddClassActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!otherMeetingFields){
                     otherMeetingFields = true;
-                    binding.meetingNumberLayout.setVisibility(View.VISIBLE);
-                    binding.meetingPasswordLayout.setVisibility(View.VISIBLE);
+//                    binding.meetingNumberLayout.setVisibility(View.VISIBLE);
+//                    binding.meetingPasswordLayout.setVisibility(View.VISIBLE);
                     binding.btnShowOtherMeetingFields.setImageResource(R.drawable.ic_arrow_up);
                 } else {
                     otherMeetingFields = false;
-                    binding.meetingNumberLayout.setVisibility(View.GONE);
-                    binding.meetingPasswordLayout.setVisibility(View.GONE);
+//                    binding.meetingNumberLayout.setVisibility(View.GONE);
+//                    binding.meetingPasswordLayout.setVisibility(View.GONE);
                     binding.btnShowOtherMeetingFields.setImageResource(R.drawable.ic_arrow_down);
                 }
             }

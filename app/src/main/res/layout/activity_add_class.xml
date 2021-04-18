@@ -7,396 +7,434 @@
     android:orientation="vertical"
     tools:context=".Activities.AddClassActivity">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <!--    Header-->
-        <RelativeLayout
-            android:layout_width="match_parent"
+<!--        Header-->
+
+        <ImageView
+            android:id="@+id/btnClose"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:padding="4dp"
+            android:src="@drawable/ic_close_x"
+            app:layout_constraintBottom_toBottomOf="@id/textView1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textView1"
+            app:tint="@color/primary_text_color"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingTop="24dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="24dp">
+            android:layout_centerInParent="true"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/tabularasa_medium"
+            android:text="@string/schedule_class"
+            android:textColor="@color/primary_text_color"
+            android:textSize="22sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-            <ImageView
-                android:id="@+id/btnClose"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:padding="4dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/ic_close_x"
-                app:tint="@color/primary_text_color" />
+<!--        Fields-->
 
-            <TextView
-                android:layout_width="wrap_content"
+<!--        Section-->
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/ic_section"
+            app:layout_constraintBottom_toTopOf="@+id/textInputLayout2"
+            app:layout_constraintEnd_toStartOf="@+id/textInputLayout1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textInputLayout1"
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout1"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="54dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:textColorHint="@color/secondary_text_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView1">
+
+            <AutoCompleteTextView
+                android:id="@+id/newClassSection"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:fontFamily="@font/tabularasa_medium"
-                android:text="@string/schedule_class"
-                android:textColor="@color/primary_text_color"
-                android:textSize="22sp" />
+                android:fontFamily="@font/tabularasa_regular"
+                android:hint="@string/section"
+                android:inputType="none"
+                android:textSize="15sp" />
 
-        </RelativeLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <!--    Fields-->
-        <LinearLayout
-            android:layout_width="match_parent"
+<!--        Group-->
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_group"
+            app:tint="@color/secondary_text_color"
+            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout2"
+            app:layout_constraintEnd_toStartOf="@+id/textInputLayout2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textInputLayout2"
+            tools:ignore="ContentDescription" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout2"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:textColorHint="@color/secondary_text_color"
+            android:layout_marginStart="54dp"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="24dp"
-            android:orientation="vertical">
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout1">
 
-            <LinearLayout
+            <AutoCompleteTextView
+                android:id="@+id/newClassGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical">
+                android:fontFamily="@font/tabularasa_regular"
+                android:hint="@string/group"
+                android:inputType="none"
+                android:textSize="15sp" />
 
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/ic_section"
-                    app:tint="@color/secondary_text_color" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:textColorHint="@color/secondary_text_color">
+<!--        Class Type-->
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_class_type"
+            app:tint="@color/secondary_text_color"
+            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout3"
+            app:layout_constraintEnd_toStartOf="@+id/textInputLayout3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textInputLayout3"
+            tools:ignore="ContentDescription" />
 
-                    <AutoCompleteTextView
-                        android:id="@+id/newClassSection"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/tabularasa_regular"
-                        android:hint="@string/section"
-                        android:inputType="none"
-                        android:textSize="15sp" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout3"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/secondary_text_color"
+            android:layout_marginStart="54dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <AutoCompleteTextView
+                android:id="@+id/newClassType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center_vertical">
+                android:fontFamily="@font/tabularasa_regular"
+                android:hint="@string/class_type"
+                android:inputType="none"
+                android:textSize="15sp" />
 
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_group"
-                    app:tint="@color/secondary_text_color" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:textColorHint="@color/secondary_text_color">
+<!--        Subject-->
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_book"
+            app:tint="@color/secondary_text_color"
+            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout4"
+            app:layout_constraintEnd_toStartOf="@+id/textInputLayout4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textInputLayout4"
+            tools:ignore="ContentDescription" />
 
-                    <AutoCompleteTextView
-                        android:id="@+id/newClassGroup"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/tabularasa_regular"
-                        android:hint="@string/group"
-                        android:inputType="none"
-                        android:textSize="15sp" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout4"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/secondary_text_color"
+            android:layout_marginStart="54dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout3">
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center_vertical">
+                android:backgroundTint="@color/white"
+                android:enabled="false"
+                android:fontFamily="@font/tabularasa_regular"
+                android:hint="@string/subject"
+                android:inputType="textPersonName|textCapSentences"
+                android:textSize="15sp" />
 
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_class_type"
-                    app:tint="@color/secondary_text_color" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:textColorHint="@color/secondary_text_color">
+<!--        Class Day-->
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_calendar2"
+            app:tint="@color/secondary_text_color"
+            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout5"
+            app:layout_constraintEnd_toStartOf="@+id/textInputLayout5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textInputLayout5"
+            tools:ignore="ContentDescription"/>
 
-                    <AutoCompleteTextView
-                        android:id="@+id/newClassType"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/tabularasa_regular"
-                        android:hint="@string/class_type"
-                        android:inputType="none"
-                        android:textSize="15sp" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout5"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/secondary_text_color"
+            android:layout_marginStart="54dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout4">
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <AutoCompleteTextView
+                android:id="@+id/newClassDay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center_vertical">
+                android:fontFamily="@font/tabularasa_regular"
+                android:hint="@string/class_day"
+                android:inputType="none"
+                android:textSize="15sp" />
 
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_book"
-                    app:tint="@color/secondary_text_color" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/txtSignUpUsername"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:textColorHint="@color/secondary_text_color">
+<!--        Start and end time-->
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_time"
+            app:tint="@color/secondary_text_color"
+            app:layout_constraintBottom_toBottomOf="@+id/btnSelectStartTime"
+            app:layout_constraintEnd_toStartOf="@+id/btnSelectStartTime"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnSelectStartTime"
+            tools:ignore="ContentDescription"/>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/white"
-                        android:enabled="false"
-                        android:fontFamily="@font/tabularasa_regular"
-                        android:hint="@string/subject"
-                        android:inputType="textPersonName|textCapSentences"
-                        android:textSize="15sp" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSelectStartTime"
+            android:layout_width="0dp"
+            android:layout_height="63dp"
+            app:layout_constraintWidth_percent="0.4"
+            android:fontFamily="@font/tabularasa_regular"
+            android:letterSpacing="0"
+            android:stateListAnimator="@null"
+            android:text="@string/start_time"
+            android:textAllCaps="false"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            app:backgroundTint="@color/background_color"
+            app:strokeColor="#969696"
+            app:strokeWidth="1dp"
+            android:layout_marginStart="54dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout5"/>
 
-                </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSelectEndTime"
+            android:layout_width="0dp"
+            android:layout_height="63dp"
+            app:layout_constraintWidth_percent="0.4"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:letterSpacing="0"
+            android:stateListAnimator="@null"
+            android:text="@string/end_time"
+            android:textAllCaps="false"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            app:backgroundTint="@color/background_color"
+            app:layout_constraintBottom_toBottomOf="@id/btnSelectStartTime"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@id/btnSelectStartTime"
+            app:layout_constraintTop_toTopOf="@id/btnSelectStartTime"
+            app:strokeColor="#969696"
+            app:strokeWidth="1dp" />
 
-            </LinearLayout>
+<!--        Meeting Info-->
+<!--        Meeting Link-->
+        <ImageView
+            android:id="@+id/ic_link"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_meeting_link"
+            app:tint="@color/secondary_text_color"
+            app:layout_constraintBottom_toBottomOf="@+id/txtNewMeetingLink"
+            app:layout_constraintEnd_toStartOf="@+id/txtNewMeetingLink"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txtNewMeetingLink"
+            tools:ignore="ContentDescription"/>
 
-            <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtNewMeetingLink"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/btnShowOtherMeetingFields"
+            android:layout_toEndOf="@id/ic_link"
+            android:textColorHint="@color/secondary_text_color"
+            android:layout_marginStart="54dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnShowOtherMeetingFields"
+            app:layout_constraintTop_toBottomOf="@+id/btnSelectStartTime">
+
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center_vertical">
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/tabularasa_regular"
+                android:hint="@string/meeting_link"
+                android:inputType="textPersonName|textCapSentences"
+                android:textSize="15sp" />
 
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_calendar2"
-                    app:tint="@color/secondary_text_color" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:textColorHint="@color/secondary_text_color">
+        <ImageView
+            android:id="@+id/btnShowOtherMeetingFields"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_arrow_down"
+            app:tint="@color/secondary_text_color"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/txtNewMeetingLink"
+            app:layout_constraintBottom_toBottomOf="@id/txtNewMeetingLink"
+            tools:ignore="ContentDescription" />
 
-                    <AutoCompleteTextView
-                        android:id="@+id/newClassDay"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/tabularasa_regular"
-                        android:hint="@string/class_day"
-                        android:inputType="none"
-                        android:textSize="15sp" />
+<!--        Meeting Number-->
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_meeting_num"
+            app:tint="@color/secondary_text_color"
+            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout6"
+            app:layout_constraintEnd_toStartOf="@+id/textInputLayout6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textInputLayout6"
+            tools:ignore="ContentDescription"/>
 
-                </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout6"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/secondary_text_color"
+            android:layout_marginStart="54dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtNewMeetingLink">
 
-            </LinearLayout>
-
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center_vertical">
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/tabularasa_regular"
+                android:hint="@string/meeting_number"
+                android:inputType="number"
+                android:textSize="15sp" />
 
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_time"
-                    app:tint="@color/secondary_text_color" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    android:layout_width="0dp"
-                    android:layout_height="63dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/tabularasa_regular"
-                    android:letterSpacing="0"
-                    android:stateListAnimator="@null"
-                    android:text="@string/start_time"
-                    android:textAllCaps="false"
-                    android:textColor="@color/secondary_text_color"
-                    android:textSize="15sp"
-                    app:backgroundTint="@color/background_color"
-                    app:strokeColor="#969696"
-                    app:strokeWidth="1dp" />
+<!--        Meeting Password-->
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_meeting_password"
+            app:tint="@color/secondary_text_color"
+            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout7"
+            app:layout_constraintEnd_toStartOf="@+id/textInputLayout7"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textInputLayout7"
+            tools:ignore="ContentDescription"/>
 
-                <com.google.android.material.button.MaterialButton
-                    android:layout_width="0dp"
-                    android:layout_height="63dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/tabularasa_regular"
-                    android:letterSpacing="0"
-                    android:stateListAnimator="@null"
-                    android:text="@string/end_time"
-                    android:textAllCaps="false"
-                    android:textColor="@color/secondary_text_color"
-                    android:textSize="15sp"
-                    app:backgroundTint="@color/background_color"
-                    app:strokeColor="#969696"
-                    app:strokeWidth="1dp" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout7"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/secondary_text_color"
+            android:layout_marginStart="54dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout6">
 
-            </LinearLayout>
-
-            <RelativeLayout
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center_vertical">
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/tabularasa_regular"
+                android:hint="@string/meeting_password"
+                android:inputType="textPersonName|textCapSentences"
+                android:textSize="15sp" />
 
-                <ImageView
-                    android:id="@+id/ic_link"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_meeting_link"
-                    app:tint="@color/secondary_text_color" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/txtNewMeetingLink"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_toStartOf="@id/btnShowOtherMeetingFields"
-                    android:layout_toEndOf="@id/ic_link"
-                    android:textColorHint="@color/secondary_text_color">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:fontFamily="@font/tabularasa_medium"
+            android:paddingStart="64dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="64dp"
+            android:paddingBottom="10dp"
+            android:stateListAnimator="@null"
+            android:text="@string/save"
+            android:textColor="@color/secondary_text_color"
+            app:backgroundTint="@color/background_color"
+            app:strokeColor="#969696"
+            app:strokeWidth="0.9dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout7"/>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/white"
-                        android:fontFamily="@font/tabularasa_regular"
-                        android:hint="@string/meeting_link"
-                        android:inputType="textPersonName|textCapSentences"
-                        android:textSize="15sp" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/btnShowOtherMeetingFields"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_arrow_down"
-                    app:tint="@color/secondary_text_color" />
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/meetingNumberLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center_vertical"
-                android:visibility="gone">
-
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_meeting_num"
-                    app:tint="@color/secondary_text_color" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:textColorHint="@color/secondary_text_color">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/white"
-                        android:fontFamily="@font/tabularasa_regular"
-                        android:hint="@string/meeting_number"
-                        android:inputType="number"
-                        android:textSize="15sp" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/meetingPasswordLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center_vertical"
-                android:visibility="gone">
-
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_meeting_password"
-                    app:tint="@color/secondary_text_color" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:textColorHint="@color/secondary_text_color">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/white"
-                        android:fontFamily="@font/tabularasa_regular"
-                        android:hint="@string/meeting_password"
-                        android:inputType="textPersonName|textCapSentences"
-                        android:textSize="15sp" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSave"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="32dp"
-                android:fontFamily="@font/tabularasa_medium"
-                android:paddingStart="64dp"
-                android:paddingTop="10dp"
-                android:paddingEnd="64dp"
-                android:paddingBottom="10dp"
-                android:stateListAnimator="@null"
-                android:text="@string/save"
-                android:textColor="@color/secondary_text_color"
-                app:backgroundTint="@color/background_color"
-                app:strokeColor="#969696"
-                app:strokeWidth="0.9dp" />
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
