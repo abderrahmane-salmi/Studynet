@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,383 +7,398 @@
     tools:context=".Activities.ClassDetailsActivity"
     android:orientation="vertical">
 
-    <!--    Header-->
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="8dp"
-        android:paddingTop="24dp"
-        android:paddingEnd="8dp"
-        android:paddingBottom="24dp">
+        android:layout_height="wrap_content">
 
+        <!--        Header-->
         <ImageView
             android:id="@+id/btnClose"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:padding="4dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="24dp"
+            android:padding="4dp"
             android:src="@drawable/ic_close_x"
-            app:tint="@color/primary_text_color" />
+            app:layout_constraintBottom_toBottomOf="@id/textView1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textView1"
+            app:tint="@color/primary_text_color"
+            tools:ignore="ContentDescription" />
 
         <TextView
+            android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_marginTop="24dp"
             android:fontFamily="@font/tabularasa_medium"
-            android:text="Class Details"
+            android:text="@string/class_details"
             android:textColor="@color/primary_text_color"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </RelativeLayout>
+        <!--        Class info-->
+        <!--        Subject-->
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="24dp"
+            android:src="@drawable/ic_section"
+            app:layout_constraintBottom_toBottomOf="@id/classType"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/classSubject"
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
 
-    <!--    Middle-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_marginTop="12dp"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/classSubject"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="Base de données"
+            android:textColor="@color/primary_text_color"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView1"
+            app:layout_constraintTop_toBottomOf="@+id/textView1" />
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_section"
-                app:tint="@color/secondary_text_color" />
+        <TextView
+            android:id="@+id/classType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="TD"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="@id/classSubject"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/classSubject"
+            app:layout_constraintTop_toBottomOf="@id/classSubject" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="8dp">
+        <!--        Class date-->
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="24dp"
+            android:src="@drawable/ic_time"
+            app:layout_constraintBottom_toBottomOf="@id/classStartHour"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/classDay"
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
 
-                <TextView
-                    android:id="@+id/classSubject"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Base de données"
-                    android:textColor="@color/primary_text_color"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/tabularasa_regular" />
-
-                <TextView
-                    android:id="@+id/classType"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="TD"
-                    android:textColor="@color/secondary_text_color"
-                    android:textSize="15sp"
-                    android:fontFamily="@font/tabularasa_regular" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/classDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="19 avril 2021"
+            android:textColor="@color/primary_text_color"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintTop_toBottomOf="@+id/classType" />
+
+        <TextView
+            android:id="@+id/classStartHour"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="8:00 AM"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="@id/classDay"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/classDay"
+            app:layout_constraintTop_toBottomOf="@id/classDay" />
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_time"
-                app:tint="@color/secondary_text_color" />
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/tabularasa_medium"
+            android:text=" - "
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@id/classStartHour"
+            app:layout_constraintStart_toEndOf="@id/classStartHour"
+            app:layout_constraintTop_toTopOf="@id/classStartHour" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="8dp">
+        <TextView
+            android:id="@+id/classEndHour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="9:30 AM"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@id/textView2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/textView2"
+            app:layout_constraintTop_toTopOf="@id/textView2" />
 
-                <TextView
-                    android:id="@+id/classDay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="19 avril 2021"
-                    android:textColor="@color/primary_text_color"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/tabularasa_regular" />
+        <!--        Section + Group-->
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="24dp"
+            android:src="@drawable/ic_list"
+            app:layout_constraintBottom_toBottomOf="@id/classGroup"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/classSection"
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/classStartHour"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/tabularasa_regular"
-                        android:text="8:00 AM"
-                        android:textColor="@color/secondary_text_color"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/tabularasa_medium"
-                        android:text=" - "
-                        android:textColor="@color/secondary_text_color"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:id="@+id/classEndHour"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/tabularasa_regular"
-                        android:text="9:30 AM"
-                        android:textColor="@color/secondary_text_color"
-                        android:textSize="15sp" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/classSection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="L3 ISIL B"
+            android:textColor="@color/primary_text_color"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView3"
+            app:layout_constraintTop_toBottomOf="@+id/classStartHour" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="@string/group"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="@id/classSection"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/classSection"
+            app:layout_constraintTop_toBottomOf="@id/classSection" />
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_list"
-                app:tint="@color/secondary_text_color" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="8dp">
-
-                <TextView
-                    android:id="@+id/classSection"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="L3 ISIL B"
-                    android:textColor="@color/primary_text_color"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/tabularasa_regular" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Group "
-                        android:textColor="@color/secondary_text_color"
-                        android:textSize="15sp"
-                        android:fontFamily="@font/tabularasa_regular" />
-
-                    <TextView
-                        android:id="@+id/classGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1"
-                        android:textColor="@color/secondary_text_color"
-                        android:textSize="15sp"
-                        android:fontFamily="@font/tabularasa_regular" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_marginTop="12dp"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/classGroup"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+            android:layout_marginStart="4dp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="1"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@id/textView3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/textView3"
+            app:layout_constraintTop_toTopOf="@id/textView3" />
 
-            <ImageView
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true"
-                android:id="@+id/link_icon"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_meeting_link"
-                app:tint="@color/secondary_text_color" />
+        <!--        Meeting link-->
+        <ImageView
+            android:id="@+id/link_icon"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="24dp"
+            android:src="@drawable/ic_meeting_link"
+            app:layout_constraintBottom_toBottomOf="@id/classMeetingLink"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textView4"
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
 
-            <LinearLayout
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/link_icon"
-                android:layout_toStartOf="@id/btnCopyMeetingLink"
-                android:id="@+id/middle_link"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/meeting_link"
-                    android:textColor="@color/primary_text_color"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/tabularasa_regular" />
-
-                <TextView
-                    android:id="@+id/classMeetingLink"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="https://facultydz.webex.com/facultydz/j.php?MTID=m275c959d1786501ca18107725f7f883d"
-                    android:textColor="@color/secondary_text_color"
-                    android:textSize="15sp"
-                    android:fontFamily="@font/tabularasa_regular" />
-
-            </LinearLayout>
-
-            <ImageView
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:id="@+id/btnCopyMeetingLink"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_copy"
-                app:tint="@color/secondary_text_color" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_marginTop="12dp"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="@string/meeting_link"
+            android:textColor="@color/primary_text_color"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/link_icon"
+            app:layout_constraintTop_toBottomOf="@+id/classGroup" />
 
-            <ImageView
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true"
-                android:id="@+id/num_icon"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_meeting_num"
-                app:tint="@color/secondary_text_color" />
-
-            <LinearLayout
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/num_icon"
-                android:layout_toStartOf="@id/btnCopyMeetingNumber"
-                android:id="@+id/middle_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/meeting_number"
-                    android:textColor="@color/primary_text_color"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/tabularasa_regular" />
-
-                <TextView
-                    android:layout_marginEnd="16dp"
-                    android:id="@+id/classMeetingNumber"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="957 867 485"
-                    android:textColor="@color/secondary_text_color"
-                    android:textSize="15sp"
-                    android:fontFamily="@font/tabularasa_regular" />
-
-            </LinearLayout>
-
-            <ImageView
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:id="@+id/btnCopyMeetingNumber"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_copy"
-                app:tint="@color/secondary_text_color" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_marginTop="12dp"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/classMeetingLink"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+            android:layout_marginEnd="16dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/tabularasa_regular"
+            android:maxLines="1"
+            android:text="https://facultydz.webex.com/facultydz/j.php?MTID=m275c959d1786501ca18107725f7f883d"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toStartOf="@+id/btnCopyMeetingLink"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/textView4"
+            app:layout_constraintTop_toBottomOf="@id/textView4" />
 
-            <ImageView
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true"
-                android:id="@+id/password_icon"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_meeting_password"
-                app:tint="@color/secondary_text_color" />
+        <ImageView
+            android:id="@+id/btnCopyMeetingLink"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_copy"
+            app:layout_constraintBottom_toBottomOf="@id/classMeetingLink"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textView4"
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
 
-            <LinearLayout
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/password_icon"
-                android:layout_toStartOf="@id/btnCopyMeetingPassword"
-                android:id="@+id/middle_password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="16dp">
+        <!--        Meeting num-->
+        <ImageView
+            android:id="@+id/num_icon"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="24dp"
+            android:src="@drawable/ic_meeting_num"
+            app:layout_constraintBottom_toBottomOf="@id/classMeetingNumber"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textView5"
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/meeting_password"
-                    android:textColor="@color/primary_text_color"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/tabularasa_regular" />
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="@string/meeting_number"
+            android:textColor="@color/primary_text_color"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/num_icon"
+            app:layout_constraintTop_toBottomOf="@+id/classMeetingLink" />
 
-                <TextView
-                    android:layout_marginEnd="16dp"
-                    android:id="@+id/classMeetingPassword"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="mfgUdkOp"
-                    android:textColor="@color/secondary_text_color"
-                    android:textSize="15sp"
-                    android:fontFamily="@font/tabularasa_regular" />
+        <TextView
+            android:id="@+id/classMeetingNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/tabularasa_regular"
+            android:maxLines="1"
+            android:text="957 867 485"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toStartOf="@+id/btnCopyMeetingNumber"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/textView5"
+            app:layout_constraintTop_toBottomOf="@id/textView5" />
 
-            </LinearLayout>
+        <ImageView
+            android:id="@+id/btnCopyMeetingNumber"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_copy"
+            app:layout_constraintBottom_toBottomOf="@id/classMeetingNumber"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textView5"
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
 
-            <ImageView
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:id="@+id/btnCopyMeetingPassword"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_copy"
-                app:tint="@color/secondary_text_color" />
+        <!--        Meeting password-->
+        <ImageView
+            android:id="@+id/password_icon"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="24dp"
+            android:src="@drawable/ic_meeting_password"
+            app:layout_constraintBottom_toBottomOf="@id/classMeetingPassword"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textView6"
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
 
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="@string/meeting_password"
+            android:textColor="@color/primary_text_color"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/password_icon"
+            app:layout_constraintTop_toBottomOf="@+id/classMeetingNumber" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/classMeetingPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/tabularasa_regular"
+            android:maxLines="1"
+            android:text="mfgUdkOp"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toStartOf="@+id/btnCopyMeetingPassword"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/textView6"
+            app:layout_constraintTop_toBottomOf="@id/textView6" />
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/btnCopyMeetingPassword"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_copy"
+            app:layout_constraintBottom_toBottomOf="@id/classMeetingPassword"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textView6"
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/otherMeetingInfoGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:constraint_referenced_ids="btnCopyMeetingPassword,classMeetingNumber,textView5,num_icon,classMeetingPassword,textView6,btnCopyMeetingNumber,password_icon" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
