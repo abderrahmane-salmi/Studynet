@@ -29,12 +29,12 @@ public class SubjectsFragment extends Fragment {
         assert context != null;
         context.btnFilter.setVisibility(View.GONE);
 
-        binding.included.subjectMainLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.action_nav_subjects_to_subjectDetailsFragment);
-            }
-        });
+//        binding.included.subjectMainLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Navigation.findNavController(view).navigate(R.id.action_nav_subjects_to_subjectDetailsFragment);
+//            }
+//        });
 
         return view;
     }
