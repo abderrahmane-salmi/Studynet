@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
@@ -43,7 +44,7 @@ public class HomeworksFragment extends Fragment {
     private Dialog dialog;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         binding = FragmentHomeworksBinding.inflate(inflater, container, false);
@@ -54,10 +55,9 @@ public class HomeworksFragment extends Fragment {
         assert context != null;
         context.btnFilter.setVisibility(View.VISIBLE);
 
-        // If the user is a teacher or an admin then show the filter button
+        // If the user is a teacher or an admin then show the filter button (by section)
         if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT) || currentUser.getUserType().equals(Utils.ADMIN_ACCOUNT)){
 
-            binding.noHomeworksMsg.setVisibility(View.GONE);
             binding.selectSectionMsg.setVisibility(View.VISIBLE);
             binding.btnAdd.setVisibility(View.VISIBLE);
 
@@ -94,7 +94,7 @@ public class HomeworksFragment extends Fragment {
                     btnApplyFilter.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            binding.selectSectionMsg.setVisibility(View.GONE);
+
                         }
                     });
 
@@ -115,7 +115,7 @@ public class HomeworksFragment extends Fragment {
                 }
             });
 
-        } else if (currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT)){ // If its a student
+        } else if (currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT)){ // If its a student (filter homeworks by date)
 
             context.btnFilter.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -143,7 +143,7 @@ public class HomeworksFragment extends Fragment {
                     btnApplyFilter.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            binding.selectSectionMsg.setVisibility(View.GONE);
+
                         }
                     });
 
@@ -166,36 +166,36 @@ public class HomeworksFragment extends Fragment {
 
         }
 
-        binding.included.btnCompleteHomework.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isChecked){
-                    binding.included.btnCompleteHomework.setSpeed(-1);
-                    binding.included.btnCompleteHomework.playAnimation();
-                    isChecked = false;
-//                    TODO: Add animation here
-                    binding.included.homeworkTitle.setPaintFlags(binding.included.homeworkTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                    binding.included.homeworkDate.setTextColor(getResources().getColor(R.color.secondary_text_color, null));
-                    binding.included.homeworkDateIcon.setImageResource(R.drawable.ic_time);
-                    DrawableCompat.setTint(DrawableCompat.wrap(binding.included.homeworkDateIcon.getDrawable()), ContextCompat.getColor(getContext(), R.color.secondary_text_color));
-                } else {
-                    binding.included.btnCompleteHomework.setSpeed(1);
-                    binding.included.btnCompleteHomework.playAnimation();
-                    isChecked = true;
-                    binding.included.homeworkTitle.setPaintFlags(binding.included.homeworkTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    binding.included.homeworkDate.setTextColor(getResources().getColor(R.color.primary_color, null));
-                    binding.included.homeworkDateIcon.setImageResource(R.drawable.ic_checked);
-                    DrawableCompat.setTint(DrawableCompat.wrap(binding.included.homeworkDateIcon.getDrawable()), ContextCompat.getColor(getContext(), R.color.primary_color));
-                }
-            }
-        });
+//        binding.included.btnCompleteHomework.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (isChecked){
+//                    binding.included.btnCompleteHomework.setSpeed(-1);
+//                    binding.included.btnCompleteHomework.playAnimation();
+//                    isChecked = false;
+////                    TODO: Add animation here
+//                    binding.included.homeworkTitle.setPaintFlags(binding.included.homeworkTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+//                    binding.included.homeworkDate.setTextColor(getResources().getColor(R.color.secondary_text_color, null));
+//                    binding.included.homeworkDateIcon.setImageResource(R.drawable.ic_time);
+//                    DrawableCompat.setTint(DrawableCompat.wrap(binding.included.homeworkDateIcon.getDrawable()), ContextCompat.getColor(getContext(), R.color.secondary_text_color));
+//                } else {
+//                    binding.included.btnCompleteHomework.setSpeed(1);
+//                    binding.included.btnCompleteHomework.playAnimation();
+//                    isChecked = true;
+//                    binding.included.homeworkTitle.setPaintFlags(binding.included.homeworkTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//                    binding.included.homeworkDate.setTextColor(getResources().getColor(R.color.primary_color, null));
+//                    binding.included.homeworkDateIcon.setImageResource(R.drawable.ic_checked);
+//                    DrawableCompat.setTint(DrawableCompat.wrap(binding.included.homeworkDateIcon.getDrawable()), ContextCompat.getColor(getContext(), R.color.primary_color));
+//                }
+//            }
+//        });
 
-        binding.included.homeworkMainLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), HomeworkDetailsActivity.class));
-            }
-        });
+//        binding.included.homeworkMainLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(getActivity(), HomeworkDetailsActivity.class));
+//            }
+//        });
 
 //        Check animation
 //        binding.btnCompleteHomework.setOnClickListener(new View.OnClickListener() {
