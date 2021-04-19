@@ -1,171 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.HomeworkDetailsActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:scrollbars="none">
 
-    <!--    Header-->
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="8dp"
-        android:paddingTop="24dp"
-        android:paddingEnd="8dp"
-        android:paddingBottom="24dp">
+        android:layout_height="wrap_content">
 
+        <!--        Header-->
         <ImageView
             android:id="@+id/btnClose"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:padding="4dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="24dp"
+            android:padding="4dp"
             android:src="@drawable/ic_close_x"
-            app:tint="@color/primary_text_color" />
+            app:layout_constraintBottom_toBottomOf="@id/textView1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textView1"
+            app:tint="@color/primary_text_color"
+            tools:ignore="ContentDescription" />
 
         <TextView
+            android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_marginTop="24dp"
             android:fontFamily="@font/tabularasa_medium"
             android:text="@string/homework_details"
             android:textColor="@color/primary_text_color"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </RelativeLayout>
+<!--        Homework info-->
+<!--        Subject-->
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="24dp"
+            android:src="@drawable/ic_section"
+            app:layout_constraintBottom_toBottomOf="@id/txtSubjectCode"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/txtSubject"
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
 
-    <!--    Middle-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_marginTop="12dp"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/txtSubject"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="Base de données"
+            android:textColor="@color/primary_text_color"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView1"
+            app:layout_constraintTop_toBottomOf="@+id/textView1" />
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_section"
-                app:tint="@color/secondary_text_color" />
+        <TextView
+            android:id="@+id/txtSubjectCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="BD2"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="@id/txtSubject"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/txtSubject"
+            app:layout_constraintTop_toBottomOf="@id/txtSubject" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="8dp">
+<!--        Due date-->
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="24dp"
+            android:src="@drawable/ic_time"
+            app:layout_constraintBottom_toBottomOf="@id/txtHomeworkDueHour"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/txtHomeworkDueDate"
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Base de données"
-                    android:textColor="@color/primary_text_color"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/tabularasa_regular" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="BD2"
-                    android:textColor="@color/secondary_text_color"
-                    android:textSize="15sp"
-                    android:fontFamily="@font/tabularasa_regular" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/txtHomeworkDueDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="19 avril 2021"
+            android:textColor="@color/primary_text_color"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintTop_toBottomOf="@+id/txtSubjectCode" />
+
+        <TextView
+            android:id="@+id/txtHomeworkDueHour"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="8:00 AM"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="@id/txtHomeworkDueDate"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/txtHomeworkDueDate"
+            app:layout_constraintTop_toBottomOf="@id/txtHomeworkDueDate" />
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_time"
-                app:tint="@color/secondary_text_color" />
+<!--        Homework content-->
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_list"
+            app:tint="@color/secondary_text_color"
+            android:layout_marginStart="24dp"
+            app:layout_constraintBottom_toBottomOf="@id/txtHomeworkDescription"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/txtHomeworkTitle"
+            tools:ignore="ContentDescription" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="19 avril 2021"
-                    android:textColor="@color/primary_text_color"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/tabularasa_regular" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="00:00"
-                    android:textColor="@color/secondary_text_color"
-                    android:textSize="15sp"
-                    android:fontFamily="@font/tabularasa_regular" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/txtHomeworkTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Serie 1, Exercice 2"
+            android:textColor="@color/primary_text_color"
+            android:textSize="18sp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView3"
+            app:layout_constraintTop_toBottomOf="@+id/txtHomeworkDueHour" />
+
+        <TextView
+            android:id="@+id/txtHomeworkDescription"
+            android:lineSpacingExtra="-2dp"
+            android:layout_width="0dp"
+            android:layout_marginEnd="16dp"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+            android:text="Faites le deuxième exercice de la première série, ne faites pas la dernière question car nous le ferons dans le cours."
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            android:fontFamily="@font/tabularasa_regular"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/txtHomeworkTitle"
+            app:layout_constraintTop_toBottomOf="@id/txtHomeworkTitle" />
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_list"
-                app:tint="@color/secondary_text_color" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Serie 1, Exercice 2"
-                    android:textColor="@color/primary_text_color"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/tabularasa_regular" />
-
-                <TextView
-                    android:lineSpacingExtra="-2dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Faites le deuxième exercice de la première série, ne faites pas la dernière question car nous le ferons dans le cours."
-                    android:textColor="@color/secondary_text_color"
-                    android:textSize="15sp"
-                    android:fontFamily="@font/tabularasa_regular" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        </LinearLayout>
-
-</LinearLayout>
+</ScrollView>
