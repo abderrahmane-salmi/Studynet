@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="24dp"
@@ -11,58 +12,71 @@
     android:backgroundTint="@color/white"
     app:cardCornerRadius="8dp">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="20dp">
 
         <ImageView
+            android:id="@+id/iconTeacher"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_marginStart="16dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:id="@+id/iconTeacher"
-            android:src="@drawable/ic_person2"/>
+            android:src="@drawable/ic_person2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+<!--        Name-->
+        <TextView
+            android:id="@+id/txtTeacherName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@id/iconArrow"
-            android:layout_toEndOf="@id/iconTeacher"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="16dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/tabularasa_regular"
+            android:maxLines="1"
+            android:text="Mohammed Benchikh"
+            android:textColor="@color/primary_text_color"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/iconArrow"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/iconTeacher"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/txtTeacherName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mohammed Benchikh"
-                android:textColor="@color/primary_text_color"
-                android:fontFamily="@font/tabularasa_regular"
-                android:textSize="18sp"/>
+        <!--        Subject-->
+        <TextView
+            android:id="@+id/txtTeacherSubject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="Base de données"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iconArrow"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/txtTeacherName"
+            app:layout_constraintTop_toBottomOf="@+id/txtTeacherName" />
 
-            <TextView
-                android:id="@+id/txtTeacherSubject"
-                android:layout_marginTop="-2dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Base de données"
-                android:textColor="@color/secondary_text_color"
-                android:fontFamily="@font/tabularasa_regular"
-                android:textSize="14sp"/>
-
-        </LinearLayout>
-
+<!--        Icon-->
         <ImageView
             android:id="@+id/iconArrow"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_next"
             android:layout_width="10dp"
             android:layout_height="10dp"
-            app:tint="@color/secondary_text_color" />
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_next"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
