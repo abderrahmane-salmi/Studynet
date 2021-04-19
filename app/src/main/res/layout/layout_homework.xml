@@ -1,136 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/homeworkMainLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/right_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_toStartOf="@id/left_layout"
-        android:orientation="vertical"
-        android:padding="20dp">
-
-        <TextView
-            android:id="@+id/homeworkTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:fontFamily="@font/tabularasa_regular"
-            android:maxLines="1"
-            android:text="Serie 1, Exercice 2"
-            android:textColor="@color/primary_text_color"
-            android:textSize="18sp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/ic_book"
-                app:tint="@color/secondary_text_color"/>
-
-            <TextView
-                android:id="@+id/homeworkSubject"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Base de données" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:id="@+id/homeworkDateIcon"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/ic_time"
-                app:tint="@color/secondary_text_color"/>
-
-            <TextView
-                android:id="@+id/homeworkDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="19 Avril 2021" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/left_layout"
+<!--    Title-->
+    <TextView
+        android:id="@+id/homeworkTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/tabularasa_regular"
+        android:maxLines="1"
+        android:text="Serie 1, Exercice 2"
+        android:textColor="@color/primary_text_color"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/checkMark"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+<!--    Subject-->
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/ic_book"
+        app:tint="@color/secondary_text_color"
+        app:layout_constraintTop_toBottomOf="@id/homeworkTitle"
+        app:layout_constraintStart_toStartOf="@id/homeworkTitle"
+        android:layout_marginTop="8dp"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/homeworkSubject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Base de données"
+        app:layout_constraintBottom_toBottomOf="@id/imageView1"
+        app:layout_constraintEnd_toStartOf="@+id/checkMark"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/imageView1"
+        app:layout_constraintTop_toTopOf="@id/imageView1" />
+
+<!--    Due date-->
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/ic_time"
+        app:tint="@color/secondary_text_color"
+        app:layout_constraintTop_toBottomOf="@id/imageView1"
+        app:layout_constraintStart_toStartOf="@id/imageView1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="20dp"
+        tools:ignore="ContentDescription"/>
+
+    <TextView
+        android:id="@+id/homeworkDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="19 Avril 2021"
+        app:layout_constraintBottom_toBottomOf="@id/imageView2"
+        app:layout_constraintEnd_toStartOf="@+id/checkMark"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/imageView2"
+        app:layout_constraintTop_toTopOf="@id/imageView2" />
+
+<!--    Check mark-->
+    <RelativeLayout
+        android:id="@+id/checkMark"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
         android:layout_gravity="center"
-        android:layout_marginEnd="16dp"
-        android:gravity="center">
+        android:gravity="center"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="16dp">
 
-        <RelativeLayout
-            android:id="@+id/studentLeftLayout"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_centerInParent="true"
+            android:padding="5dp"
+            android:src="@drawable/circle"/>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/btnCompleteHomework"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:visibility="visible">
-
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_centerInParent="true"
-                android:padding="5dp"
-                android:src="@drawable/circle"/>
-
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/btnCompleteHomework"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                app:lottie_rawRes="@raw/check_mark" />
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/teacherLeftLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/btnModify"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_modify"
-                app:tint="@color/primary_color" />
-
-            <ImageView
-                android:id="@+id/btnDelete"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/ic_delete"
-                app:tint="#FF332E" />
-
-        </LinearLayout>
+            app:lottie_rawRes="@raw/check_mark" />
 
     </RelativeLayout>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
