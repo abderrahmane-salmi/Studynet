@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -37,7 +38,7 @@ import java.util.List;
 public class TimetableFragment extends Fragment {
 
     private FragmentTimetableBinding binding;
-    private CurrentUser currentUser = CurrentUser.getInstance();
+    private final CurrentUser currentUser = CurrentUser.getInstance();
 
     private Dialog dialog;
 
@@ -47,7 +48,7 @@ public class TimetableFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         binding = FragmentTimetableBinding.inflate(inflater, container, false);
@@ -193,62 +194,62 @@ public class TimetableFragment extends Fragment {
             }
         });
 
-        binding.included.classMainLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ClassDetailsActivity.class));
-            }
-        });
+//        binding.included.classMainLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(getActivity(), ClassDetailsActivity.class));
+//            }
+//        });
 
-        binding.included.classMainLayout.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
-
-            @SuppressLint("ClickableViewAccessibility")
-            public void onSwipeRight() {
-                switch (currentDay){
-                    case 1:
-                        goToDay6();
-                        break;
-                    case 2:
-                        goToDay1();
-                        break;
-                    case 3:
-                        goToDay2();
-                        break;
-                    case 4:
-                        goToDay3();
-                        break;
-                    case 5:
-                        goToDay4();
-                        break;
-                    case 6:
-                        goToDay5();
-                        break;
-                }
-            }
-
-            public void onSwipeLeft() {
-                switch (currentDay){
-                    case 1:
-                        goToDay2();
-                        break;
-                    case 2:
-                        goToDay3();
-                        break;
-                    case 3:
-                        goToDay4();
-                        break;
-                    case 4:
-                        goToDay5();
-                        break;
-                    case 5:
-                        goToDay6();
-                        break;
-                    case 6:
-                        goToDay1();
-                        break;
-                }
-            }
-        });
+//        binding.included.classMainLayout.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
+//
+//            @SuppressLint("ClickableViewAccessibility")
+//            public void onSwipeRight() {
+//                switch (currentDay){
+//                    case 1:
+//                        goToDay6();
+//                        break;
+//                    case 2:
+//                        goToDay1();
+//                        break;
+//                    case 3:
+//                        goToDay2();
+//                        break;
+//                    case 4:
+//                        goToDay3();
+//                        break;
+//                    case 5:
+//                        goToDay4();
+//                        break;
+//                    case 6:
+//                        goToDay5();
+//                        break;
+//                }
+//            }
+//
+//            public void onSwipeLeft() {
+//                switch (currentDay){
+//                    case 1:
+//                        goToDay2();
+//                        break;
+//                    case 2:
+//                        goToDay3();
+//                        break;
+//                    case 3:
+//                        goToDay4();
+//                        break;
+//                    case 4:
+//                        goToDay5();
+//                        break;
+//                    case 5:
+//                        goToDay6();
+//                        break;
+//                    case 6:
+//                        goToDay1();
+//                        break;
+//                }
+//            }
+//        });
 
         return view;
     }

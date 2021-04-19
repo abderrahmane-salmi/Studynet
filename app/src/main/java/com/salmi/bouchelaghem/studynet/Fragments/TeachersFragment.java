@@ -2,6 +2,7 @@ package com.salmi.bouchelaghem.studynet.Fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -19,7 +20,7 @@ public class TeachersFragment extends Fragment {
     private FragmentTeachersBinding binding;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentTeachersBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
@@ -29,12 +30,12 @@ public class TeachersFragment extends Fragment {
         assert context != null;
         context.btnFilter.setVisibility(View.GONE);
 
-        binding.included.teacherMainLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.action_nav_teachers_to_teacherDetailsFragment);
-            }
-        });
+//        binding.included.teacherMainLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Navigation.findNavController(view).navigate(R.id.action_nav_teachers_to_teacherDetailsFragment);
+//            }
+//        });
 
         return view;
     }
