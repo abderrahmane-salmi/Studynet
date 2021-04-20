@@ -7,6 +7,7 @@ public class Assignment {
     private int id;
     private String sectionCode;
     private int teacherId;
+    // TODO: Think about adding the module's name for display purposes
     private String moduleCode;
     private String moduleType;
     private List<Integer> concernedGroups;

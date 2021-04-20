@@ -32,6 +32,7 @@
     <string name="thu">Thu</string>
     <string name="you_have">You have</string>
     <string name="classes">classes</string>
+    <string name="class_1">class</string>
     <string name="no_classes_today">No Classes Today</string>
     <string name="new_homework">New Homework</string>
     <string name="due_date">Due Date</string>

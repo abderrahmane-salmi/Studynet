@@ -1,6 +1,5 @@
 package com.salmi.bouchelaghem.studynet.Models;
 
-import java.util.Date;
 import java.util.List;
 
 public class Session {
@@ -14,19 +13,19 @@ public class Session {
     * Example: startTime = "08:00" , endTime = "09:30" */
     private String startTime;
     private String endTime;
-    private Date date;
+    private int day;
     private String meetingLink, meetingNumber, meetingPassword;
 
     public Session() {
     }
 
-    public Session(int id, Assignment assignment, List<Integer> concernedGroups, String startTime, String endTime, Date date, String meetingLink, String meetingNumber, String meetingPassword) {
+    public Session(int id, Assignment assignment, List<Integer> concernedGroups, String startTime, String endTime, int day, String meetingLink, String meetingNumber, String meetingPassword) {
         this.id = id;
         this.assignment = assignment;
         this.concernedGroups = concernedGroups;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.date = date;
+        this.day = day;
         this.meetingLink = meetingLink;
         this.meetingNumber = meetingNumber;
         this.meetingPassword = meetingPassword;
@@ -72,12 +71,12 @@ public class Session {
         this.endTime = endTime;
     }
 
-    public Date getDate() {
-        return date;
+    public int getDay() {
+        return day;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDay(int day) {
+        this.day = day;
     }
 
     public String getMeetingLink() {
