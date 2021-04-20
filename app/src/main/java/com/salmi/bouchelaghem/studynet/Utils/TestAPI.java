@@ -71,7 +71,7 @@ public class TestAPI extends Application {
         sections.add(new Section("L2_GENIE_CIVIL_A", 4, specialties.get(2), teachers, modules));
 
         students = new ArrayList<>();
-        students.add(new Student(users.get(0).getId(), users.get(0).getEmail(), users.get(0).getFirstName(), users.get(0).getLastName(), users.get(0).getUserType(), users.get(0).getDateJoined(), "181831033883", sections.get(0)));
+        students.add(new Student(users.get(0).getId(), users.get(0).getEmail(), users.get(0).getFirstName(), users.get(0).getLastName(), users.get(0).getUserType(), users.get(0).getDateJoined(), "181831033883", sections.get(0), 2));
 
         assignments = new ArrayList<>();
         assignments.add(new Assignment(1, sections.get(0), teachers.get(0), modules.get(0), Utils.TD, Arrays.asList(1, 2)));

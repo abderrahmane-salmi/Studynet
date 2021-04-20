@@ -12,11 +12,14 @@ import android.widget.Toast;
 import com.salmi.bouchelaghem.studynet.Models.Department;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Specialty;
+import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
+import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivitySignUpBinding;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -34,7 +37,9 @@ public class SignUpActivity extends AppCompatActivity {
     private boolean groupSelected = false;
 
     // Fields
-    private String department, speciality, section, group;
+    private String department, speciality, section;
+    private int group;
+    private Section studentSection;
 
     // Test Api
     TestAPI testAPI;
@@ -58,7 +63,26 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (validateRegistrationNumber() & validateFirstName() & validateLastName() & validateEmail() & validatePassword() &
                 departmentSelected & specialitySelected & sectionSelected & groupSelected){
-                    Toast.makeText(SignUpActivity.this, "Done", Toast.LENGTH_SHORT).show();
+
+                    // TODO: Figure out how to do with the id
+                    String registrationNumber = binding.txtRegistrationNumber.getEditText().getText().toString().trim();
+                    String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
+                    String lastName = binding.txtLastName.getEditText().getText().toString().trim();
+                    String email = binding.txtEmail.getEditText().getText().toString().trim();
+                    // TODO: Figure out how to do with the password
+                    String password = binding.txtPassword.getEditText().getText().toString().trim();
+
+                    Student student = new Student();
+                    student.setRegistrationNumber(registrationNumber);
+                    student.setFirstName(firstName);
+                    student.setLastName(lastName);
+                    student.setEmail(email);
+                    student.setUserType(Utils.STUDENT_ACCOUNT);
+                    student.setDateJoined(new Date());
+                    student.setSection(studentSection);
+                    student.setGroup(group);
+
+                    Toast.makeText(SignUpActivity.this, "Done", Toast.LENGTH_LONG).show();
                 } else {
                     if (!departmentSelected){
                         binding.departmentTextInputLayout.setError(getString(R.string.empty_msg1));
@@ -132,7 +156,8 @@ public class SignUpActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Get the selected item
                 sectionSelected = true;
-                section = sections.get(position).getCode();
+                studentSection = sections.get(position);
+                section = studentSection.getCode();
                 binding.sectionTextInputLayout.setError(null);
 
                 // Disable other spinners
@@ -151,7 +176,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Get the selected item
                 groupSelected = true;
-                group = String.valueOf(position+1);
+                group = position+1;
                 binding.groupTextInputLayout.setError(null);
             }
         });
