@@ -83,8 +83,6 @@
     <string name="meeting_link_copied">The meeting link has been copied</string>
     <string name="meeting_number_copied">The meeting number has been copied</string>
     <string name="meeting_password_copied">The meeting password has been copied</string>
-    <string name="username_msg1">Username can\'t be empty</string>
-    <string name="username_msg2">Username too long</string>
     <string name="email_msg1">Email can\'t be empty</string>
     <string name="email_msg2">Please enter a valid email address</string>
     <string name="department">Department</string>
@@ -94,4 +92,13 @@
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="speciality">Speciality</string>
+    <string name="first_name_msg">First name can\'t be empty</string>
+    <string name="reg_number_msg">Registration number can\'t be empty</string>
+    <string name="last_name_msg">Last name can\'t be empty</string>
+    <string name="password_msg">Password can\'t be empty</string>
+    <string name="password_msg2">Password too short</string>
+    <string name="empty_msg1">Department can\'t be empty</string>
+    <string name="empty_msg2">Speciality can\'t be empty</string>
+    <string name="empty_msg3">Section can\'t be empty</string>
+    <string name="empty_msg4">Group can\'t be empty</string>
 </resources>

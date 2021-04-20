@@ -160,7 +160,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColorHint="@color/secondary_text_color"
-                    app:errorEnabled="true">
+                    app:errorEnabled="true"
+                    android:enabled="false">
 
                     <AutoCompleteTextView
                         android:id="@+id/txtSpeciality"
@@ -169,8 +170,7 @@
                         android:fontFamily="@font/tabularasa_regular"
                         android:hint="@string/speciality"
                         android:inputType="none"
-                        android:textSize="15sp"
-                        android:enabled="false"/>
+                        android:textSize="15sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -180,7 +180,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColorHint="@color/secondary_text_color"
-                    app:errorEnabled="true">
+                    app:errorEnabled="true"
+                    android:enabled="false">
 
                     <AutoCompleteTextView
                         android:id="@+id/txtSection"
@@ -189,8 +190,7 @@
                         android:fontFamily="@font/tabularasa_regular"
                         android:hint="@string/section"
                         android:inputType="none"
-                        android:textSize="15sp"
-                        android:enabled="false"/>
+                        android:textSize="15sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -200,7 +200,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColorHint="@color/secondary_text_color"
-                    app:errorEnabled="true">
+                    app:errorEnabled="true"
+                    android:enabled="false">
 
                     <AutoCompleteTextView
                         android:id="@+id/txtGroup"
@@ -209,8 +210,7 @@
                         android:fontFamily="@font/tabularasa_regular"
                         android:hint="@string/group"
                         android:inputType="none"
-                        android:textSize="15sp"
-                        android:enabled="false"/>
+                        android:textSize="15sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

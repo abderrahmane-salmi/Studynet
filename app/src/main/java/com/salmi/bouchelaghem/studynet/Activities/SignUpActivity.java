@@ -7,13 +7,13 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.salmi.bouchelaghem.studynet.Models.Department;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Specialty;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
-import com.salmi.bouchelaghem.studynet.databinding.ActivityNavigationBinding;
 import com.salmi.bouchelaghem.studynet.databinding.ActivitySignUpBinding;
 
 import java.util.ArrayList;
@@ -31,9 +31,10 @@ public class SignUpActivity extends AppCompatActivity {
     private boolean departmentSelected = false;
     private boolean specialitySelected = false;
     private boolean sectionSelected = false;
+    private boolean groupSelected = false;
 
     // Fields
-    private String department, speciality, section;
+    private String department, speciality, section, group;
 
     // Test Api
     TestAPI testAPI;
@@ -55,8 +56,22 @@ public class SignUpActivity extends AppCompatActivity {
         binding.btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validateUsername() & validateEmail() & validatePassword()){
-
+                if (validateRegistrationNumber() & validateFirstName() & validateLastName() & validateEmail() & validatePassword() &
+                departmentSelected & specialitySelected & sectionSelected & groupSelected){
+                    Toast.makeText(SignUpActivity.this, "Done", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (!departmentSelected){
+                        binding.departmentTextInputLayout.setError(getString(R.string.empty_msg1));
+                    }
+                    if (!specialitySelected){
+                        binding.specialityTextInputLayout.setError(getString(R.string.empty_msg2));
+                    }
+                    if (!sectionSelected) {
+                        binding.sectionTextInputLayout.setError(getString(R.string.empty_msg3));
+                    }
+                    if (!groupSelected){
+                        binding.groupTextInputLayout.setError(getString(R.string.empty_msg4));
+                    }
                 }
             }
         });
@@ -72,13 +87,18 @@ public class SignUpActivity extends AppCompatActivity {
 
                 // Disable other spinners
                 binding.txtSpeciality.setText("");
-                binding.txtSection.setEnabled(false);
+                specialitySelected = false;
+
+                binding.sectionTextInputLayout.setEnabled(false);
                 binding.txtSection.setText("");
-                binding.txtGroup.setEnabled(false);
+                sectionSelected = false;
+
+                binding.groupTextInputLayout.setEnabled(false);
                 binding.txtGroup.setText("");
+                groupSelected = false;
 
                 // Set up the specialities spinner
-                binding.txtSpeciality.setEnabled(true);
+                binding.specialityTextInputLayout.setEnabled(true);
                 setupSpecialitiesSpinner(departments.get(position));
             }
         });
@@ -94,11 +114,14 @@ public class SignUpActivity extends AppCompatActivity {
 
                 // Disable other spinners
                 binding.txtSection.setText("");
-                binding.txtGroup.setEnabled(false);
+                sectionSelected = false;
+
+                binding.groupTextInputLayout.setEnabled(false);
                 binding.txtGroup.setText("");
+                groupSelected = false;
 
                 // Set up the sections spinner
-                binding.txtSection.setEnabled(true);
+                binding.sectionTextInputLayout.setEnabled(true);
                 setupSectionsSpinner(specialties.get(position));
             }
         });
@@ -114,10 +137,22 @@ public class SignUpActivity extends AppCompatActivity {
 
                 // Disable other spinners
                 binding.txtGroup.setText("");
+                groupSelected = false;
 
                 // Set up the groups spinner
-                binding.txtGroup.setEnabled(true);
+                binding.groupTextInputLayout.setEnabled(true);
                 setupGroupsSpinner(sections.get(position).getNbGroups());
+            }
+        });
+
+        // When the user chooses a group
+        binding.txtGroup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Get the selected item
+                groupSelected = true;
+                group = String.valueOf(position+1);
+                binding.groupTextInputLayout.setError(null);
             }
         });
 
@@ -201,20 +236,40 @@ public class SignUpActivity extends AppCompatActivity {
         binding.txtDepartment.setAdapter(departmentsAdapter);
     }
 
-    public boolean validateUsername(){
-        String username = binding.txtUsername.getEditText().getText().toString().trim();
+    public boolean validateRegistrationNumber(){
+        String regNumber = binding.txtRegistrationNumber.getEditText().getText().toString().trim();
 
-        if (username.isEmpty()){
-            binding.txtUsername.setError(getString(R.string.username_msg1));
-            return false;
-        } else if (username.length() > 20) {
-            binding.txtUsername.setError(getString(R.string.username_msg2));
+        if (regNumber.isEmpty()){
+            binding.txtRegistrationNumber.setError(getString(R.string.reg_number_msg));
             return false;
         } else {
-            binding.txtUsername.setError(null);
+            binding.txtRegistrationNumber.setError(null);
             return true;
         }
-        return true;
+    }
+
+    public boolean validateFirstName(){
+        String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
+
+        if (firstName.isEmpty()){
+            binding.txtFirstName.setError(getString(R.string.first_name_msg));
+            return false;
+        } else {
+            binding.txtFirstName.setError(null);
+            return true;
+        }
+    }
+
+    public boolean validateLastName(){
+        String lastName = binding.txtLastName.getEditText().getText().toString().trim();
+
+        if (lastName.isEmpty()){
+            binding.txtLastName.setError(getString(R.string.last_name_msg));
+            return false;
+        } else {
+            binding.txtLastName.setError(null);
+            return true;
+        }
     }
 
     public boolean validateEmail(){
@@ -236,10 +291,10 @@ public class SignUpActivity extends AppCompatActivity {
         String password = binding.txtPassword.getEditText().getText().toString().trim();
 
         if (password.isEmpty()){
-            binding.txtPassword.setError("Password can't be empty");
+            binding.txtPassword.setError(getString(R.string.password_msg));
             return false;
         } else if (password.length() < 6) {
-            binding.txtPassword.setError("Password too short");
+            binding.txtPassword.setError(getString(R.string.password_msg2));
             return false;
         } else {
             binding.txtPassword.setError(null);
