@@ -56,7 +56,9 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentUser.setUserType(Utils.STUDENT_ACCOUNT);
+                binding.txtLoginEmail.getEditText().setText("e");
+                binding.txtLoginPassword.getEditText().setText("e");
+
                 if (binding.txtLoginEmail.getEditText().getText().toString().equals("e") &&
                         binding.txtLoginPassword.getEditText().getText().toString().equals("e") ){
 
