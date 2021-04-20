@@ -10,6 +10,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
@@ -431,14 +433,9 @@ public class TimetableFragment extends Fragment {
     private void initRecView() {
         sessions = new ArrayList<>();
         binding.classesRecView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.classesRecView.addItemDecoration(new DividerItemDecoration(requireContext(), LinearLayout.VERTICAL));
         adapter = new SessionsAdapter(getContext());
     }
-
-//    private int getDayFromDate(int date){
-//        Calendar c = Calendar.getInstance();
-//        c.setTime(date);
-//        return c.get(Calendar.DAY_OF_WEEK)-1;
-//    }
 
     private void showTodaySessions(int today){
 
