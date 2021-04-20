@@ -119,9 +119,10 @@ public class TimetableFragment extends Fragment {
                         // Get only the teacher's sections
                         List<String> sectionsNames = new ArrayList<>();
                         for (Section section : sections) {
-                            if (section.getTeachers().contains(currentUser.getCurrentTeacher())) {
-                                sectionsNames.add(section.getCode());
-                            }
+//                            if (section.getTeachers().contains(currentUser.getCurrentTeacher())) {
+//                                sectionsNames.add(section.getCode());
+//                            }
+                            sectionsNames.add(section.getCode());
                         }
                         if (!sectionsNames.isEmpty()) {
                             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sectionsNames);

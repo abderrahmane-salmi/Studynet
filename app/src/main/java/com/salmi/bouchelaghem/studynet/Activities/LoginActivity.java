@@ -56,8 +56,10 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.txtLoginEmail.getEditText().setText("e");
-                binding.txtLoginPassword.getEditText().setText("e");
+
+                // Default
+                currentUser.setUserType(Utils.STUDENT_ACCOUNT);
+                currentUser.setCurrentStudent(new Student(testAPI.getUsers().get(0).getId(), testAPI.getUsers().get(0).getEmail(), testAPI.getUsers().get(0).getFirstName(), testAPI.getUsers().get(0).getLastName(), testAPI.getUsers().get(0).getUserType(), testAPI.getUsers().get(0).getDateJoined(), "181831033883", testAPI.getSections().get(0), 2));
 
                 if (binding.txtLoginEmail.getEditText().getText().toString().equals("e") &&
                         binding.txtLoginPassword.getEditText().getText().toString().equals("e") ){
