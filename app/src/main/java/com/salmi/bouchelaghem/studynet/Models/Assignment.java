@@ -7,7 +7,7 @@ public class Assignment {
     private int id;
     private String sectionCode;
     private int teacherId;
-    // TODO: Think about adding the module's name for display purposes
+    private String moduleName;
     private String moduleCode;
     private String moduleType;
     private List<Integer> concernedGroups;
@@ -15,10 +15,11 @@ public class Assignment {
     public Assignment() {
     }
 
-    public Assignment(int id, String sectionCode, int teacherId, String moduleCode, String moduleType, List<Integer> concernedGroups) {
+    public Assignment(int id, String sectionCode, int teacherId, String moduleName, String moduleCode, String moduleType, List<Integer> concernedGroups) {
         this.id = id;
         this.sectionCode = sectionCode;
         this.teacherId = teacherId;
+        this.moduleName = moduleName;
         this.moduleCode = moduleCode;
         this.moduleType = moduleType;
         this.concernedGroups = concernedGroups;
@@ -46,6 +47,14 @@ public class Assignment {
 
     public void setTeacherId(int teacherId) {
         this.teacherId = teacherId;
+    }
+
+    public String getModuleName() {
+        return moduleName;
+    }
+
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
     }
 
     public String getModuleCode() {

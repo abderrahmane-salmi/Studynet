@@ -5,6 +5,7 @@ public class Utils {
     // Tables
 
     // Fields
+    public static final String ID = "id";
 
     // User types
     public static final String STUDENT_ACCOUNT = "Student";

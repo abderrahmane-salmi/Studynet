@@ -397,7 +397,7 @@
             android:id="@+id/otherMeetingInfoGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="visible"
+            android:visibility="gone"
             app:constraint_referenced_ids="btnCopyMeetingPassword,classMeetingNumber,textView5,num_icon,classMeetingPassword,textView6,btnCopyMeetingNumber,password_icon" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

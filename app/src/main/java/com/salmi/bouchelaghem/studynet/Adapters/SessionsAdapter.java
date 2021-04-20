@@ -1,6 +1,7 @@
 package com.salmi.bouchelaghem.studynet.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.salmi.bouchelaghem.studynet.Activities.ClassDetailsActivity;
 import com.salmi.bouchelaghem.studynet.Models.Session;
+import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.LayoutClassBinding;
 
 import java.util.List;
@@ -25,7 +28,24 @@ public class SessionsAdapter extends RecyclerView.Adapter<SessionsAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutClassBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        LayoutClassBinding binding = LayoutClassBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        ViewHolder holder = new ViewHolder(binding);
+
+        holder.binding.classMainLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get the session's id
+                int id = sessions.get(holder.getAdapterPosition()).getId();
+
+                Intent intent = new Intent(context, ClassDetailsActivity.class);
+                intent.putExtra(Utils.ID, id);
+                context.startActivity(intent);
+
+                /* TODO: We can send the whole session object to optimize the nb of reads from the db*/
+            }
+        });
+
+        return holder;
     }
 
     @Override
@@ -50,7 +70,7 @@ public class SessionsAdapter extends RecyclerView.Adapter<SessionsAdapter.ViewHo
         holder.binding.txtClassEndHour.setText(session.getEndTime());
 
         // Module
-        holder.binding.txtClassSubject.setText(session.getAssignment().getModuleCode());
+        holder.binding.txtClassSubject.setText(session.getAssignment().getModuleName());
         holder.binding.txtClassType.setText(session.getAssignment().getModuleType());
 
     }
