@@ -23,7 +23,6 @@
     <string name="sign_in">Sign in</string>
     <string name="timetable">Timetable</string>
     <string name="reset_password">Reset Password</string>
-    <string name="username">Username</string>
     <string name="you_have_no_homeworks">You Have No Homeworks</string>
     <string name="sat">Sat</string>
     <string name="sun">Sun</string>
@@ -89,7 +88,10 @@
     <string name="email_msg1">Email can\'t be empty</string>
     <string name="email_msg2">Please enter a valid email address</string>
     <string name="department">Department</string>
-    <string name="year">Year</string>
     <string name="homework_title">Homework Title</string>
     <string name="class_details">Class Details</string>
+    <string name="registration_number">Registration Number</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="speciality">Speciality</string>
 </resources>

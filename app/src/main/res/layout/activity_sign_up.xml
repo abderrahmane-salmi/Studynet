@@ -6,104 +6,137 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context=".Activities.SignUpActivity"
         android:background="@color/light_grey">
 
-        <ImageView
-            android:padding="16dp"
-            android:id="@+id/btnGoBackFromSignUp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_arrow_back"
-            android:layout_marginTop="24dp"
-            android:layout_marginStart="8dp"/>
-
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
             android:layout_marginTop="80dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
             app:cardElevation="8dp"
-            android:layout_centerInParent="true">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingStart="16dp"
-                android:paddingEnd="16dp"
                 android:paddingTop="16dp"
+                android:paddingEnd="16dp"
                 android:paddingBottom="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/tabularasa_medium"
                     android:text="@string/sign_up"
                     android:textColor="@color/primary_text_color"
-                    android:textSize="30sp"
-                    android:fontFamily="@font/tabularasa_medium"/>
+                    android:textSize="30sp" />
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/txtRegistrationNumber"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:id="@+id/txtUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="48dp"
                     app:errorEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:backgroundTint="@color/white"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/username"
+                        android:backgroundTint="@color/white"
                         android:fontFamily="@font/tabularasa_regular"
-                        android:textSize="15sp"
-                        android:inputType="textPersonName|textCapSentences"/>
+                        android:hint="@string/registration_number"
+                        android:inputType="number"
+                        android:textSize="15sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/txtFirstName"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:id="@+id/txtEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:errorEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:backgroundTint="@color/white"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/email"
+                        android:backgroundTint="@color/white"
                         android:fontFamily="@font/tabularasa_regular"
-                        android:textSize="15sp"
-                        android:inputType="textEmailAddress"/>
+                        android:hint="@string/first_name"
+                        android:inputType="textPersonName|textCapSentences"
+                        android:textSize="15sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/txtLastName"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:errorEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/white"
+                        android:fontFamily="@font/tabularasa_regular"
+                        android:hint="@string/last_name"
+                        android:inputType="textPersonName|textCapSentences"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/txtEmail"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:errorEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/white"
+                        android:fontFamily="@font/tabularasa_regular"
+                        android:hint="@string/email"
+                        android:inputType="textEmailAddress"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/txtPassword"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:errorEnabled="true"
                     app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:backgroundTint="@color/white"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/password"
+                        android:backgroundTint="@color/white"
                         android:fontFamily="@font/tabularasa_regular"
-                        android:textSize="15sp"
-                        android:inputType="textPassword"/>
+                        android:hint="@string/password"
+                        android:inputType="textPassword"
+                        android:textSize="15sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/departmentTextInputLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -122,6 +155,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/specialityTextInputLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -129,17 +163,19 @@
                     app:errorEnabled="true">
 
                     <AutoCompleteTextView
-                        android:id="@+id/txtYear"
+                        android:id="@+id/txtSpeciality"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/tabularasa_regular"
-                        android:hint="@string/year"
+                        android:hint="@string/speciality"
                         android:inputType="none"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        android:enabled="false"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/sectionTextInputLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -153,11 +189,13 @@
                         android:fontFamily="@font/tabularasa_regular"
                         android:hint="@string/section"
                         android:inputType="none"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        android:enabled="false"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/groupTextInputLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -171,7 +209,8 @@
                         android:fontFamily="@font/tabularasa_regular"
                         android:hint="@string/group"
                         android:inputType="none"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        android:enabled="false"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -190,6 +229,6 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
