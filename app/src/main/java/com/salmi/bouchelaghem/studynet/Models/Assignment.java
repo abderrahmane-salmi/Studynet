@@ -5,20 +5,20 @@ import java.util.List;
 public class Assignment {
 
     private int id;
-    private Section section;
-    private Teacher teacher;
-    private Module module;
+    private String sectionCode;
+    private int teacherId;
+    private String moduleCode;
     private String moduleType;
     private List<Integer> concernedGroups;
 
     public Assignment() {
     }
 
-    public Assignment(int id, Section section, Teacher teacher, Module module, String moduleType, List<Integer> concernedGroups) {
+    public Assignment(int id, String sectionCode, int teacherId, String moduleCode, String moduleType, List<Integer> concernedGroups) {
         this.id = id;
-        this.section = section;
-        this.teacher = teacher;
-        this.module = module;
+        this.sectionCode = sectionCode;
+        this.teacherId = teacherId;
+        this.moduleCode = moduleCode;
         this.moduleType = moduleType;
         this.concernedGroups = concernedGroups;
     }
@@ -31,28 +31,28 @@ public class Assignment {
         this.id = id;
     }
 
-    public Section getSection() {
-        return section;
+    public String getSectionCode() {
+        return sectionCode;
     }
 
-    public void setSection(Section section) {
-        this.section = section;
+    public void setSectionCode(String sectionCode) {
+        this.sectionCode = sectionCode;
     }
 
-    public Teacher getTeacher() {
-        return teacher;
+    public int getTeacherId() {
+        return teacherId;
     }
 
-    public void setTeacher(Teacher teacher) {
-        this.teacher = teacher;
+    public void setTeacherId(int teacherId) {
+        this.teacherId = teacherId;
     }
 
-    public Module getModule() {
-        return module;
+    public String getModuleCode() {
+        return moduleCode;
     }
 
-    public void setModule(Module module) {
-        this.module = module;
+    public void setModuleCode(String moduleCode) {
+        this.moduleCode = moduleCode;
     }
 
     public String getModuleType() {
