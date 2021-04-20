@@ -7,6 +7,11 @@ public class Utils {
     // Fields
     public static final String ID = "id";
 
+    // Session
+    public static final String MEETING_LINK = "Meeting Link";
+    public static final String MEETING_NUMBER = "Meeting Number";
+    public static final String MEETING_PASSWORD = "Meeting Password";
+
     // User types
     public static final String STUDENT_ACCOUNT = "Student";
     public static final String TEACHER_ACCOUNT = "Teacher";

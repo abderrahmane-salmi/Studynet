@@ -2,6 +2,9 @@ package com.salmi.bouchelaghem.studynet.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -42,9 +45,13 @@ public class ClassDetailsActivity extends AppCompatActivity {
             }
         });
 
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+
         binding.btnCopyMeetingLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ClipData clipData = ClipData.newPlainText(Utils.MEETING_LINK, binding.classMeetingLink.getText());
+                clipboard.setPrimaryClip(clipData);
                 Toast.makeText(ClassDetailsActivity.this, getString(R.string.meeting_link_copied), Toast.LENGTH_SHORT).show();
             }
         });
@@ -52,6 +59,8 @@ public class ClassDetailsActivity extends AppCompatActivity {
         binding.btnCopyMeetingNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ClipData clipData = ClipData.newPlainText(Utils.MEETING_NUMBER, binding.classMeetingNumber.getText());
+                clipboard.setPrimaryClip(clipData);
                 Toast.makeText(ClassDetailsActivity.this, getString(R.string.meeting_number_copied), Toast.LENGTH_SHORT).show();
             }
         });
@@ -59,6 +68,8 @@ public class ClassDetailsActivity extends AppCompatActivity {
         binding.btnCopyMeetingPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ClipData clipData = ClipData.newPlainText(Utils.MEETING_PASSWORD, binding.classMeetingPassword.getText());
+                clipboard.setPrimaryClip(clipData);
                 Toast.makeText(ClassDetailsActivity.this, getString(R.string.meeting_password_copied), Toast.LENGTH_SHORT).show();
             }
         });
