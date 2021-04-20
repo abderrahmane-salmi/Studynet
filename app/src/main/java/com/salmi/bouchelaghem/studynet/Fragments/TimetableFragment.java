@@ -24,9 +24,13 @@ import com.google.android.material.button.MaterialButton;
 import com.salmi.bouchelaghem.studynet.Activities.AddClassActivity;
 import com.salmi.bouchelaghem.studynet.Activities.ClassDetailsActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
+import com.salmi.bouchelaghem.studynet.Models.Admin;
+import com.salmi.bouchelaghem.studynet.Models.Section;
+import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.OnSwipeTouchListener;
+import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.FragmentTimetableBinding;
 
@@ -44,7 +48,10 @@ public class TimetableFragment extends Fragment {
 
     // Days
     private int currentDay = 1;
-    List<String> days;
+    private List<String> days;
+
+    // Test api
+    TestAPI testAPI;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -54,22 +61,42 @@ public class TimetableFragment extends Fragment {
         binding = FragmentTimetableBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        // Test api
+        testAPI = TestAPI.getInstance();
+
         // If the user is a teacher or an admin then show the filter button
         if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT) || currentUser.getUserType().equals(Utils.ADMIN_ACCOUNT)){
 
             binding.selectSectionMsg.setVisibility(View.VISIBLE);
-            binding.btnAdd.setVisibility(View.VISIBLE);
 
             NavigationActivity context = (NavigationActivity) getActivity();
             assert context != null;
 
-            binding.btnAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(context, AddClassActivity.class));
-                }
-            });
+            // If the user is a teacher
+            if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT)){
 
+                // Get the current teacher from the app API
+                Teacher teacher = currentUser.getCurrentTeacher();
+
+                // Show the add button
+                binding.btnAdd.setVisibility(View.VISIBLE);
+                binding.btnAdd.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(context, AddClassActivity.class));
+                    }
+                });
+
+            } else { // If the user is an admin
+
+                // Get the current admin from the app api
+                Admin admin = currentUser.getCurrentAdmin();
+
+                // Show the signal button on the sessions
+
+            }
+
+            // Show and setup the filter
             context.btnFilter.setVisibility(View.VISIBLE);
             context.btnFilter.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -82,12 +109,37 @@ public class TimetableFragment extends Fragment {
                     MaterialButton btnApplyFilter = view.findViewById(R.id.btnApplyFilter);
 
                     // Init sections list
-                    List<String> list = new ArrayList<>();
-                    list.add("First");
-                    list.add("Second");
-                    list.add("Third");
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, list);
-                    filterTimetableSection.setAdapter(arrayAdapter);
+                    // Get all the sections
+                    List<Section> sections = testAPI.getSections();
+
+                    // If its a teacher then get only his sections
+                    List<String> sectionsNames = new ArrayList<>();
+                    if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT)){
+
+                        // Get only the teacher's sections
+                        for (Section section:sections){
+                            if (section.getTeachers().contains(currentUser.getCurrentTeacher())){
+                                sectionsNames.add(section.getCode());
+                            }
+                        }
+
+                        if (!sectionsNames.isEmpty()){
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sectionsNames);
+                            filterTimetableSection.setAdapter(arrayAdapter);
+                        }
+
+                    } else { // If its an admin get him all the sections
+
+                        for (Section section:sections){
+                            sectionsNames.add(section.getCode());
+                        }
+
+                        if (!sectionsNames.isEmpty()){
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sectionsNames);
+                            filterTimetableSection.setAdapter(arrayAdapter);
+                        }
+
+                    }
 
                     // TODO: restoreFilterState(); // set the filter values to the last filter applied
 
@@ -96,6 +148,9 @@ public class TimetableFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             binding.selectSectionMsg.setVisibility(View.GONE);
+
+                            // Get all the sessions
+
                         }
                     });
 

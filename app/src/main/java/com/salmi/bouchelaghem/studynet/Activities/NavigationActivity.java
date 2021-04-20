@@ -40,12 +40,15 @@ public class NavigationActivity extends AppCompatActivity {
         btnFilter = binding.btnFilter;
 
         if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT)){
+            // If its a teacher then show the teacher's drawer menu
             binding.navigationView.getMenu().clear();
             binding.navigationView.inflateMenu(R.menu.drawer_teacher_menu);
         } else if (currentUser.getUserType().equals(Utils.ADMIN_ACCOUNT)){
+            // If its a admin then show the admin's drawer menu
             binding.navigationView.getMenu().clear();
             binding.navigationView.inflateMenu(R.menu.drawer_teacher_menu);
         }
+        // If its a student then the default drawer menu will do
 
         binding.btnOpenDrawer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +60,7 @@ public class NavigationActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.fragment);
         NavigationUI.setupWithNavController(binding.navigationView, navController);
 
+        // Change toolbar title to the fragment's title
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
             public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {

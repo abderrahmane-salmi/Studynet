@@ -35,7 +35,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (validateEmail()){
                     String email = binding.txtEmail.getEditText().getText().toString().trim();
-                    
+
                     Toast.makeText(ResetPasswordActivity.this, "Done", Toast.LENGTH_SHORT).show();
                 }
             }

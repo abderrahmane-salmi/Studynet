@@ -45,6 +45,7 @@ public class TestAPI extends Application {
         users.add(new User(2, "email2@me.com", "User2", "User2", Utils.TEACHER_ACCOUNT, new Date()));
         users.add(new User(3, "email3@me.com", "User3", "User3", Utils.TEACHER_ACCOUNT, new Date()));
         users.add(new User(4, "email4@me.com", "User4", "User4", Utils.TEACHER_ACCOUNT, new Date()));
+        users.add(new User(5, "email5@me.com", "User5", "User5", Utils.ADMIN_ACCOUNT, new Date()));
 
         teachers = new ArrayList<>();
         teachers.add(new Teacher(users.get(1).getId(), users.get(1).getEmail(), users.get(1).getFirstName(), users.get(1).getLastName(), users.get(1).getUserType(), users.get(1).getDateJoined(), "MCB"));

@@ -2,9 +2,16 @@ package com.salmi.bouchelaghem.studynet.Utils;
 
 import android.app.Application;
 
+import com.salmi.bouchelaghem.studynet.Models.Admin;
+import com.salmi.bouchelaghem.studynet.Models.Student;
+import com.salmi.bouchelaghem.studynet.Models.Teacher;
+
 public class CurrentUser extends Application {
 
     private String userType;
+    private Student currentStudent;
+    private Teacher currentTeacher;
+    private Admin currentAdmin;
     private static CurrentUser instance;
 
     public static void setInstance(CurrentUser instance) {
@@ -27,5 +34,29 @@ public class CurrentUser extends Application {
 
     public void setUserType(String userType) {
         this.userType = userType;
+    }
+
+    public Student getCurrentStudent() {
+        return currentStudent;
+    }
+
+    public void setCurrentStudent(Student currentStudent) {
+        this.currentStudent = currentStudent;
+    }
+
+    public Teacher getCurrentTeacher() {
+        return currentTeacher;
+    }
+
+    public void setCurrentTeacher(Teacher currentTeacher) {
+        this.currentTeacher = currentTeacher;
+    }
+
+    public Admin getCurrentAdmin() {
+        return currentAdmin;
+    }
+
+    public void setCurrentAdmin(Admin currentAdmin) {
+        this.currentAdmin = currentAdmin;
     }
 }
