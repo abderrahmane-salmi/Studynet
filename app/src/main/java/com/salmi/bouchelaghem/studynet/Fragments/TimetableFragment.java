@@ -431,7 +431,7 @@ public class TimetableFragment extends Fragment {
         sessions = new ArrayList<>();
         binding.classesRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.classesRecView.addItemDecoration(new DividerItemDecoration(requireContext(), LinearLayout.VERTICAL));
-        adapter = new SessionsAdapter(getContext());
+        adapter = new SessionsAdapter(getContext(), currentUser.getUserType());
     }
 
     private void showTodaySessions(int today){
