@@ -65,6 +65,7 @@ public class TimetableFragment extends Fragment {
     // Filter
     private boolean sectionSelected = false;
     private String selectedSection;
+    private boolean filterApplied = false;
 
     // Test api
     TestAPI testAPI;
@@ -140,10 +141,14 @@ public class TimetableFragment extends Fragment {
 
                                 if (sectionSelected) {
 
+                                    filterApplied = true;
                                     getSessions(selectedSection);
+                                    goToDay1();
+                                    binding.selectSectionMsg.setVisibility(View.GONE);
+                                    dialog.dismiss();
 
                                 } else {
-                                    Toast.makeText(getActivity(), "There is no filter applied!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -219,9 +224,13 @@ public class TimetableFragment extends Fragment {
                                 if (sectionSelected) {
 
                                     getSessions(selectedSection);
+                                    goToDay1();
+                                    binding.selectSectionMsg.setVisibility(View.GONE);
+                                    dialog.dismiss();
+                                    filterApplied = true;
 
                                 } else {
-                                    Toast.makeText(getActivity(), "There is no filter applied!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
                                 }
 
                             }
@@ -416,18 +425,6 @@ public class TimetableFragment extends Fragment {
                 sessions.add(session);
             }
         }
-
-        if (!sessions.isEmpty()) {
-
-            adapter.setSessions(sessions);
-            binding.classesRecView.setAdapter(adapter);
-            binding.classesRecView.setVisibility(View.VISIBLE);
-            binding.emptyMsg.setVisibility(View.GONE);
-
-        } else {
-            binding.classesRecView.setVisibility(View.GONE);
-            binding.emptyMsg.setVisibility(View.VISIBLE);
-        }
     }
 
     private void initRecView() {
@@ -489,9 +486,11 @@ public class TimetableFragment extends Fragment {
         // Setting the day's name
         binding.txtSelectedDay.setText(days.get(0));
 
-        // Show today's classes
-        showTodaySessions(1);
-
+        // Show today's sessions only if the user is a student or the teacher/admin applied a filter
+        if(currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+            // Show today's classes
+            showTodaySessions(1);
+        }
     }
 
     private void goToDay2(){
@@ -508,8 +507,11 @@ public class TimetableFragment extends Fragment {
         // Setting the day's name
         binding.txtSelectedDay.setText(days.get(1));
 
-        // Show today's classes
-        showTodaySessions(2);
+        // Show today's sessions only if the user is a student or the teacher/admin applied a filter
+        if(currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+            // Show today's classes
+            showTodaySessions(2);
+        }
     }
 
     private void goToDay3(){
@@ -526,8 +528,11 @@ public class TimetableFragment extends Fragment {
         // Setting the day's name
         binding.txtSelectedDay.setText(days.get(2));
 
-        // Show today's classes
-        showTodaySessions(3);
+        // Show today's sessions only if the user is a student or the teacher/admin applied a filter
+        if(currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+            // Show today's classes
+            showTodaySessions(3);
+        }
     }
 
     private void goToDay4(){
@@ -544,8 +549,11 @@ public class TimetableFragment extends Fragment {
         // Setting the day's name
         binding.txtSelectedDay.setText(days.get(3));
 
-        // Show today's classes
-        showTodaySessions(4);
+        // Show today's sessions only if the user is a student or the teacher/admin applied a filter
+        if(currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+            // Show today's classes
+            showTodaySessions(4);
+        }
     }
 
     private void goToDay5(){
@@ -562,8 +570,11 @@ public class TimetableFragment extends Fragment {
         // Setting the day's name
         binding.txtSelectedDay.setText(days.get(4));
 
-        // Show today's classes
-        showTodaySessions(5);
+        // Show today's sessions only if the user is a student or the teacher/admin applied a filter
+        if(currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+            // Show today's classes
+            showTodaySessions(5);
+        }
     }
 
     private void goToDay6(){
@@ -580,8 +591,11 @@ public class TimetableFragment extends Fragment {
         // Setting the day's name
         binding.txtSelectedDay.setText(days.get(5));
 
-        // Show today's classes
-        showTodaySessions(6);
+        // Show today's sessions only if the user is a student or the teacher/admin applied a filter
+        if(currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+            // Show today's classes
+            showTodaySessions(6);
+        }
     }
 
 }

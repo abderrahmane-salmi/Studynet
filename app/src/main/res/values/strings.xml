@@ -102,4 +102,5 @@
     <string name="empty_msg2">Speciality can\'t be empty</string>
     <string name="empty_msg3">Section can\'t be empty</string>
     <string name="empty_msg4">Group can\'t be empty</string>
+    <string name="no_filter_msg">There is no filter applied!</string>
 </resources>
