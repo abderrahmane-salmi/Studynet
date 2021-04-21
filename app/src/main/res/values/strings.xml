@@ -103,4 +103,8 @@
     <string name="empty_msg3">Section can\'t be empty</string>
     <string name="empty_msg4">Group can\'t be empty</string>
     <string name="no_filter_msg">There is no filter applied!</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="session_deleted_msg">Session deleted successfully</string>
 </resources>

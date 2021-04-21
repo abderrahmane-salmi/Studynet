@@ -115,6 +115,10 @@ public class SessionsAdapter extends RecyclerView.Adapter<SessionsAdapter.ViewHo
         notifyDataSetChanged();
     }
 
+    public List<Session> getSessions() {
+        return sessions;
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder{
 
         LayoutClassBinding binding;
