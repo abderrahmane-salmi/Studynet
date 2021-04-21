@@ -123,60 +123,6 @@
         app:layout_constraintStart_toEndOf="@id/textView4"
         app:layout_constraintTop_toTopOf="@id/textView4" />
 
-<!--    Control buttons-->
-<!--    Teacher-->
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/teacherControlButtons"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:constraint_referenced_ids="btnDelete, btnModify"/>
-
-    <ImageView
-        android:id="@+id/btnDelete"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/ic_delete"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginEnd="24dp"
-        app:tint="@color/red"
-        tools:ignore="ContentDescription" />
-
-    <ImageView
-        android:id="@+id/btnModify"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="10dp"
-        android:src="@drawable/ic_modify"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btnDelete"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/primary_color"
-        tools:ignore="ContentDescription" />
-
-<!--    Admin-->
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/adminControlButtons"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:constraint_referenced_ids="btnReport"/>
-
-    <ImageView
-        android:id="@+id/btnReport"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:src="@drawable/ic_report"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginEnd="24dp"
-        app:tint="@color/red"
-        tools:ignore="ContentDescription" />
-
-
     <!--        TODO: Idea: Add class status: (finished, didn't start ...ect)-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

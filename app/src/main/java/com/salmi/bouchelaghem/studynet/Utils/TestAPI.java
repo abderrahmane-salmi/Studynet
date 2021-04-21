@@ -84,7 +84,7 @@ public class TestAPI extends Application {
         assignments.add(new Assignment(6, sections.get(0).getCode(), teachers.get(0).getId(), modules.get(2).getName(), modules.get(2).getCode(), Utils.COURS, Arrays.asList(1, 2, 3)));
 
         sessions = new ArrayList<>();
-        sessions.add(new Session(1, assignments.get(0), Collections.singletonList(1), "08:00", "09:30",  3, "https://facultydz.webex.com/facultydz/j.php?MTID=m275c959d1786501ca18107725f7f883d", "957 867 485", "mfgUdkOp"));
+        sessions.add(new Session(1, assignments.get(0), Collections.singletonList(1), "08:00", "09:30",  5, "https://facultydz.webex.com/facultydz/j.php?MTID=m275c959d1786501ca18107725f7f883d", "957 867 485", "mfgUdkOp"));
         sessions.add(new Session(2, assignments.get(1), Collections.singletonList(3), "09:40", "11:20", 4, "https://facultydz.webex.com/facultydz/j.php?MTID=m275c959d1786501ca18107725f7f883d", "957 867 485", "mfgUdkOp"));
         sessions.add(new Session(3, assignments.get(2), Arrays.asList(1, 2, 3), "13:00", "14:30", 3, "https://facultydz.webex.com/facultydz/j.php?MTID=m275c959d1786501ca18107725f7f883d", "957 867 485", "mfgUdkOp"));
         sessions.add(new Session(4, assignments.get(3), Collections.singletonList(1), "08:00", "09:30", 1, "https://facultydz.webex.com/facultydz/j.php?MTID=m275c959d1786501ca18107725f7f883d", "957 867 485", "mfgUdkOp"));

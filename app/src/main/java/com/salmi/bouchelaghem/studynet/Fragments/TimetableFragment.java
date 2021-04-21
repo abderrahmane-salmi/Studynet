@@ -45,8 +45,6 @@ import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.FragmentTimetableBinding;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -76,6 +74,7 @@ public class TimetableFragment extends Fragment {
 
     // Test api
     TestAPI testAPI;
+    private String currentUserType;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -85,6 +84,8 @@ public class TimetableFragment extends Fragment {
         binding = FragmentTimetableBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        // Get current user type
+        currentUserType = currentUser.getUserType();
         initRecView();
 
         // Test api
@@ -93,7 +94,7 @@ public class TimetableFragment extends Fragment {
         NavigationActivity context = (NavigationActivity) getActivity();
         assert context != null;
 
-        switch (currentUser.getUserType()) {
+        switch (currentUserType) {
             case Utils.TEACHER_ACCOUNT:  // If the user is a teacher
 
                 binding.selectSectionMsg.setVisibility(View.VISIBLE);
@@ -327,7 +328,7 @@ public class TimetableFragment extends Fragment {
         });
 
         // If its a student show him today's classes
-        if (currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT)){
+        if (currentUserType.equals(Utils.STUDENT_ACCOUNT)){
 
             // Used ViewTreeObserver to wait for the UI to be sized and then we can get the the view's width
             binding.day2.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -361,63 +362,6 @@ public class TimetableFragment extends Fragment {
 
         }
 
-//        binding.included.classMainLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(getActivity(), ClassDetailsActivity.class));
-//            }
-//        });
-
-//        binding.included.classMainLayout.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
-//
-//            @SuppressLint("ClickableViewAccessibility")
-//            public void onSwipeRight() {
-//                switch (currentDay){
-//                    case 1:
-//                        goToDay6();
-//                        break;
-//                    case 2:
-//                        goToDay1();
-//                        break;
-//                    case 3:
-//                        goToDay2();
-//                        break;
-//                    case 4:
-//                        goToDay3();
-//                        break;
-//                    case 5:
-//                        goToDay4();
-//                        break;
-//                    case 6:
-//                        goToDay5();
-//                        break;
-//                }
-//            }
-//
-//            public void onSwipeLeft() {
-//                switch (currentDay){
-//                    case 1:
-//                        goToDay2();
-//                        break;
-//                    case 2:
-//                        goToDay3();
-//                        break;
-//                    case 3:
-//                        goToDay4();
-//                        break;
-//                    case 4:
-//                        goToDay5();
-//                        break;
-//                    case 5:
-//                        goToDay6();
-//                        break;
-//                    case 6:
-//                        goToDay1();
-//                        break;
-//                }
-//            }
-//        });
-
         return view;
     }
 
@@ -438,11 +382,18 @@ public class TimetableFragment extends Fragment {
         sessions = new ArrayList<>();
         binding.classesRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.classesRecView.addItemDecoration(new DividerItemDecoration(requireContext(), LinearLayout.VERTICAL));
-        adapter = new SessionsAdapter(getContext(), currentUser.getUserType());
+        adapter = new SessionsAdapter(getContext());
 
-        // On swipe
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(binding.classesRecView);
+        // Swipe to action in rec view
+        if (currentUserType.equals(Utils.TEACHER_ACCOUNT)){
+            // If its a teacher then show delete + edit buttons
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(teacherCallBack);
+            itemTouchHelper.attachToRecyclerView(binding.classesRecView);
+        } else if (currentUserType.equals(Utils.ADMIN_ACCOUNT)){
+            // If its an admin then show report button
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(adminCallBack);
+            itemTouchHelper.attachToRecyclerView(binding.classesRecView);
+        }
     }
 
     private void showTodaySessions(int today){
@@ -498,7 +449,7 @@ public class TimetableFragment extends Fragment {
         binding.txtSelectedDay.setText(days.get(0));
 
         // Show today's sessions only if the user is a student or the teacher/admin applied a filter
-        if(currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+        if(currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
             // Show today's classes
             showTodaySessions(1);
         }
@@ -519,7 +470,7 @@ public class TimetableFragment extends Fragment {
         binding.txtSelectedDay.setText(days.get(1));
 
         // Show today's sessions only if the user is a student or the teacher/admin applied a filter
-        if(currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+        if(currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
             // Show today's classes
             showTodaySessions(2);
         }
@@ -540,7 +491,7 @@ public class TimetableFragment extends Fragment {
         binding.txtSelectedDay.setText(days.get(2));
 
         // Show today's sessions only if the user is a student or the teacher/admin applied a filter
-        if(currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+        if(currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
             // Show today's classes
             showTodaySessions(3);
         }
@@ -561,7 +512,7 @@ public class TimetableFragment extends Fragment {
         binding.txtSelectedDay.setText(days.get(3));
 
         // Show today's sessions only if the user is a student or the teacher/admin applied a filter
-        if(currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+        if(currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
             // Show today's classes
             showTodaySessions(4);
         }
@@ -582,7 +533,7 @@ public class TimetableFragment extends Fragment {
         binding.txtSelectedDay.setText(days.get(4));
 
         // Show today's sessions only if the user is a student or the teacher/admin applied a filter
-        if(currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+        if(currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
             // Show today's classes
             showTodaySessions(5);
         }
@@ -603,14 +554,14 @@ public class TimetableFragment extends Fragment {
         binding.txtSelectedDay.setText(days.get(5));
 
         // Show today's sessions only if the user is a student or the teacher/admin applied a filter
-        if(currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+        if(currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
             // Show today's classes
             showTodaySessions(6);
         }
     }
 
     // Swipe to delete and edit in the recycler view
-    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+    ItemTouchHelper.SimpleCallback teacherCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
             return false;
@@ -660,6 +611,36 @@ public class TimetableFragment extends Fragment {
                     .addSwipeLeftActionIcon(R.drawable.ic_delete)
                     .addSwipeRightBackgroundColor(ContextCompat.getColor(requireContext(), R.color.green))
                     .addSwipeRightActionIcon(R.drawable.ic_modify)
+                    .create()
+                    .decorate();
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+    };
+
+    ItemTouchHelper.SimpleCallback adminCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            int position = viewHolder.getAdapterPosition();
+
+            if (direction == ItemTouchHelper.LEFT){ // Swipe left to right <- : Report session
+                Toast.makeText(getContext(), "Report", Toast.LENGTH_SHORT).show();
+                adapter.notifyItemChanged(position); // To reset the item on the screen
+            }
+        }
+
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red))
+                    .addSwipeLeftActionIcon(R.drawable.ic_report)
                     .create()
                     .decorate();
 

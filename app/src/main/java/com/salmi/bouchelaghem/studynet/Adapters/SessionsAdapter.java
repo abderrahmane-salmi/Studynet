@@ -19,12 +19,10 @@ import java.util.List;
 public class SessionsAdapter extends RecyclerView.Adapter<SessionsAdapter.ViewHolder> {
 
     private List<Session> sessions;
-    private String userType;
     private final Context context;
 
-    public SessionsAdapter(Context context, String userType) {
+    public SessionsAdapter(Context context) {
         this.context = context;
-        this.userType = userType;
     }
 
     @NonNull
@@ -46,34 +44,6 @@ public class SessionsAdapter extends RecyclerView.Adapter<SessionsAdapter.ViewHo
                 /* TODO: We can send the whole session object to optimize the nb of reads from the db*/
             }
         });
-
-        if (userType.equals(Utils.TEACHER_ACCOUNT)){ // Show teacher control buttons
-            binding.teacherControlButtons.setVisibility(View.VISIBLE);
-
-            binding.btnDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-
-            binding.btnModify.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-
-        } else if (userType.equals(Utils.ADMIN_ACCOUNT)){ // Show admin control buttons
-            binding.adminControlButtons.setVisibility(View.VISIBLE);
-
-            binding.btnReport.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-        }
 
         return holder;
     }
