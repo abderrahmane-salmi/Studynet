@@ -70,7 +70,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView1">
 
             <AutoCompleteTextView
-                android:id="@+id/newClassSection"
+                android:id="@+id/classSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/section"
@@ -107,7 +107,7 @@
             app:layout_constraintTop_toBottomOf="@+id/txtHomeworkSection">
 
             <AutoCompleteTextView
-                android:id="@+id/newClassGroup"
+                android:id="@+id/classGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/group"
@@ -144,10 +144,10 @@
             app:layout_constraintTop_toBottomOf="@+id/txtHomeworkGroup">
 
             <AutoCompleteTextView
-                android:id="@+id/newClassType"
+                android:id="@+id/classType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/subject"
+                android:hint="@string/module"
                 android:inputType="none"
                 android:fontFamily="@font/tabularasa_regular"
                 android:textSize="15sp"/>

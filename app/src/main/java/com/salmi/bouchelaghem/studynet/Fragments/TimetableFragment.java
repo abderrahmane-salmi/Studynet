@@ -105,7 +105,9 @@ public class TimetableFragment extends Fragment {
                 binding.btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(context, AddClassActivity.class));
+                        Intent intent = new Intent(context, AddClassActivity.class);
+                        intent.putExtra(Utils.ACTION, Utils.ACTION_ADD);
+                        startActivity(intent);
                     }
                 });
 
@@ -603,6 +605,8 @@ public class TimetableFragment extends Fragment {
                     break;
                 case ItemTouchHelper.RIGHT: // Swipe right to left -> : Edit item
                     Intent intent = new Intent(getContext(), AddClassActivity.class);
+                    intent.putExtra(Utils.ACTION, Utils.ACTION_UPDATE);
+                    intent.putExtra(Utils.ID, sessions.get(position).getId());
                     startActivity(intent);
                     adapter.notifyItemChanged(position); // To reset the item on the screen
                     break;

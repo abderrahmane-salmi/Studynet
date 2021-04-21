@@ -29,4 +29,10 @@ public class Utils {
     public static final String TD = "TD";
     public static final String TP = "TP";
 
+    // Action types
+    public static final String ACTION = "Action";
+    public static final String ACTION_ADD = "Add";
+    public static final String ACTION_UPDATE = "Update";
+    public static final String ACTION_DELETE = "Delete";
+
 }
