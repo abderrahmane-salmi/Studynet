@@ -1,6 +1,5 @@
 package com.salmi.bouchelaghem.studynet.Fragments;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -9,15 +8,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +19,14 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.salmi.bouchelaghem.studynet.Activities.AddClassActivity;
@@ -60,6 +58,7 @@ public class TimetableFragment extends Fragment {
     private Dialog dialog;
 
     // Days
+    // TODO: use it or delete it
     private int currentDay = 1;
     private List<String> days;
 
@@ -76,7 +75,6 @@ public class TimetableFragment extends Fragment {
     TestAPI testAPI;
     private String currentUserType;
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -140,7 +138,9 @@ public class TimetableFragment extends Fragment {
                             filterTimetableSection.setAdapter(arrayAdapter);
                         }
 
-                        // TODO: restoreFilterState(); // set the filter values to the last filter applied
+                        if (filterApplied){
+                            restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
+                        }
 
                         // Init Buttons
                         btnApplyFilter.setOnClickListener(new View.OnClickListener() {
@@ -222,7 +222,9 @@ public class TimetableFragment extends Fragment {
                             filterTimetableSection.setAdapter(arrayAdapter);
                         }
 
-                        // TODO: restoreFilterState(); // set the filter values to the last filter applied
+                        if (filterApplied){
+                            restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
+                        }
 
                         // Init Buttons
                         btnApplyFilter.setOnClickListener(new View.OnClickListener() {
@@ -363,6 +365,10 @@ public class TimetableFragment extends Fragment {
         }
 
         return view;
+    }
+
+    private void restoreFilterState(AutoCompleteTextView filter) {
+        filter.setText(selectedSection, false);
     }
 
     private void getSessions(String sectionCode) {
