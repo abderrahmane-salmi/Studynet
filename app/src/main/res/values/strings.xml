@@ -110,4 +110,8 @@
     <string name="update_class">Update Class</string>
     <string name="select_groups">Select Groups:</string>
     <string name="cancel">Cancel</string>
+    <string name="link_msg">Meeting link can\'t be empty</string>
+    <string name="empty_msg5">Module can\'t be empty</string>
+    <string name="empty_msg6">Type can\'t be empty</string>
+    <string name="empty_msg7">Day can\'t be empty</string>
 </resources>

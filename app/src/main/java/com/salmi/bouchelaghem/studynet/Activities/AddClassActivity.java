@@ -8,10 +8,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.salmi.bouchelaghem.studynet.Models.Assignment;
 import com.salmi.bouchelaghem.studynet.Models.Module;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Session;
@@ -48,15 +48,18 @@ public class AddClassActivity extends AppCompatActivity {
     private boolean classTypeSelected = false;
 
     private String[] groupsArray; // All groups as an array
-    private List<String> selectedGroups; // The groups selected by the user
+    private List<String> selectedGroupsString; // The groups selected by the user (as a string)
+    private List<Integer> selectedGroupsInt; // The groups selected by the user (as a int)
     private boolean[] groupsStates; // We need this just for the dialog
     private boolean groupSelected = false;
 
-    private String day;
+    private String dayName;
+    private int day;
     private List<String> days;
     private boolean daySelected = false;
 
     // TODO: add start and end time
+
     private String meetingLink, meetingNumber, meetingPassword;
 
     private Teacher currentTeacher;
@@ -107,7 +110,59 @@ public class AddClassActivity extends AppCompatActivity {
                 binding.btnSave.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(AddClassActivity.this, "Add", Toast.LENGTH_SHORT).show();
+
+                        if (sectionSelected & moduleSelected & classTypeSelected
+                        & groupSelected & daySelected & validateMeetingLink()){
+
+                            // TODO: set id
+                            session = new Session();
+                            session.setConcernedGroups(selectedGroupsInt);
+                            // Set time
+                            session.setDay(day);
+                            session.setMeetingLink(meetingLink);
+
+                            if (!binding.txtMeetingNumber.getEditText().getText().toString().isEmpty() &&
+                            !binding.txtMeetingPassword.getEditText().getText().toString().isEmpty()){
+                                meetingNumber = binding.txtMeetingNumber.getEditText().getText().toString().trim();
+                                session.setMeetingNumber(meetingNumber);
+                                meetingPassword = binding.txtMeetingPassword.getEditText().getText().toString().trim();
+                                session.setMeetingNumber(meetingPassword);
+                            }
+
+                            Assignment assignment = new Assignment();
+                            // TODO: set id
+                            assignment.setSectionCode(section.getCode());
+                            assignment.setTeacherId(currentTeacher.getId());
+                            assignment.setModuleName(module.getName());
+                            assignment.setModuleCode(module.getCode());
+                            assignment.setModuleType(classType);
+                            assignment.setConcernedGroups(selectedGroupsInt);
+
+                            session.setAssignment(assignment);
+
+                            // Save it to the database
+
+
+                        } else {
+                            if (!sectionSelected){
+                                binding.classSectionTextLayout.setError(getString(R.string.empty_msg3));
+                            }
+                            if (!moduleSelected){
+                                binding.classModuleLayout.setError(getString(R.string.empty_msg5));
+                            }
+                            if (!classTypeSelected){
+                                binding.classTypeTextLayout.setError(getString(R.string.empty_msg6));
+                            }
+                            if (!groupSelected){
+                                // TODO: show error msg
+//                                binding.classSectionTextLayout.setError(getString(R.string.empty_msg4));
+                            }
+                            if (!daySelected){
+                                binding.classDayTextLayout.setError(getString(R.string.empty_msg7));
+                            }
+                        }
+
+
                     }
                 });
 
@@ -126,7 +181,7 @@ public class AddClassActivity extends AppCompatActivity {
                 binding.btnSave.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(AddClassActivity.this, "Update", Toast.LENGTH_SHORT).show();
+                        // Same as 'add' but we only update the session object in the database
                     }
                 });
                 break;
@@ -218,9 +273,9 @@ public class AddClassActivity extends AppCompatActivity {
                         // Get the current item
                         String currentGroup = groupsArray[which];
                         if (isChecked){ // If its selected then add it to the selected items list
-                            selectedGroups.add(currentGroup);
+                            selectedGroupsString.add(currentGroup);
                         } else { // if not then remove it from the list
-                            selectedGroups.remove(currentGroup);
+                            selectedGroupsString.remove(currentGroup);
                         }
                     }
                 });
@@ -229,18 +284,23 @@ public class AddClassActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        if (!selectedGroups.isEmpty()){
-                            groupSelected = true;
-                            Collections.sort(selectedGroups);
+                        binding.classGroup.setText("");
+                        selectedGroupsInt = new ArrayList<>();
 
-                            binding.classGroup.setText("");
-                            for (int i=0; i<selectedGroups.size()-1; i++){
-                                binding.classGroup.append(selectedGroups.get(i) + ", ");
+                        if (!selectedGroupsString.isEmpty()){
+                            groupSelected = true;
+                            Collections.sort(selectedGroupsString);
+
+                            for (int i = 0; i< selectedGroupsString.size()-1; i++){
+                                // Show the selected groups in the text view
+                                binding.classGroup.append(selectedGroupsString.get(i) + ", ");
+                                // Save the selected groups as integers
+                                selectedGroupsInt.add(Integer.parseInt(selectedGroupsString.get(i)));
                             }
-                            binding.classGroup.append(selectedGroups.get(selectedGroups.size()-1));
+                            binding.classGroup.append(selectedGroupsString.get(selectedGroupsString.size()-1));
+                            selectedGroupsInt.add(Integer.parseInt(selectedGroupsString.get(selectedGroupsString.size()-1)));
                         } else {
                             groupSelected = false;
-                            binding.classGroup.setText("");
                             binding.classGroup.setHint(R.string.group);
                         }
                     }
@@ -255,6 +315,17 @@ public class AddClassActivity extends AppCompatActivity {
 
                 builder.show();
 
+            }
+        });
+
+        binding.classDay.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Get selected item
+                daySelected = true;
+                dayName = days.get(position);
+                day = position+1;
+                binding.classDay.setError(null);
             }
         });
 
@@ -355,7 +426,7 @@ public class AddClassActivity extends AppCompatActivity {
             groupsArray[grp] = String.valueOf(grp+1);
         }
         groupsStates = new boolean[groupsArray.length];
-        selectedGroups = new ArrayList<>();
+        selectedGroupsString = new ArrayList<>();
     }
 
     // Get the module's types depending on the teacher and the section
@@ -398,6 +469,18 @@ public class AddClassActivity extends AppCompatActivity {
             binding.classSection.setAdapter(arrayAdapter);
         }
 
+    }
+
+    public boolean validateMeetingLink(){
+        meetingLink = binding.txtMeetingLink.getEditText().getText().toString().trim();
+
+        if (meetingLink.isEmpty()){
+            binding.txtMeetingLink.setError(getString(R.string.link_msg));
+            return false;
+        } else {
+            binding.txtMeetingLink.setError(null);
+            return true;
+        }
     }
 
 }

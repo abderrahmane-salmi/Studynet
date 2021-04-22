@@ -52,14 +52,14 @@
             android:layout_height="25dp"
             android:layout_marginStart="24dp"
             android:src="@drawable/ic_section"
-            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout1"
+            app:layout_constraintBottom_toBottomOf="@+id/classSectionTextLayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textInputLayout1"
+            app:layout_constraintTop_toTopOf="@+id/classSectionTextLayout"
             app:tint="@color/secondary_text_color"
             tools:ignore="ContentDescription" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout1"
+            android:id="@+id/classSectionTextLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
             android:textColorHint="@color/secondary_text_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout1"
+            app:layout_constraintTop_toBottomOf="@+id/classSectionTextLayout"
             android:enabled="false">
 
             <AutoCompleteTextView
@@ -200,14 +200,14 @@
             android:layout_height="22dp"
             android:layout_marginStart="24dp"
             android:src="@drawable/ic_calendar2"
-            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout5"
+            app:layout_constraintBottom_toBottomOf="@+id/classDayTextLayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textInputLayout5"
+            app:layout_constraintTop_toTopOf="@+id/classDayTextLayout"
             app:tint="@color/secondary_text_color"
             tools:ignore="ContentDescription" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout5"
+            android:id="@+id/classDayTextLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -260,7 +260,7 @@
             app:layout_constraintEnd_toStartOf="@+id/btnSelectEndTime"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/imageView7"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout5"
+            app:layout_constraintTop_toBottomOf="@+id/classDayTextLayout"
             app:strokeColor="#969696"
             app:strokeWidth="1dp" />
 
