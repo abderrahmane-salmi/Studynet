@@ -117,12 +117,14 @@ public class AddClassActivity extends AppCompatActivity {
                     public void onClick(View v) {
 
                         if (sectionSelected & moduleSelected & classTypeSelected
-                        & groupSelected & daySelected & validateMeetingLink()){
+                        & groupSelected & daySelected & validateMeetingLink()
+                        & startTime != null & endTime != null){
 
                             // TODO: set id
                             session = new Session();
                             session.setConcernedGroups(selectedGroupsInt);
-                            // Set time
+                            session.setStartTime(startTime);
+                            session.setEndTime(endTime);
                             session.setDay(day);
                             session.setMeetingLink(meetingLink);
 
@@ -159,11 +161,16 @@ public class AddClassActivity extends AppCompatActivity {
                                 binding.classTypeTextLayout.setError(getString(R.string.empty_msg6));
                             }
                             if (!groupSelected){
-                                // TODO: show error msg
-                                binding.classGroup.setError(getString(R.string.empty_msg4));
+                                binding.classGroup.setError("");
                             }
                             if (!daySelected){
                                 binding.classDayTextLayout.setError(getString(R.string.empty_msg7));
+                            }
+                            if (startTime == null){
+                                binding.btnSelectStartTime.setError("");
+                            }
+                            if (endTime == null){
+                                binding.btnSelectEndTime.setError("");
                             }
                         }
 
@@ -339,19 +346,27 @@ public class AddClassActivity extends AppCompatActivity {
         binding.btnSelectStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MaterialTimePicker picker = openTimePicker("Select Start time");
+                MaterialTimePicker picker;
+                if (startTime != null){ // If we have already a selected time
+                    picker = openTimePicker("Select Start time", startTime.getHour(), startTime.getMinute());
+                } else { // Else: make 8:00 the default time
+                    picker = openTimePicker("Select Start time", 8, 0);
+                }
+
                 picker.addOnPositiveButtonClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         int hour = picker.getHour();
                         int minute = picker.getMinute();
                         startTime = LocalTime.of(hour, minute);
+                        binding.btnSelectStartTime.setText(startTime.toString());
+                        binding.btnSelectStartTime.setError(null);
                     }
                 });
                 picker.addOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
-
+                        picker.dismiss();
                     }
                 });
             }
@@ -360,18 +375,39 @@ public class AddClassActivity extends AppCompatActivity {
         binding.btnSelectEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MaterialTimePicker picker = openTimePicker("Select End time");
+                MaterialTimePicker picker;
+                if (startTime != null){ // If we have already a selected time
+                    picker = openTimePicker("Select End time", endTime.getHour(), endTime.getMinute());
+                } else { // Else: make 8:00 the default time
+                    picker = openTimePicker("Select End time", 8, 0);
+                }
+                picker.addOnPositiveButtonClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int hour = picker.getHour();
+                        int minute = picker.getMinute();
+                        endTime = LocalTime.of(hour, minute);
+                        binding.btnSelectEndTime.setText(endTime.toString());
+                        binding.btnSelectEndTime.setError(null);
+                    }
+                });
+                picker.addOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        picker.dismiss();
+                    }
+                });
             }
         });
 
     }
 
-    private MaterialTimePicker openTimePicker(String title) {
+    private MaterialTimePicker openTimePicker(String title, int hour, int minute) {
         MaterialTimePicker picker = new MaterialTimePicker.Builder()
                 .setTitleText(title)
                 .setTimeFormat(TimeFormat.CLOCK_24H)
-                .setHour(8)
-                .setMinute(0)
+                .setHour(hour)
+                .setMinute(minute)
                 .build();
 
         picker.show(getSupportFragmentManager(), "TAG");
@@ -438,8 +474,10 @@ public class AddClassActivity extends AppCompatActivity {
             binding.classDay.setText(days.get(session.getDay()-1));
 
             // Time
-            binding.btnSelectStartTime.setText(session.getStartTime().toString());
-            binding.btnSelectEndTime.setText(session.getEndTime().toString());
+            startTime = session.getStartTime();
+            binding.btnSelectStartTime.setText(startTime.toString());
+            endTime = session.getEndTime();
+            binding.btnSelectEndTime.setText(endTime.toString());
 
             // Meeting info
             binding.txtMeetingLink.getEditText().setText(session.getMeetingLink());
