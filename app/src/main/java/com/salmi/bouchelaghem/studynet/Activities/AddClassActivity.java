@@ -155,7 +155,7 @@ public class AddClassActivity extends AppCompatActivity {
                             }
                             if (!groupSelected){
                                 // TODO: show error msg
-//                                binding.classSectionTextLayout.setError(getString(R.string.empty_msg4));
+                                binding.classGroup.setError(getString(R.string.empty_msg4));
                             }
                             if (!daySelected){
                                 binding.classDayTextLayout.setError(getString(R.string.empty_msg7));
@@ -193,7 +193,7 @@ public class AddClassActivity extends AppCompatActivity {
                 // Get selected item
                 sectionSelected = true;
                 section = sections.get(position);
-                binding.classSection.setError(null);
+                binding.classSectionTextLayout.setError(null);
 
                 // Disable other spinners
                 binding.classModule.setText("");
@@ -220,7 +220,7 @@ public class AddClassActivity extends AppCompatActivity {
                 // Get selected item
                 moduleSelected = true;
                 module = modules.get(position);
-                binding.classModule.setError(null);
+                binding.classModuleLayout.setError(null);
 
                 // Disable other spinners
                 binding.classType.setText("");
@@ -243,7 +243,7 @@ public class AddClassActivity extends AppCompatActivity {
                 // Get selected item
                 classTypeSelected = true;
                 classType = classTypes.get(position);
-                binding.classType.setError(null);
+                binding.classTypeTextLayout.setError(null);
 
                 // Disable other spinners
                 binding.classGroup.setText("");
@@ -259,6 +259,7 @@ public class AddClassActivity extends AppCompatActivity {
         binding.classGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                binding.classGroup.setError(null);
                 // Init builder
                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(AddClassActivity.this, R.style.MyAlertDialogTheme);
                 // Set title
@@ -325,7 +326,7 @@ public class AddClassActivity extends AppCompatActivity {
                 daySelected = true;
                 dayName = days.get(position);
                 day = position+1;
-                binding.classDay.setError(null);
+                binding.classDayTextLayout.setError(null);
             }
         });
 
