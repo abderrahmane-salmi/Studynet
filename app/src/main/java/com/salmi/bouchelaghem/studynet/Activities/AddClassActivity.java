@@ -46,12 +46,10 @@ public class AddClassActivity extends AppCompatActivity {
     private List<String> classTypes;
     private boolean classTypeSelected = false;
 
-    private int group;
-    private List<String> groups;
-    private String[] groupsArray = {"1", "2", "3"};
+    private String[] groupsArray; // All groups as an array
+    private List<String> selectedGroups; // The groups selected by the user
+    private boolean[] groupsStates; // We need this just for the dialog
     private boolean groupSelected = false;
-    private boolean[] selectedGroupsStates;
-    private List<Integer> groupsList = new ArrayList<>();
 
     private String day;
     private List<String> days;
@@ -199,12 +197,12 @@ public class AddClassActivity extends AppCompatActivity {
             }
         });
 
-        selectedGroupsStates = new boolean[groupsArray.length];
-
+        groupsArray = new String[]{"1", "2", "3", "4"};
+        groupsStates = new boolean[groupsArray.length];
+        selectedGroups = new ArrayList<>();
         binding.classGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                groups = new ArrayList<>();
                 // Init builder
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddClassActivity.this);
                 // Set title
@@ -212,33 +210,36 @@ public class AddClassActivity extends AppCompatActivity {
                 // No cancel
                 builder.setCancelable(false);
 
-                builder.setMultiChoiceItems(groupsArray, selectedGroupsStates, new DialogInterface.OnMultiChoiceClickListener() {
+                builder.setMultiChoiceItems(groupsArray, groupsStates, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-//                        if (isChecked){
-//                            groups.add(groupsArray[which]);
-//                        } else {
-//                            groups.remove(which);
-//                        }
-                        selectedGroupsStates[which] = isChecked;
-//                        groups.add(groupsArray[which]);
+
+                        // Get the current item
+                        String currentGroup = groupsArray[which];
+                        if (isChecked){ // If its selected then add it to the selected items list
+                            selectedGroups.add(currentGroup);
+                        } else { // if not then remove it from the list
+                            selectedGroups.remove(currentGroup);
+                        }
                     }
                 });
 
                 builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        binding.classGroup.setText("");
-//                        for (int i = 0; i< groups.size()-1; i++){
-//                            binding.classGroup.append(groups.get(i) + ", ");
-//                        }
-                        for (int i=0; i<selectedGroupsStates.length-1; i++){
-                            if (selectedGroupsStates[i]){
-                                binding.classGroup.append((i+1) + ", ");
+
+                        if (!selectedGroups.isEmpty()){
+                            groupSelected = true;
+                            Collections.sort(selectedGroups);
+
+                            binding.classGroup.setText("");
+                            for (int i=0; i<selectedGroups.size()-1; i++){
+                                binding.classGroup.append(selectedGroups.get(i) + ", ");
                             }
-                        }
-                        if (selectedGroupsStates[selectedGroupsStates.length-1]){
-                            binding.classGroup.append(String.valueOf(selectedGroupsStates.length));
+                            binding.classGroup.append(selectedGroups.get(selectedGroups.size()-1));
+                        } else {
+                            groupSelected = false;
+                            binding.classGroup.setText(R.string.group);
                         }
                     }
                 });
