@@ -149,7 +149,8 @@ public class AddClassActivity extends AppCompatActivity {
                 classTypeSelected = false;
 
                 binding.classGroup.setEnabled(false);
-                binding.classGroup.setText(R.string.group);
+                binding.classGroup.setText("");
+                binding.classGroup.setHint(R.string.group);
                 groupSelected = false;
 
                 // Setup the next spinner
@@ -171,7 +172,8 @@ public class AddClassActivity extends AppCompatActivity {
                 classTypeSelected = false;
 
                 binding.classGroup.setEnabled(false);
-                binding.classGroup.setText(R.string.group);
+                binding.classGroup.setText("");
+                binding.classGroup.setHint(R.string.group);
                 groupSelected = false;
 
                 // Setup the next spinner
@@ -189,7 +191,8 @@ public class AddClassActivity extends AppCompatActivity {
                 binding.classType.setError(null);
 
                 // Disable other spinners
-                binding.classGroup.setText(R.string.group);
+                binding.classGroup.setText("");
+                binding.classGroup.setHint(R.string.group);
                 groupSelected = false;
 
                 // Setup the next spinner
@@ -202,7 +205,7 @@ public class AddClassActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Init builder
-                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(AddClassActivity.this);
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(AddClassActivity.this, R.style.MyAlertDialogTheme);
                 // Set title
                 builder.setTitle(R.string.select_groups);
                 // No cancel
@@ -237,7 +240,8 @@ public class AddClassActivity extends AppCompatActivity {
                             binding.classGroup.append(selectedGroups.get(selectedGroups.size()-1));
                         } else {
                             groupSelected = false;
-                            binding.classGroup.setText(R.string.group);
+                            binding.classGroup.setText("");
+                            binding.classGroup.setHint(R.string.group);
                         }
                     }
                 });

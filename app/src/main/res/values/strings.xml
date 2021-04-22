@@ -108,6 +108,6 @@
     <string name="no">No</string>
     <string name="session_deleted_msg">Session deleted successfully</string>
     <string name="update_class">Update Class</string>
-    <string name="select_groups">Select Groups</string>
+    <string name="select_groups">Select Groups:</string>
     <string name="cancel">Cancel</string>
 </resources>

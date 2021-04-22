@@ -40,4 +40,10 @@
         <item name="cornerSizeBottomRight">0dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
+
+<!--    Alert Dialog-->
+    <style name="MyAlertDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorAccent">@color/primary_color</item>
+        <item name="android:colorAccent">@color/primary_color</item>
+    </style>
 </resources>
