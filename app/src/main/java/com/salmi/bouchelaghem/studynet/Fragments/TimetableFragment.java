@@ -579,6 +579,7 @@ public class TimetableFragment extends Fragment {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
             int position = viewHolder.getAdapterPosition();
+            Session currentSession = adapter.getSessions().get(position);
 
             switch (direction){
                 case ItemTouchHelper.LEFT: // Swipe left to right <- : Delete item
@@ -588,7 +589,7 @@ public class TimetableFragment extends Fragment {
                     builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            sessions.remove(position);
+                            sessions.remove(currentSession);
                             adapter.getSessions().remove(position);
                             adapter.notifyItemRemoved(position);
                             Toast.makeText(getContext(), getString(R.string.session_deleted_msg), Toast.LENGTH_SHORT).show();
@@ -606,7 +607,7 @@ public class TimetableFragment extends Fragment {
                 case ItemTouchHelper.RIGHT: // Swipe right to left -> : Edit item
                     Intent intent = new Intent(getContext(), AddClassActivity.class);
                     intent.putExtra(Utils.ACTION, Utils.ACTION_UPDATE);
-                    intent.putExtra(Utils.ID, sessions.get(position).getId());
+                    intent.putExtra(Utils.ID, currentSession.getId());
                     startActivity(intent);
                     adapter.notifyItemChanged(position); // To reset the item on the screen
                     break;
@@ -638,6 +639,7 @@ public class TimetableFragment extends Fragment {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
             int position = viewHolder.getAdapterPosition();
+            Session currentSession = adapter.getSessions().get(position);
 
             if (direction == ItemTouchHelper.LEFT){ // Swipe left to right <- : Report session
                 Toast.makeText(getContext(), "Report", Toast.LENGTH_SHORT).show();

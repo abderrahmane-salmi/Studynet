@@ -367,6 +367,24 @@ public class AddClassActivity extends AppCompatActivity {
 
             // Groups
             getGroups(currentTeacher.getId(), section);
+            // Fill the selected groups
+            setSelectedGroups(session.getConcernedGroups());
+            binding.classGroup.setEnabled(true);
+
+            // Set the selected groups to the text view
+            int nbGroups = session.getConcernedGroups().size();
+            if (nbGroups == 1){ // If there is only one group
+                binding.classGroup.setText(String.valueOf(session.getConcernedGroups().get(0)));
+            } else {
+                binding.classGroup.setText("");
+                for (int i = 0; i< session.getConcernedGroups().size()-1; i++){
+                    // Show the selected groups in the text view
+                    binding.classGroup.append(session.getConcernedGroups().get(i) + ", ");
+                }
+                binding.classGroup.append(String.valueOf(session.getConcernedGroups().get(nbGroups-1)));
+            }
+
+
 
             // Day
             initDays();
@@ -427,6 +445,15 @@ public class AddClassActivity extends AppCompatActivity {
         }
         groupsStates = new boolean[groupsArray.length];
         selectedGroupsString = new ArrayList<>();
+    }
+
+    // Set the selected groups in case of update
+    private void setSelectedGroups(List<Integer> concernedGroups) {
+
+        for (int grp:concernedGroups){
+            groupsStates[grp-1] = true;
+        }
+
     }
 
     // Get the module's types depending on the teacher and the section
