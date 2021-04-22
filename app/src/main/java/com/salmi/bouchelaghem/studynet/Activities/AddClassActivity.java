@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.salmi.bouchelaghem.studynet.Models.Module;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Session;
@@ -148,7 +149,7 @@ public class AddClassActivity extends AppCompatActivity {
                 classTypeSelected = false;
 
                 binding.classGroup.setEnabled(false);
-//                binding.classGroup.setText("");
+                binding.classGroup.setText(R.string.group);
                 groupSelected = false;
 
                 // Setup the next spinner
@@ -170,7 +171,7 @@ public class AddClassActivity extends AppCompatActivity {
                 classTypeSelected = false;
 
                 binding.classGroup.setEnabled(false);
-//                binding.classGroup.setText("");
+                binding.classGroup.setText(R.string.group);
                 groupSelected = false;
 
                 // Setup the next spinner
@@ -188,7 +189,7 @@ public class AddClassActivity extends AppCompatActivity {
                 binding.classType.setError(null);
 
                 // Disable other spinners
-//                binding.classGroup.setText("");
+                binding.classGroup.setText(R.string.group);
                 groupSelected = false;
 
                 // Setup the next spinner
@@ -197,14 +198,11 @@ public class AddClassActivity extends AppCompatActivity {
             }
         });
 
-        groupsArray = new String[]{"1", "2", "3", "4"};
-        groupsStates = new boolean[groupsArray.length];
-        selectedGroups = new ArrayList<>();
         binding.classGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Init builder
-                AlertDialog.Builder builder = new AlertDialog.Builder(AddClassActivity.this);
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(AddClassActivity.this);
                 // Set title
                 builder.setTitle(R.string.select_groups);
                 // No cancel
@@ -256,16 +254,6 @@ public class AddClassActivity extends AppCompatActivity {
             }
         });
 
-//        binding.classGroup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                // Get selected item
-//                groupSelected = true;
-//                group = Integer.parseInt(groups.get(position));
-//                binding.classType.setError(null);
-//            }
-//        });
-
     }
 
     private void fillFields(int id) {
@@ -281,6 +269,8 @@ public class AddClassActivity extends AppCompatActivity {
 
             // Sections
             String sectionCode = session.getAssignment().getSectionCode();
+            getSection(sectionCode);
+            // Set selected item
             binding.classSection.setText(sectionCode, false);
 
             // Module
@@ -301,6 +291,7 @@ public class AddClassActivity extends AppCompatActivity {
             binding.classType.setText(classType, false);
 
             // Groups
+            getGroups(currentTeacher.getId(), section);
 
             // Day
             initDays();
@@ -321,6 +312,15 @@ public class AddClassActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    // Get the section object from its code (From the API)
+    private void getSection(String sectionCode) {
+        for (Section s:testAPI.getSections()){
+            if (s.getCode().equals(sectionCode)){
+                section = s;
+            }
+        }
     }
 
     // Get the module object from its code (From the API)
@@ -346,19 +346,12 @@ public class AddClassActivity extends AppCompatActivity {
 
     // Get the groups that belongs to the selected section and they are taught by the current teacher
     private void getGroups(int teacherId, Section section) {
-//        groups = new ArrayList<>();
-//        for (int grp=0; grp<section.getNbGroups(); grp++){
-//            groups.add(String.valueOf(grp+1));
-//        }
-//
-//        groupsArray = (String[]) groups.toArray();
-//
-//        selectedGroupsStates = new boolean[groups.size()];
-
-//        if (!groups.isEmpty()) {
-//            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddClassActivity.this, R.layout.dropdown_item, groups);
-//            binding.classGroup.setAdapter(arrayAdapter);
-//        }
+        groupsArray = new String[section.getNbGroups()];
+        for (int grp=0; grp<section.getNbGroups(); grp++){
+            groupsArray[grp] = String.valueOf(grp+1);
+        }
+        groupsStates = new boolean[groupsArray.length];
+        selectedGroups = new ArrayList<>();
     }
 
     // Get the module's types depending on the teacher and the section
