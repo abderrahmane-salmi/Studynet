@@ -16,7 +16,7 @@ import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.Models.User;
 
-import java.time.LocalTime;
+import org.threeten.bp.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -44,7 +44,6 @@ public class TestAPI extends Application {
         return instance;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public TestAPI() {
         users = new ArrayList<>();
         users.add(new User(1, "email1@me.com", "User1", "User1", Utils.STUDENT_ACCOUNT, new Date()));

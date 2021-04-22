@@ -1,6 +1,6 @@
 package com.salmi.bouchelaghem.studynet.Models;
 
-import java.time.LocalTime;
+import org.threeten.bp.LocalTime;
 import java.util.List;
 
 public class Session {

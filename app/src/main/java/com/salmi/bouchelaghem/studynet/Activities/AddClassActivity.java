@@ -24,6 +24,7 @@ import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityAddClassBinding;
 
+import org.threeten.bp.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -60,7 +61,8 @@ public class AddClassActivity extends AppCompatActivity {
     private List<String> days;
     private boolean daySelected = false;
 
-    // TODO: add start and end time
+    private LocalTime startTime;
+    private LocalTime endTime;
 
 
     private String meetingLink, meetingNumber, meetingPassword;
@@ -341,7 +343,9 @@ public class AddClassActivity extends AppCompatActivity {
                 picker.addOnPositiveButtonClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        int hour = picker.getHour();
+                        int minute = picker.getMinute();
+                        startTime = LocalTime.of(hour, minute);
                     }
                 });
                 picker.addOnCancelListener(new DialogInterface.OnCancelListener() {
