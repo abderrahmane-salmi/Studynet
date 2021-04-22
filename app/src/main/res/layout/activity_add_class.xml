@@ -89,9 +89,9 @@
             android:layout_height="22dp"
             android:layout_marginStart="24dp"
             android:src="@drawable/ic_book"
-            app:layout_constraintBottom_toBottomOf="@+id/classGroupTextLayout"
+            app:layout_constraintBottom_toBottomOf="@+id/classGroup"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/classGroupTextLayout"
+            app:layout_constraintTop_toTopOf="@+id/classGroup"
             app:tint="@color/secondary_text_color"
             tools:ignore="ContentDescription" />
 
@@ -171,30 +171,51 @@
             app:tint="@color/secondary_text_color"
             tools:ignore="ContentDescription" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/classGroupTextLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        <TextView
+            android:id="@+id/classGroup"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="57dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="24dp"
+            android:hint="@string/group"
+            android:textSize="15sp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
             android:textColorHint="@color/secondary_text_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView5"
             app:layout_constraintTop_toBottomOf="@+id/classTypeTextLayout"
-            android:enabled="false">
+            app:drawableEndCompat="@drawable/ic_arrow_drop_down"
+            android:background="@drawable/rectangle_border_2"
+            android:paddingEnd="12dp"/>
 
-            <AutoCompleteTextView
-                android:id="@+id/classGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/tabularasa_regular"
-                android:hint="@string/group"
-                android:inputType="none"
-                android:textSize="15sp" />
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/classGroup"-->
+<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:layout_marginTop="12dp"-->
+<!--            android:layout_marginEnd="24dp"-->
+<!--            android:textColorHint="@color/secondary_text_color"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/imageView5"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/classTypeTextLayout"-->
+<!--            android:enabled="true">-->
 
-        </com.google.android.material.textfield.TextInputLayout>
+<!--            <AutoCompleteTextView-->
+<!--                android:id="@+id/classGroup"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:fontFamily="@font/tabularasa_regular"-->
+<!--                android:hint="@string/group"-->
+<!--                android:inputType="none"-->
+<!--                android:textSize="15sp"-->
+<!--                android:enabled="false"/>-->
+
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
 
         <!--        Class Day-->
         <ImageView
@@ -220,7 +241,7 @@
             android:textColorHint="@color/secondary_text_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView6"
-            app:layout_constraintTop_toBottomOf="@+id/classGroupTextLayout">
+            app:layout_constraintTop_toBottomOf="@+id/classGroup">
 
             <AutoCompleteTextView
                 android:id="@+id/classDay"

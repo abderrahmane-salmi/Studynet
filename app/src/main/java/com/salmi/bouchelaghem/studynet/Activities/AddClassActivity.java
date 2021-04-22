@@ -1,5 +1,6 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.salmi.bouchelaghem.studynet.Models.Module;
@@ -21,6 +23,7 @@ import com.salmi.bouchelaghem.studynet.databinding.ActivityAddClassBinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class AddClassActivity extends AppCompatActivity {
@@ -45,7 +48,10 @@ public class AddClassActivity extends AppCompatActivity {
 
     private int group;
     private List<String> groups;
+    private String[] groupsArray = {"1", "2", "3"};
     private boolean groupSelected = false;
+    private boolean[] selectedGroupsStates;
+    private List<Integer> groupsList = new ArrayList<>();
 
     private String day;
     private List<String> days;
@@ -143,8 +149,8 @@ public class AddClassActivity extends AppCompatActivity {
                 binding.classType.setText("");
                 classTypeSelected = false;
 
-                binding.classGroupTextLayout.setEnabled(false);
-                binding.classGroup.setText("");
+                binding.classGroup.setEnabled(false);
+//                binding.classGroup.setText("");
                 groupSelected = false;
 
                 // Setup the next spinner
@@ -165,8 +171,8 @@ public class AddClassActivity extends AppCompatActivity {
                 binding.classType.setText("");
                 classTypeSelected = false;
 
-                binding.classGroupTextLayout.setEnabled(false);
-                binding.classGroup.setText("");
+                binding.classGroup.setEnabled(false);
+//                binding.classGroup.setText("");
                 groupSelected = false;
 
                 // Setup the next spinner
@@ -184,24 +190,80 @@ public class AddClassActivity extends AppCompatActivity {
                 binding.classType.setError(null);
 
                 // Disable other spinners
-                binding.classGroup.setText("");
+//                binding.classGroup.setText("");
                 groupSelected = false;
 
                 // Setup the next spinner
-                binding.classGroupTextLayout.setEnabled(true);
+                binding.classGroup.setEnabled(true);
                 getGroups(currentTeacher.getId(), section);
             }
         });
 
-        binding.classGroup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        selectedGroupsStates = new boolean[groupsArray.length];
+
+        binding.classGroup.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get selected item
-                groupSelected = true;
-                group = Integer.parseInt(groups.get(position));
-                binding.classType.setError(null);
+            public void onClick(View v) {
+                groups = new ArrayList<>();
+                // Init builder
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddClassActivity.this);
+                // Set title
+                builder.setTitle(R.string.select_groups);
+                // No cancel
+                builder.setCancelable(false);
+
+                builder.setMultiChoiceItems(groupsArray, selectedGroupsStates, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+//                        if (isChecked){
+//                            groups.add(groupsArray[which]);
+//                        } else {
+//                            groups.remove(which);
+//                        }
+                        selectedGroupsStates[which] = isChecked;
+//                        groups.add(groupsArray[which]);
+                    }
+                });
+
+                builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        binding.classGroup.setText("");
+//                        for (int i = 0; i< groups.size()-1; i++){
+//                            binding.classGroup.append(groups.get(i) + ", ");
+//                        }
+                        for (int i=0; i<selectedGroupsStates.length-1; i++){
+                            if (selectedGroupsStates[i]){
+                                binding.classGroup.append((i+1) + ", ");
+                            }
+                        }
+                        if (selectedGroupsStates[selectedGroupsStates.length-1]){
+                            binding.classGroup.append(String.valueOf(selectedGroupsStates.length));
+                        }
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.show();
+
             }
         });
+
+//        binding.classGroup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                // Get selected item
+//                groupSelected = true;
+//                group = Integer.parseInt(groups.get(position));
+//                binding.classType.setError(null);
+//            }
+//        });
 
     }
 
@@ -283,15 +345,19 @@ public class AddClassActivity extends AppCompatActivity {
 
     // Get the groups that belongs to the selected section and they are taught by the current teacher
     private void getGroups(int teacherId, Section section) {
-        groups = new ArrayList<>();
-        for (int grp=0; grp<section.getNbGroups(); grp++){
-            groups.add(String.valueOf(grp+1));
-        }
+//        groups = new ArrayList<>();
+//        for (int grp=0; grp<section.getNbGroups(); grp++){
+//            groups.add(String.valueOf(grp+1));
+//        }
+//
+//        groupsArray = (String[]) groups.toArray();
+//
+//        selectedGroupsStates = new boolean[groups.size()];
 
-        if (!groups.isEmpty()) {
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddClassActivity.this, R.layout.dropdown_item, groups);
-            binding.classGroup.setAdapter(arrayAdapter);
-        }
+//        if (!groups.isEmpty()) {
+//            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddClassActivity.this, R.layout.dropdown_item, groups);
+//            binding.classGroup.setAdapter(arrayAdapter);
+//        }
     }
 
     // Get the module's types depending on the teacher and the section
