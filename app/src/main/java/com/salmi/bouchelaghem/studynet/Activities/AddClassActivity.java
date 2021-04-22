@@ -11,6 +11,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.salmi.bouchelaghem.studynet.Models.Assignment;
 import com.salmi.bouchelaghem.studynet.Models.Module;
 import com.salmi.bouchelaghem.studynet.Models.Section;
@@ -59,6 +61,7 @@ public class AddClassActivity extends AppCompatActivity {
     private boolean daySelected = false;
 
     // TODO: add start and end time
+
 
     private String meetingLink, meetingNumber, meetingPassword;
 
@@ -330,6 +333,45 @@ public class AddClassActivity extends AppCompatActivity {
             }
         });
 
+        // Time pickers
+        binding.btnSelectStartTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MaterialTimePicker picker = openTimePicker("Select Start time");
+                picker.addOnPositiveButtonClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+                picker.addOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+
+                    }
+                });
+            }
+        });
+
+        binding.btnSelectEndTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MaterialTimePicker picker = openTimePicker("Select End time");
+            }
+        });
+
+    }
+
+    private MaterialTimePicker openTimePicker(String title) {
+        MaterialTimePicker picker = new MaterialTimePicker.Builder()
+                .setTitleText(title)
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(8)
+                .setMinute(0)
+                .build();
+
+        picker.show(getSupportFragmentManager(), "TAG");
+        return picker;
     }
 
     private void fillFields(int id) {
@@ -392,8 +434,8 @@ public class AddClassActivity extends AppCompatActivity {
             binding.classDay.setText(days.get(session.getDay()-1));
 
             // Time
-            binding.btnSelectStartTime.setText(session.getStartTime());
-            binding.btnSelectEndTime.setText(session.getEndTime());
+            binding.btnSelectStartTime.setText(session.getStartTime().toString());
+            binding.btnSelectEndTime.setText(session.getEndTime().toString());
 
             // Meeting info
             binding.txtMeetingLink.getEditText().setText(session.getMeetingLink());

@@ -1,5 +1,6 @@
 package com.salmi.bouchelaghem.studynet.Models;
 
+import java.time.LocalTime;
 import java.util.List;
 
 public class Session {
@@ -11,15 +12,15 @@ public class Session {
     * so we can either save startTimeHour and startTimeMin, (same for end time)
     * or save the start and end time as strings and build them when the user chooses a time
     * Example: startTime = "08:00" , endTime = "09:30" */
-    private String startTime;
-    private String endTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
     private int day;
     private String meetingLink, meetingNumber, meetingPassword;
 
     public Session() {
     }
 
-    public Session(int id, Assignment assignment, List<Integer> concernedGroups, String startTime, String endTime, int day, String meetingLink, String meetingNumber, String meetingPassword) {
+    public Session(int id, Assignment assignment, List<Integer> concernedGroups, LocalTime startTime, LocalTime endTime, int day, String meetingLink, String meetingNumber, String meetingPassword) {
         this.id = id;
         this.assignment = assignment;
         this.concernedGroups = concernedGroups;
@@ -55,19 +56,19 @@ public class Session {
         this.concernedGroups = concernedGroups;
     }
 
-    public String getStartTime() {
+    public LocalTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public LocalTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
 

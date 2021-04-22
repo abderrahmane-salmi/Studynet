@@ -94,8 +94,8 @@ public class ClassDetailsActivity extends AppCompatActivity {
         binding.classDay.setText(days.get(session.getDay()-1));
 
         // Time
-        binding.classStartHour.setText(session.getStartTime());
-        binding.classEndHour.setText(session.getEndTime());
+        binding.classStartHour.setText(session.getStartTime().toString());
+        binding.classEndHour.setText(session.getEndTime().toString());
 
         // Section
         binding.classSection.setText(session.getAssignment().getSectionCode());

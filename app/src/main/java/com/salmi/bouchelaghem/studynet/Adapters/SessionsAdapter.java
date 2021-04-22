@@ -66,8 +66,8 @@ public class SessionsAdapter extends RecyclerView.Adapter<SessionsAdapter.ViewHo
         }
 
         // Time
-        holder.binding.txtClassStartHour.setText(session.getStartTime());
-        holder.binding.txtClassEndHour.setText(session.getEndTime());
+        holder.binding.txtClassStartHour.setText(session.getStartTime().toString());
+        holder.binding.txtClassEndHour.setText(session.getEndTime().toString());
 
         // Module
         holder.binding.txtClassSubject.setText(session.getAssignment().getModuleName());
