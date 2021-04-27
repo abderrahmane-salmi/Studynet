@@ -2,6 +2,9 @@ package com.salmi.bouchelaghem.studynet.Utils;
 
 public class Utils {
 
+    // Api base url
+    public static final String API_BASE_URL = "https://study-net-api.herokuapp.com/api/";
+
     // Tables
 
     // Fields
@@ -18,6 +21,7 @@ public class Utils {
     public static final String ADMIN_ACCOUNT = "Admin";
 
     // Homework filter
+    // TODO: take this to a string array (so we can translate it)
     public static final String YESTERDAY = "Yesterday";
     public static final String TODAY = "Today";
     public static final String TOMORROW = "Tomorrow";

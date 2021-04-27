@@ -114,4 +114,5 @@
     <string name="empty_msg5">Module can\'t be empty</string>
     <string name="empty_msg6">Type can\'t be empty</string>
     <string name="empty_msg7">Day can\'t be empty</string>
+    <string name="error">\"Error: \"</string>
 </resources>

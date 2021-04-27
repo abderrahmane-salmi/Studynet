@@ -1,10 +1,13 @@
 package com.salmi.bouchelaghem.studynet.Models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class Section {
 
     private String code;
+    @SerializedName("number_of_groups")
     private int nbGroups;
     private Specialty specialty;
     private List<Teacher> teachers;

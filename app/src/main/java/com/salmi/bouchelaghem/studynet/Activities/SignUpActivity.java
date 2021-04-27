@@ -1,5 +1,6 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Specialty;
 import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.R;
+import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivitySignUpBinding;
@@ -21,6 +23,12 @@ import com.salmi.bouchelaghem.studynet.databinding.ActivitySignUpBinding;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -44,16 +52,27 @@ public class SignUpActivity extends AppCompatActivity {
     // Test Api
     TestAPI testAPI;
 
+    // Studynet Api
+    private StudynetAPI api;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivitySignUpBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
 
         // Test Api
         testAPI = TestAPI.getInstance();
+
+        // Init retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Utils.API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // Init our api, this will implement the code of all the methods in the interface
+        api = retrofit.create(StudynetAPI.class);
 
         // Setup departments list
         getAllDepartments();
@@ -247,18 +266,35 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void getAllDepartments() {
-        departments = new ArrayList<>();
-        departments = testAPI.getDepartments();
+//        departments = testAPI.getDepartments();
 
-        // Get the names of the departments
-        List<String> departmentsNames = new ArrayList<>();
-        for (Department department:departments){
-            departmentsNames.add(department.getName());
-        }
+        // Get the departments from the api
+        Call<List<Department>> call = api.getDepartments();
+        call.enqueue(new Callback<List<Department>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Department>> call, @NonNull Response<List<Department>> response) {
+                if (response.isSuccessful()){
+                    departments = response.body();
 
-        // Set up spinner
-        ArrayAdapter<String> departmentsAdapter = new ArrayAdapter<>(this, R.layout.dropdown_item, departmentsNames);
-        binding.txtDepartment.setAdapter(departmentsAdapter);
+                    // Get the names of the departments
+                    List<String> departmentsNames = new ArrayList<>();
+                    for (Department department:departments){
+                        departmentsNames.add(department.getName());
+                    }
+
+                    // Set up spinner
+                    ArrayAdapter<String> departmentsAdapter = new ArrayAdapter<>(SignUpActivity.this, R.layout.dropdown_item, departmentsNames);
+                    binding.txtDepartment.setAdapter(departmentsAdapter);
+                } else {
+                    Toast.makeText(SignUpActivity.this, getString(R.string.error)+response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Department>> call, @NonNull Throwable t) {
+                Toast.makeText(SignUpActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public boolean validateRegistrationNumber(){
