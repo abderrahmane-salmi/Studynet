@@ -67,9 +67,9 @@ public class TestAPI extends Application {
         departments.add(new Department("ST", "Science et Technologie"));
 
         specialties = new ArrayList<>();
-        specialties.add(new Specialty("ISIL", "Licence Ingénierie des Systèmes d’Information et des Logiciels", departments.get(0)));
-        specialties.add(new Specialty("ACAD", "Licence Informatique Académique", departments.get(0)));
-        specialties.add(new Specialty("GC", "Licence en Génie Civil", departments.get(1)));
+        specialties.add(new Specialty("ISIL", "Licence Ingénierie des Systèmes d’Information et des Logiciels", departments.get(0).getCode()));
+        specialties.add(new Specialty("ACAD", "Licence Informatique Académique", departments.get(0).getCode()));
+        specialties.add(new Specialty("GC", "Licence en Génie Civil", departments.get(1).getCode()));
 
         sections = new ArrayList<>();
         sections.add(new Section("L3 ISIL B", 3, specialties.get(0), teachers, modules));

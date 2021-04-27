@@ -3,12 +3,12 @@ package com.salmi.bouchelaghem.studynet.Models;
 public class Specialty {
 
     private String code, name;
-    private Department department;
+    private String department;
 
     public Specialty() {
     }
 
-    public Specialty(String code, String name, Department department) {
+    public Specialty(String code, String name, String department) {
         this.code = code;
         this.name = name;
         this.department = department;
@@ -30,11 +30,11 @@ public class Specialty {
         this.name = name;
     }
 
-    public Department getDepartment() {
+    public String getDepartment() {
         return department;
     }
 
-    public void setDepartment(Department department) {
+    public void setDepartment(String department) {
         this.department = department;
     }
 }

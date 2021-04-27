@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.AdapterView;
@@ -239,30 +240,35 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+    // Get all the specialities for the selected department
     private void setupSpecialitiesSpinner(Department department) {
-        // Get all the specialities for the selected department
-        specialties = new ArrayList<>();
-        for (Specialty s:testAPI.getSpecialties()){
-            if (s.getDepartment() == department){
-                specialties.add(s);
+        Call<List<Specialty>> call = api.getSpecialities(department.getCode());
+        call.enqueue(new Callback<List<Specialty>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Specialty>> call, @NonNull Response<List<Specialty>> response) {
+                if (response.isSuccessful()){
+                    specialties = response.body();
+
+                    // Get names
+                    List<String> specialitiesNames = new ArrayList<>();
+                    for (Specialty s:specialties){
+                        specialitiesNames.add(s.getCode());
+                    }
+
+                    // Set up the spinner
+                    ArrayAdapter<String> specialitiesAdapter = new ArrayAdapter<>(SignUpActivity.this, R.layout.dropdown_item, specialitiesNames);
+                    binding.txtSpeciality.setAdapter(specialitiesAdapter);
+                } else {
+                    Toast.makeText(SignUpActivity.this, getString(R.string.error)+response.code(), Toast.LENGTH_SHORT).show();
+                }
             }
-        }
 
-        if (!specialties.isEmpty()){
-
-            // Get names
-            List<String> specialitiesNames = new ArrayList<>();
-            for (Specialty s:specialties){
-                specialitiesNames.add(s.getCode());
+            @Override
+            public void onFailure(@NonNull Call<List<Specialty>> call, @NonNull Throwable t) {
+                Toast.makeText(SignUpActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d("Chkoupi", "ChkoupionFailure: "+t.getMessage());
             }
-
-            // Set up the spinner
-            ArrayAdapter<String> specialitiesAdapter = new ArrayAdapter<>(this, R.layout.dropdown_item, specialitiesNames);
-            binding.txtSpeciality.setAdapter(specialitiesAdapter);
-
-        } else {
-            // No specialities
-        }
+        });
     }
 
     private void getAllDepartments() {
