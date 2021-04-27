@@ -72,9 +72,9 @@ public class TestAPI extends Application {
         specialties.add(new Specialty("GC", "Licence en Génie Civil", departments.get(1).getCode()));
 
         sections = new ArrayList<>();
-        sections.add(new Section("L3 ISIL B", 3, specialties.get(0), teachers, modules));
-        sections.add(new Section("L3 ACAD A", 3, specialties.get(1), teachers, modules));
-        sections.add(new Section("L2 GENIE CIVIL A", 4, specialties.get(2), teachers, modules));
+        sections.add(new Section("L3 ISIL B", 3, specialties.get(0).getCode()));
+        sections.add(new Section("L3 ACAD A", 3, specialties.get(1).getCode()));
+        sections.add(new Section("L2 GENIE CIVIL A", 4, specialties.get(2).getCode()));
 
         students = new ArrayList<>();
         students.add(new Student(users.get(0).getId(), users.get(0).getEmail(), users.get(0).getFirstName(), users.get(0).getLastName(), users.get(0).getUserType(), users.get(0).getDateJoined(), "181831033883", sections.get(0), 2));

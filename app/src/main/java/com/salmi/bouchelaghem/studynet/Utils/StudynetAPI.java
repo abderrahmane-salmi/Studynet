@@ -1,6 +1,7 @@
 package com.salmi.bouchelaghem.studynet.Utils;
 
 import com.salmi.bouchelaghem.studynet.Models.Department;
+import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Specialty;
 
 import java.util.List;
@@ -22,7 +23,11 @@ public interface StudynetAPI {
     // Get specialities based on department
     @GET("specialties")
     Call<List<Specialty>> getSpecialities(@Query("department") String department);
+    // This will generate 'specialties/?department=INFO'
 
     // Sections
+    @GET("sections")
+    Call<List<Section>> getSections(@Query("specialty") String specialty);
+    // sections/?specialty=ISIL
 
 }

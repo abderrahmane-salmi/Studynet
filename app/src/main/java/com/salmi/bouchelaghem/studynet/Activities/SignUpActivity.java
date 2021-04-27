@@ -214,30 +214,34 @@ public class SignUpActivity extends AppCompatActivity {
         binding.txtGroup.setAdapter(groupsAdapter);
     }
 
-    private void setupSectionsSpinner(Specialty specialty) {
-        // Get all the sections for the selected spec
-        sections = new ArrayList<>();
-        for (Section s:testAPI.getSections()){
-            if (s.getSpecialty() == specialty){
-                sections.add(s);
+    // Get all the sections for the selected spec
+    private void setupSectionsSpinner(Specialty s) {
+        Call<List<Section>> call = api.getSections(s.getCode());
+        call.enqueue(new Callback<List<Section>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Section>> call, @NonNull Response<List<Section>> response) {
+                if (response.isSuccessful()){
+                    sections = response.body();
+
+                    // Get names
+                    List<String> sectionsNames = new ArrayList<>();
+                    for (Section sec:sections){
+                        sectionsNames.add(sec.getCode());
+                    }
+
+                    // Set up the spinner
+                    ArrayAdapter<String> sectionsAdapter = new ArrayAdapter<>(SignUpActivity.this, R.layout.dropdown_item, sectionsNames);
+                    binding.txtSection.setAdapter(sectionsAdapter);
+                } else {
+                    Toast.makeText(SignUpActivity.this, getString(R.string.error)+response.code(), Toast.LENGTH_SHORT).show();
+                }
             }
-        }
 
-        if (!sections.isEmpty()){
-
-            // Get names
-            List<String> sectionsNames = new ArrayList<>();
-            for (Section s:sections){
-                sectionsNames.add(s.getCode());
+            @Override
+            public void onFailure(@NonNull Call<List<Section>> call, @NonNull Throwable t) {
+                Toast.makeText(SignUpActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
             }
-
-            // Set up the spinner
-            ArrayAdapter<String> sectionsAdapter = new ArrayAdapter<>(this, R.layout.dropdown_item, sectionsNames);
-            binding.txtSection.setAdapter(sectionsAdapter);
-
-        } else {
-            // No sections
-        }
+        });
     }
 
     // Get all the specialities for the selected department
@@ -266,7 +270,6 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<List<Specialty>> call, @NonNull Throwable t) {
                 Toast.makeText(SignUpActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.d("Chkoupi", "ChkoupionFailure: "+t.getMessage());
             }
         });
     }
