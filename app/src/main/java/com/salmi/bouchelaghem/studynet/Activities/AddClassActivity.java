@@ -87,95 +87,84 @@ public class AddClassActivity extends AppCompatActivity {
 
         fillSpinners();
 
-        binding.btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        binding.btnClose.setOnClickListener(v -> finish());
 
-        binding.btnShowOtherMeetingFields.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!otherMeetingFields){
-                    otherMeetingFields = true;
-                    binding.meetingFieldsGroup.setVisibility(View.VISIBLE);
-                    binding.btnShowOtherMeetingFields.setImageResource(R.drawable.ic_arrow_up);
-                } else {
-                    otherMeetingFields = false;
-                    binding.meetingFieldsGroup.setVisibility(View.GONE);
-                    binding.btnShowOtherMeetingFields.setImageResource(R.drawable.ic_arrow_down);
-                }
+        binding.btnShowOtherMeetingFields.setOnClickListener(v -> {
+            if (!otherMeetingFields){
+                otherMeetingFields = true;
+                binding.meetingFieldsGroup.setVisibility(View.VISIBLE);
+                binding.btnShowOtherMeetingFields.setImageResource(R.drawable.ic_arrow_up);
+            } else {
+                otherMeetingFields = false;
+                binding.meetingFieldsGroup.setVisibility(View.GONE);
+                binding.btnShowOtherMeetingFields.setImageResource(R.drawable.ic_arrow_down);
             }
         });
 
         switch (action){
             case Utils.ACTION_ADD: // Add a new session
                 // When the user clicks on save we create a new session
-                binding.btnSave.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                binding.btnSave.setOnClickListener(v -> {
 
-                        if (sectionSelected & moduleSelected & classTypeSelected
-                        & groupSelected & daySelected & validateMeetingLink()
-                        & startTime != null & endTime != null){
+                    if (sectionSelected & moduleSelected & classTypeSelected
+                    & groupSelected & daySelected & validateMeetingLink()
+                    & startTime != null & endTime != null){
 
-                            // TODO: set id
-                            session = new Session();
-                            session.setConcernedGroups(selectedGroupsInt);
-                            session.setStartTime(startTime);
-                            session.setEndTime(endTime);
-                            session.setDay(day);
-                            session.setMeetingLink(meetingLink);
+                        // TODO: set id
+                        session = new Session();
+                        session.setConcernedGroups(selectedGroupsInt);
+                        session.setStartTime(startTime);
+                        session.setEndTime(endTime);
+                        session.setDay(day);
+                        session.setMeetingLink(meetingLink);
 
-                            if (!binding.txtMeetingNumber.getEditText().getText().toString().isEmpty() &&
-                            !binding.txtMeetingPassword.getEditText().getText().toString().isEmpty()){
-                                meetingNumber = binding.txtMeetingNumber.getEditText().getText().toString().trim();
-                                session.setMeetingNumber(meetingNumber);
-                                meetingPassword = binding.txtMeetingPassword.getEditText().getText().toString().trim();
-                                session.setMeetingNumber(meetingPassword);
-                            }
-
-                            Assignment assignment = new Assignment();
-                            // TODO: set id
-                            assignment.setSectionCode(section.getCode());
-                            assignment.setTeacherId(currentTeacher.getId());
-                            assignment.setModuleName(module.getName());
-                            assignment.setModuleCode(module.getCode());
-                            assignment.setModuleType(classType);
-                            assignment.setConcernedGroups(selectedGroupsInt);
-
-                            session.setAssignment(assignment);
-
-                            // Save it to the database
-
-
-                        } else {
-                            if (!sectionSelected){
-                                binding.classSectionTextLayout.setError(getString(R.string.empty_msg3));
-                            }
-                            if (!moduleSelected){
-                                binding.classModuleLayout.setError(getString(R.string.empty_msg5));
-                            }
-                            if (!classTypeSelected){
-                                binding.classTypeTextLayout.setError(getString(R.string.empty_msg6));
-                            }
-                            if (!groupSelected){
-                                binding.classGroup.setError("");
-                            }
-                            if (!daySelected){
-                                binding.classDayTextLayout.setError(getString(R.string.empty_msg7));
-                            }
-                            if (startTime == null){
-                                binding.btnSelectStartTime.setError("");
-                            }
-                            if (endTime == null){
-                                binding.btnSelectEndTime.setError("");
-                            }
+                        if (!binding.txtMeetingNumber.getEditText().getText().toString().isEmpty() &&
+                        !binding.txtMeetingPassword.getEditText().getText().toString().isEmpty()){
+                            meetingNumber = binding.txtMeetingNumber.getEditText().getText().toString().trim();
+                            session.setMeetingNumber(meetingNumber);
+                            meetingPassword = binding.txtMeetingPassword.getEditText().getText().toString().trim();
+                            session.setMeetingNumber(meetingPassword);
                         }
 
+                        Assignment assignment = new Assignment();
+                        // TODO: set id
+                        assignment.setSectionCode(section.getCode());
+                        assignment.setTeacherId(currentTeacher.getId());
+                        assignment.setModuleName(module.getName());
+                        assignment.setModuleCode(module.getCode());
+                        assignment.setModuleType(classType);
+                        assignment.setConcernedGroups(selectedGroupsInt);
 
+                        session.setAssignment(assignment);
+
+                        // Save it to the database
+
+
+                    } else {
+                        if (!sectionSelected){
+                            binding.classSectionTextLayout.setError(getString(R.string.empty_msg3));
+                        }
+                        if (!moduleSelected){
+                            binding.classModuleLayout.setError(getString(R.string.empty_msg5));
+                        }
+                        if (!classTypeSelected){
+                            binding.classTypeTextLayout.setError(getString(R.string.empty_msg6));
+                        }
+                        if (!groupSelected){
+                            binding.classGroup.setError("");
+                        }
+                        if (!daySelected){
+                            binding.classDayTextLayout.setError(getString(R.string.empty_msg7));
+                        }
+                        if (startTime == null){
+                            binding.btnSelectStartTime.setError("");
+                        }
+                        if (endTime == null){
+                            binding.btnSelectEndTime.setError("");
+                        }
                     }
+
+
                 });
 
                 break;
@@ -199,31 +188,28 @@ public class AddClassActivity extends AppCompatActivity {
                 break;
         }
 
-        binding.classSection.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get selected item
-                sectionSelected = true;
-                section = sections.get(position);
-                binding.classSectionTextLayout.setError(null);
+        binding.classSection.setOnItemClickListener((parent, view1, position, id) -> {
+            // Get selected item
+            sectionSelected = true;
+            section = sections.get(position);
+            binding.classSectionTextLayout.setError(null);
 
-                // Disable other spinners
-                binding.classModule.setText("");
-                moduleSelected = false;
+            // Disable other spinners
+            binding.classModule.setText("");
+            moduleSelected = false;
 
-                binding.classTypeTextLayout.setEnabled(false);
-                binding.classType.setText("");
-                classTypeSelected = false;
+            binding.classTypeTextLayout.setEnabled(false);
+            binding.classType.setText("");
+            classTypeSelected = false;
 
-                binding.classGroup.setEnabled(false);
-                binding.classGroup.setText("");
-                binding.classGroup.setHint(R.string.group);
-                groupSelected = false;
+            binding.classGroup.setEnabled(false);
+            binding.classGroup.setText("");
+            binding.classGroup.setHint(R.string.group);
+            groupSelected = false;
 
-                // Setup the next spinner
-                binding.classModuleLayout.setEnabled(true);
-                getModules(currentTeacher.getId(), section.getCode());
-            }
+            // Setup the next spinner
+            binding.classModuleLayout.setEnabled(true);
+            getModules(currentTeacher.getId(), section.getCode());
         });
 
         binding.classModule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
