@@ -18,6 +18,9 @@
         <item name="android:navigationBarColor">?attr/colorPrimaryVariant</item>
 
         <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialog</item>
+
+        <!--        Custom Font-->
+        <item name="android:fontFamily">@font/tabularasa_regular</item>
     </style>
 
     <style name="NavigationView" >

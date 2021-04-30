@@ -1,15 +1,19 @@
 package com.salmi.bouchelaghem.studynet.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.threeten.bp.LocalTime;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Homework {
+public class Homework implements Parcelable {
 
     private int id;
     private Assignment assignment;
-    private List<Integer> concernedGroups;
+    private ArrayList<Integer> concernedGroups;
     private String title;
     private Date dueDate;
     private LocalTime dueTime;
@@ -18,7 +22,7 @@ public class Homework {
     public Homework() {
     }
 
-    public Homework(int id, Assignment assignment, List<Integer> concernedGroups, String title, Date dueDate, LocalTime dueTime, String comment) {
+    public Homework(int id, Assignment assignment, ArrayList<Integer> concernedGroups, String title, Date dueDate, LocalTime dueTime, String comment) {
         this.id = id;
         this.assignment = assignment;
         this.concernedGroups = concernedGroups;
@@ -27,6 +31,45 @@ public class Homework {
         this.dueTime = dueTime;
         this.comment = comment;
     }
+
+    @SuppressWarnings("unchecked")
+    protected Homework(Parcel in) {
+        id = in.readInt();
+        assignment = in.readTypedObject(Assignment.CREATOR);
+        concernedGroups = (ArrayList<Integer>) in.readSerializable();
+        title = in.readString();
+        dueDate = (java.util.Date) in.readSerializable();
+        dueTime = (org.threeten.bp.LocalTime) in.readSerializable();
+        comment = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeTypedObject(assignment, flags);
+        dest.writeSerializable(concernedGroups);
+        dest.writeString(title);
+        dest.writeSerializable(dueDate);
+        dest.writeSerializable(dueTime);
+        dest.writeString(comment);
+    }
+
+    public static final Creator<Homework> CREATOR = new Creator<Homework>() {
+        @Override
+        public Homework createFromParcel(Parcel in) {
+            return new Homework(in);
+        }
+
+        @Override
+        public Homework[] newArray(int size) {
+            return new Homework[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -48,7 +91,7 @@ public class Homework {
         return concernedGroups;
     }
 
-    public void setConcernedGroups(List<Integer> concernedGroups) {
+    public void setConcernedGroups(ArrayList<Integer> concernedGroups) {
         this.concernedGroups = concernedGroups;
     }
 

@@ -4,9 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.icu.text.DateFormat;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -17,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.salmi.bouchelaghem.studynet.Activities.HomeworkDetailsActivity;
 import com.salmi.bouchelaghem.studynet.Models.Homework;
 import com.salmi.bouchelaghem.studynet.R;
-import com.salmi.bouchelaghem.studynet.databinding.LayoutClassBinding;
+import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.LayoutHomeworkBinding;
 
 import java.text.SimpleDateFormat;
@@ -46,7 +44,9 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
         ViewHolder holder = new ViewHolder(binding);
 
         holder.binding.homeworkMainLayout.setOnClickListener(v -> {
+            Homework homework = homeworks.get(holder.getAdapterPosition());
             Intent intent = new Intent(context, HomeworkDetailsActivity.class);
+            intent.putExtra(Utils.HOMEWORK, homework);
             context.startActivity(intent);
         });
 

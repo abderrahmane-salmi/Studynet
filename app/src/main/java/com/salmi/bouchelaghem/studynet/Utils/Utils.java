@@ -6,6 +6,7 @@ public class Utils {
     public static final String API_BASE_URL = "https://study-net-api.herokuapp.com/api/";
 
     // Tables
+    public static final String HOMEWORK = "Homework";
 
     // Fields
     public static final String ID = "id";

@@ -52,7 +52,7 @@ public class AddClassActivity extends AppCompatActivity {
 
     private String[] groupsArray; // All groups as an array
     private List<String> selectedGroupsString; // The groups selected by the user (as a string)
-    private List<Integer> selectedGroupsInt; // The groups selected by the user (as a int)
+    private ArrayList<Integer> selectedGroupsInt; // The groups selected by the user (as a int)
     private boolean[] groupsStates; // We need this just for the dialog
     private boolean groupSelected = false;
 

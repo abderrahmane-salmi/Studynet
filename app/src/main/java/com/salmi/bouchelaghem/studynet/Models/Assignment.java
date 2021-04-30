@@ -1,8 +1,12 @@
 package com.salmi.bouchelaghem.studynet.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class Assignment {
+public class Assignment implements Parcelable {
 
     private int id;
     private String sectionCode;
@@ -10,12 +14,12 @@ public class Assignment {
     private String moduleName;
     private String moduleCode;
     private String moduleType;
-    private List<Integer> concernedGroups;
+    private ArrayList<Integer> concernedGroups;
 
     public Assignment() {
     }
 
-    public Assignment(int id, String sectionCode, int teacherId, String moduleName, String moduleCode, String moduleType, List<Integer> concernedGroups) {
+    public Assignment(int id, String sectionCode, int teacherId, String moduleName, String moduleCode, String moduleType, ArrayList<Integer> concernedGroups) {
         this.id = id;
         this.sectionCode = sectionCode;
         this.teacherId = teacherId;
@@ -24,6 +28,28 @@ public class Assignment {
         this.moduleType = moduleType;
         this.concernedGroups = concernedGroups;
     }
+    @SuppressWarnings("unchecked")
+    protected Assignment(Parcel in) {
+        id = in.readInt();
+        sectionCode = in.readString();
+        teacherId = in.readInt();
+        moduleName = in.readString();
+        moduleCode = in.readString();
+        moduleType = in.readString();
+        concernedGroups = (ArrayList<Integer>) in.readSerializable();
+    }
+
+    public static final Creator<Assignment> CREATOR = new Creator<Assignment>() {
+        @Override
+        public Assignment createFromParcel(Parcel in) {
+            return new Assignment(in);
+        }
+
+        @Override
+        public Assignment[] newArray(int size) {
+            return new Assignment[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -77,7 +103,23 @@ public class Assignment {
         return concernedGroups;
     }
 
-    public void setConcernedGroups(List<Integer> concernedGroups) {
+    public void setConcernedGroups(ArrayList<Integer> concernedGroups) {
         this.concernedGroups = concernedGroups;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(sectionCode);
+        dest.writeInt(teacherId);
+        dest.writeString(moduleName);
+        dest.writeString(moduleCode);
+        dest.writeString(moduleType);
+        dest.writeSerializable(concernedGroups);
     }
 }
