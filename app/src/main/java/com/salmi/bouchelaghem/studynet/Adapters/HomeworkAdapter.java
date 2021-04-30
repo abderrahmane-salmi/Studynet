@@ -25,7 +25,6 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
 
     private List<Homework> homeworks;
     private final Context context;
-    private boolean isChecked = false;
 
     public HomeworkAdapter(Context context) {
         this.context = context;
@@ -52,6 +51,7 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
 
         holder.binding.btnCompleteHomework.setOnClickListener(v -> {
             // TODO: read isChecked value from shared prefs
+            boolean isChecked = false;
             if (isChecked){
                 // Mark the homework as unchecked
                 isChecked = false;
@@ -100,6 +100,10 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
     public void setHomeworks(List<Homework> homeworks) {
         this.homeworks = homeworks;
         notifyDataSetChanged();
+    }
+
+    public List<Homework> getHomeworks() {
+        return homeworks;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder{

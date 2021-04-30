@@ -2,7 +2,6 @@ package com.salmi.bouchelaghem.studynet.Fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -102,87 +100,70 @@ public class TimetableFragment extends Fragment {
 
                 // Show the add button
                 binding.btnAdd.setVisibility(View.VISIBLE);
-                binding.btnAdd.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, AddClassActivity.class);
-                        intent.putExtra(Utils.ACTION, Utils.ACTION_ADD);
-                        startActivity(intent);
-                    }
+                binding.btnAdd.setOnClickListener(v -> {
+                    Intent intent = new Intent(context, AddClassActivity.class);
+                    intent.putExtra(Utils.ACTION, Utils.ACTION_ADD);
+                    startActivity(intent);
                 });
 
                 // Show and setup the filter
                 context.btnFilter.setVisibility(View.VISIBLE);
-                context.btnFilter.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        View view = View.inflate(context, R.layout.popup_teacher_timetable_filter, null);
-                        // Init Views
-                        ImageView btnCloseFilter = view.findViewById(R.id.btnCloseFilter);
-                        AutoCompleteTextView filterTimetableSection = view.findViewById(R.id.filterTimetableSection);
-                        MaterialButton btnApplyFilter = view.findViewById(R.id.btnApplyFilter);
+                context.btnFilter.setOnClickListener(v -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    View view1 = View.inflate(context, R.layout.popup_teacher_timetable_filter, null);
+                    // Init Views
+                    ImageView btnCloseFilter = view1.findViewById(R.id.btnCloseFilter);
+                    AutoCompleteTextView filterTimetableSection = view1.findViewById(R.id.filterTimetableSection);
+                    MaterialButton btnApplyFilter = view1.findViewById(R.id.btnApplyFilter);
 
-                        // Init sections list
-                        // Get all the sections
-                        List<Section> sections = testAPI.getSections();
+                    // Init sections list
+                    // Get all the sections
+                    List<Section> sections = testAPI.getSections();
 
-                        // Get only the teacher's sections
-                        List<String> sectionsNames = new ArrayList<>();
-                        for (Section section : sections) {
-                            sectionsNames.add(section.getCode());
-                        }
-                        if (!sectionsNames.isEmpty()) {
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sectionsNames);
-                            filterTimetableSection.setAdapter(arrayAdapter);
-                        }
-
-                        if (filterApplied){
-                            restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
-                        }
-
-                        // Init Buttons
-                        btnApplyFilter.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                if (sectionSelected) {
-
-                                    filterApplied = true;
-                                    getSessions(selectedSection);
-                                    goToDay1();
-                                    binding.selectSectionMsg.setVisibility(View.GONE);
-                                    dialog.dismiss();
-
-                                } else {
-                                    Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-
-                        btnCloseFilter.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                        filterTimetableSection.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                sectionSelected = true;
-                                selectedSection = sectionsNames.get(position);
-                            }
-                        });
-
-                        builder.setView(view);
-                        dialog = builder.create(); // creating our dialog
-                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        dialog.show();
-                        // Show rounded corners
-                        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-                        dialog.getWindow().setAttributes(params);
+                    // Get only the teacher's sections
+                    List<String> sectionsNames = new ArrayList<>();
+                    for (Section section : sections) {
+                        sectionsNames.add(section.getCode());
                     }
+                    if (!sectionsNames.isEmpty()) {
+                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sectionsNames);
+                        filterTimetableSection.setAdapter(arrayAdapter);
+                    }
+
+                    if (filterApplied){
+                        restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
+                    }
+
+                    // Init Buttons
+                    btnApplyFilter.setOnClickListener(v1 -> {
+
+                        if (sectionSelected) {
+
+                            filterApplied = true;
+                            getSessions(selectedSection);
+                            goToDay1();
+                            binding.selectSectionMsg.setVisibility(View.GONE);
+                            dialog.dismiss();
+
+                        } else {
+                            Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    btnCloseFilter.setOnClickListener(v12 -> dialog.dismiss());
+
+                    filterTimetableSection.setOnItemClickListener((parent, view11, position, id) -> {
+                        sectionSelected = true;
+                        selectedSection = sectionsNames.get(position);
+                    });
+
+                    builder.setView(view1);
+                    dialog = builder.create(); // creating our dialog
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    dialog.show();
+                    // Show rounded corners
+                    WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                    dialog.getWindow().setAttributes(params);
                 });
 
                 break;
@@ -197,77 +178,63 @@ public class TimetableFragment extends Fragment {
 
                 // Show and setup the filter
                 context.btnFilter.setVisibility(View.VISIBLE);
-                context.btnFilter.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        View view = View.inflate(context, R.layout.popup_teacher_timetable_filter, null);
-                        // Init Views
-                        ImageView btnCloseFilter = view.findViewById(R.id.btnCloseFilter);
-                        AutoCompleteTextView filterTimetableSection = view.findViewById(R.id.filterTimetableSection);
-                        MaterialButton btnApplyFilter = view.findViewById(R.id.btnApplyFilter);
+                context.btnFilter.setOnClickListener(v -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    View view12 = View.inflate(context, R.layout.popup_teacher_timetable_filter, null);
+                    // Init Views
+                    ImageView btnCloseFilter = view12.findViewById(R.id.btnCloseFilter);
+                    AutoCompleteTextView filterTimetableSection = view12.findViewById(R.id.filterTimetableSection);
+                    MaterialButton btnApplyFilter = view12.findViewById(R.id.btnApplyFilter);
 
-                        // Init sections list
-                        // Get all the sections
-                        List<Section> sections = testAPI.getSections();
+                    // Init sections list
+                    // Get all the sections
+                    List<Section> sections = testAPI.getSections();
 
-                        // If its an admin get him all the sections
-                        List<String> sectionsNames = new ArrayList<>();
-                        for (Section section : sections) {
-                            sectionsNames.add(section.getCode());
-                        }
-                        if (!sectionsNames.isEmpty()) {
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sectionsNames);
-                            filterTimetableSection.setAdapter(arrayAdapter);
-                        }
-
-                        if (filterApplied){
-                            restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
-                        }
-
-                        // Init Buttons
-                        btnApplyFilter.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                if (sectionSelected) {
-
-                                    getSessions(selectedSection);
-                                    goToDay1();
-                                    binding.selectSectionMsg.setVisibility(View.GONE);
-                                    dialog.dismiss();
-                                    filterApplied = true;
-
-                                } else {
-                                    Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
-                                }
-
-                            }
-                        });
-
-                        btnCloseFilter.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                        filterTimetableSection.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                sectionSelected = true;
-                                selectedSection = sectionsNames.get(position);
-                            }
-                        });
-
-                        builder.setView(view);
-                        dialog = builder.create(); // creating our dialog
-                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        dialog.show();
-                        // Show rounded corners
-                        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-                        dialog.getWindow().setAttributes(params);
+                    // If its an admin get him all the sections
+                    List<String> sectionsNames = new ArrayList<>();
+                    for (Section section : sections) {
+                        sectionsNames.add(section.getCode());
                     }
+                    if (!sectionsNames.isEmpty()) {
+                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sectionsNames);
+                        filterTimetableSection.setAdapter(arrayAdapter);
+                    }
+
+                    if (filterApplied){
+                        restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
+                    }
+
+                    // Init Buttons
+                    btnApplyFilter.setOnClickListener(v13 -> {
+
+                        if (sectionSelected) {
+
+                            getSessions(selectedSection);
+                            goToDay1();
+                            binding.selectSectionMsg.setVisibility(View.GONE);
+                            dialog.dismiss();
+                            filterApplied = true;
+
+                        } else {
+                            Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
+                        }
+
+                    });
+
+                    btnCloseFilter.setOnClickListener(v14 -> dialog.dismiss());
+
+                    filterTimetableSection.setOnItemClickListener((parent, view121, position, id) -> {
+                        sectionSelected = true;
+                        selectedSection = sectionsNames.get(position);
+                    });
+
+                    builder.setView(view12);
+                    dialog = builder.create(); // creating our dialog
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    dialog.show();
+                    // Show rounded corners
+                    WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                    dialog.getWindow().setAttributes(params);
                 });
 
                 break;
@@ -286,47 +253,17 @@ public class TimetableFragment extends Fragment {
         days = Arrays.asList(getResources().getStringArray(R.array.days));
 
         // Change the day by clicking on the wanted day
-        binding.day1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToDay1();
-            }
-        });
+        binding.day1.setOnClickListener(v -> goToDay1());
 
-        binding.day2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToDay2();
-            }
-        });
+        binding.day2.setOnClickListener(v -> goToDay2());
 
-        binding.day3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToDay3();
-            }
-        });
+        binding.day3.setOnClickListener(v -> goToDay3());
 
-        binding.day4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToDay4();
-            }
-        });
+        binding.day4.setOnClickListener(v -> goToDay4());
 
-        binding.day5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToDay5();
-            }
-        });
+        binding.day5.setOnClickListener(v -> goToDay5());
 
-        binding.day6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToDay6();
-            }
-        });
+        binding.day6.setOnClickListener(v -> goToDay6());
 
         // If its a student show him today's classes
         if (currentUserType.equals(Utils.STUDENT_ACCOUNT)){
@@ -340,6 +277,7 @@ public class TimetableFragment extends Fragment {
                     Calendar calendar = Calendar.getInstance();
                     switch (calendar.get(Calendar.DAY_OF_WEEK)){
                         case 0:
+                        case 6: // If its the weekend then show him the classes of the first day of next week
                             goToDay1();
                             break;
                         case 1:
@@ -390,7 +328,7 @@ public class TimetableFragment extends Fragment {
         adapter = new SessionsAdapter(getContext());
 
         // Swipe to action in rec view
-        if (currentUserType.equals(Utils.TEACHER_ACCOUNT)){
+        if (currentUserType.equals(Utils.TEACHER_ACCOUNT)) {
             // If its a teacher then show delete + edit buttons
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(teacherCallBack);
             itemTouchHelper.attachToRecyclerView(binding.classesRecView);
@@ -583,21 +521,15 @@ public class TimetableFragment extends Fragment {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setMessage(R.string.are_you_sure);
-                    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            sessions.remove(currentSession);
-                            adapter.getSessions().remove(position);
-                            adapter.notifyItemRemoved(position);
-                            Toast.makeText(getContext(), getString(R.string.session_deleted_msg), Toast.LENGTH_SHORT).show();
-                        }
+                    builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+                        sessions.remove(currentSession);
+                        adapter.getSessions().remove(position);
+                        adapter.notifyItemRemoved(position);
+                        Toast.makeText(getContext(), getString(R.string.session_deleted_msg), Toast.LENGTH_SHORT).show();
                     });
-                    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Do Nothing
-                            adapter.notifyItemChanged(position); // To reset the item on the screen
-                        }
+                    builder.setNegativeButton(R.string.no, (dialog, which) -> {
+                        // Do Nothing
+                        adapter.notifyItemChanged(position); // To reset the item on the screen
                     });
                     builder.create().show();
                     break;

@@ -3,6 +3,7 @@ package com.salmi.bouchelaghem.studynet.Fragments;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,11 +15,15 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
@@ -41,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+
 public class HomeworksFragment extends Fragment {
 
     private FragmentHomeworksBinding binding;
@@ -61,6 +68,7 @@ public class HomeworksFragment extends Fragment {
 
     // Test api
     TestAPI testAPI = TestAPI.getInstance();
+    private String currentUserType;
 
 
     @Override
@@ -71,7 +79,7 @@ public class HomeworksFragment extends Fragment {
         View view = binding.getRoot();
 
         // Get current user type
-        String currentUserType = currentUser.getUserType();
+        currentUserType = currentUser.getUserType();
         initRecView();
 
         // Show the filter button
@@ -115,11 +123,11 @@ public class HomeworksFragment extends Fragment {
                     // TODO: restoreFilterState(); // set the filter values to the last filter applied
 
                     // Init Buttons
-                    btnApplyFilter.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
+                    btnApplyFilter.setOnClickListener(v14 -> {
+                        // TODO: Verify the the user selected section and module
+                        binding.selectSectionMsg.setVisibility(View.GONE);
+                        getAllHomeworks("");
+                        dialog.dismiss();
                     });
 
                     btnCloseFilter.setOnClickListener(v1 -> dialog.dismiss());
@@ -171,11 +179,11 @@ public class HomeworksFragment extends Fragment {
                     // TODO: restoreFilterState(); // set the filter values to the last filter applied
 
                     // Init Buttons
-                    btnApplyFilter.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
+                    btnApplyFilter.setOnClickListener(v13 -> {
+                        // TODO: Verify the the user selected section and module
+                        binding.selectSectionMsg.setVisibility(View.GONE);
+                        getAllHomeworks("");
+                        dialog.dismiss();
                     });
 
                     btnCloseFilter.setOnClickListener(v1 -> dialog.dismiss());
@@ -319,6 +327,13 @@ public class HomeworksFragment extends Fragment {
         binding.homeworksRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.homeworksRecView.addItemDecoration(new DividerItemDecoration(requireContext(), LinearLayout.VERTICAL));
         adapter = new HomeworkAdapter(getContext());
+
+        // Swipe to action in rec view
+        if (currentUserType.equals(Utils.TEACHER_ACCOUNT)){
+            // If its a teacher then show delete + edit buttons
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(teacherCallBack);
+            itemTouchHelper.attachToRecyclerView(binding.homeworksRecView);
+        }
     }
 
     @Override
@@ -326,5 +341,60 @@ public class HomeworksFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    // Swipe to delete and edit in the recycler view
+    ItemTouchHelper.SimpleCallback teacherCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            int position = viewHolder.getAdapterPosition();
+            Homework currentHomework = adapter.getHomeworks().get(position);
+
+            switch (direction){
+                case ItemTouchHelper.LEFT: // Swipe left to right <- : Delete item
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage(R.string.are_you_sure);
+                    builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+                        homeworks.remove(currentHomework);
+                        adapter.getHomeworks().remove(currentHomework);
+                        adapter.notifyItemRemoved(position);
+                        Toast.makeText(getContext(), getString(R.string.homework_deleted_msg), Toast.LENGTH_SHORT).show();
+                    });
+                    builder.setNegativeButton(R.string.no, (dialog, which) -> {
+                        // Do Nothing
+                        adapter.notifyItemChanged(position); // To reset the item on the screen
+                    });
+                    builder.create().show();
+                    break;
+                case ItemTouchHelper.RIGHT: // Swipe right to left -> : Edit item
+                    Intent intent = new Intent(getContext(), AddHomeworkActivity.class);
+                    intent.putExtra(Utils.ACTION, Utils.ACTION_UPDATE);
+                    intent.putExtra(Utils.HOMEWORK, currentHomework);
+                    startActivity(intent);
+                    adapter.notifyItemChanged(position); // To reset the item on the screen
+                    break;
+            }
+        }
+
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red))
+                    .addSwipeLeftActionIcon(R.drawable.ic_delete)
+                    .addSwipeRightBackgroundColor(ContextCompat.getColor(requireContext(), R.color.green))
+                    .addSwipeRightActionIcon(R.drawable.ic_modify)
+                    .create()
+                    .decorate();
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+    };
 
 }

@@ -127,4 +127,5 @@
     <string name="error">Error: </string>
     <string name="types">Types:</string>
     <string name="types2">Types</string>
+    <string name="homework_deleted_msg">Homework deleted successfully</string>
 </resources>
