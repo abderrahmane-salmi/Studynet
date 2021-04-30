@@ -67,7 +67,7 @@ public class SubjectsFragment extends Fragment {
         }
     }
 
-    // Get the current student's modules
+    // Get the current section's modules
     private void getModules(String section) {
         modules = TestAPI.getInstance().getModules();
         if (!modules.isEmpty()) {
