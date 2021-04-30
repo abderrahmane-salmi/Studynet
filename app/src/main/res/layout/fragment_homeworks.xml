@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.HomeworksFragment">
 
-    <!--    TODO: Add dividers-->
-    <!--    https://stackoverflow.com/questions/24618829/how-to-add-dividers-and-spaces-between-items-in-recyclerview-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/homeworksRecView"
         android:layout_width="match_parent"

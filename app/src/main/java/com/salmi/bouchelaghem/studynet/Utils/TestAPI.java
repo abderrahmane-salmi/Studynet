@@ -96,9 +96,9 @@ public class TestAPI extends Application {
         sessions.add(new Session(6, assignments.get(5), Arrays.asList(1, 2, 3), LocalTime.of(14, 30), LocalTime.of(16, 10), 2, "https://facultydz.webex.com/facultydz/j.php?MTID=m275c959d1786501ca18107725f7f883d", "957 867 485", "mfgUdkOp"));
 
         homework = new ArrayList<>();
-        homework.add(new Homework(1, assignments.get(0), Arrays.asList(1, 2), "Serie 1, Exercice 2", new Date(2021, 5, 01), "Faites le deuxième exercice de la première série, ne faites pas la dernière question car nous le ferons dans le cours."));
-        homework.add(new Homework(2, assignments.get(1), Collections.singletonList(3), "Serie 3, Exercice 1", new Date(2021, 4, 25), "Faites le deuxième exercice de la première série, ne faites pas la dernière question car nous le ferons dans le cours."));
-        homework.add(new Homework(3, assignments.get(2), Arrays.asList(1, 2, 3), "Serie 2, Exercice 4", new Date(2021, 5, 10), "Faites le deuxième exercice de la première série, ne faites pas la dernière question car nous le ferons dans le cours."));
+        homework.add(new Homework(1, assignments.get(0), Arrays.asList(1, 2), "Serie 1, Exercice 2", new Date(2021-1900, 5, 1), LocalTime.of(12, 0), "Faites le deuxième exercice de la première série, ne faites pas la dernière question car nous le ferons dans le cours."));
+        homework.add(new Homework(2, assignments.get(1), Collections.singletonList(3), "Serie 3, Exercice 1", new Date(2021-1900, 4, 25), LocalTime.of(19, 0), "Faites le deuxième exercice de la première série, ne faites pas la dernière question car nous le ferons dans le cours."));
+        homework.add(new Homework(3, assignments.get(2), Arrays.asList(1, 2, 3), "Serie 2, Exercice 4", new Date(2021-1900, 5, 10), LocalTime.of(23, 0), "Faites le deuxième exercice de la première série, ne faites pas la dernière question car nous le ferons dans le cours."));
     }
 
     public List<User> getUsers() {

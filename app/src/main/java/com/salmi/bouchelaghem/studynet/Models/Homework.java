@@ -1,5 +1,7 @@
 package com.salmi.bouchelaghem.studynet.Models;
 
+import org.threeten.bp.LocalTime;
+
 import java.util.Date;
 import java.util.List;
 
@@ -10,17 +12,19 @@ public class Homework {
     private List<Integer> concernedGroups;
     private String title;
     private Date dueDate;
+    private LocalTime dueTime;
     private String comment;
 
     public Homework() {
     }
 
-    public Homework(int id, Assignment assignment, List<Integer> concernedGroups, String title, Date dueDate, String comment) {
+    public Homework(int id, Assignment assignment, List<Integer> concernedGroups, String title, Date dueDate, LocalTime dueTime, String comment) {
         this.id = id;
         this.assignment = assignment;
         this.concernedGroups = concernedGroups;
         this.title = title;
         this.dueDate = dueDate;
+        this.dueTime = dueTime;
         this.comment = comment;
     }
 
@@ -62,6 +66,14 @@ public class Homework {
 
     public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public LocalTime getDueTime() {
+        return dueTime;
+    }
+
+    public void setDueTime(LocalTime dueTime) {
+        this.dueTime = dueTime;
     }
 
     public String getComment() {

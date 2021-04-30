@@ -1,5 +1,23 @@
 <resources>
     <string name="app_name">Studynet</string>
+
+    <string-array name="days">
+        <item>Saturday</item>
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+    </string-array>
+
+    <string-array name="homework_filter_values">
+        <item>Yesterday</item>
+        <item>Today</item>
+        <item>Tomorrow</item>
+        <item>This week</item>
+        <item>All</item>
+    </string-array>
+
     <string name="meeting_link">Meeting Link</string>
     <string name="meeting_number">Meeting Number</string>
     <string name="meeting_password">Meeting Password</string>
@@ -38,14 +56,6 @@
     <string name="due_date">Due Date</string>
     <string name="due_time">Due Time</string>
     <string name="notes">Notes</string>
-    <string-array name="days">
-        <item>Saturday</item>
-        <item>Sunday</item>
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-    </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="coefficient">Coefficient:</string>
@@ -114,5 +124,5 @@
     <string name="empty_msg5">Module can\'t be empty</string>
     <string name="empty_msg6">Type can\'t be empty</string>
     <string name="empty_msg7">Day can\'t be empty</string>
-    <string name="error">\"Error: \"</string>
+    <string name="error">Error: </string>
 </resources>

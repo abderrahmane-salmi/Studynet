@@ -8,10 +8,6 @@ public class Session {
     private int id;
     private Assignment assignment;
     private List<Integer> concernedGroups;
-    /* Time picker gives you the hours and the minutes separated as int format
-    * so we can either save startTimeHour and startTimeMin, (same for end time)
-    * or save the start and end time as strings and build them when the user chooses a time
-    * Example: startTime = "08:00" , endTime = "09:30" */
     private LocalTime startTime;
     private LocalTime endTime;
     private int day;
