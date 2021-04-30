@@ -89,7 +89,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/coefficient1"
+                    android:text="@string/types2"
                     android:textColor="@color/primary_text_color"
                     android:textSize="16sp"
                     android:fontFamily="@font/tabularasa_regular" />
@@ -98,7 +98,7 @@
                     android:id="@+id/txtSubjectTypes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3"
+                    android:text="Cours, TD, TP"
                     android:textColor="@color/secondary_text_color"
                     android:textSize="14sp"
                     android:fontFamily="@font/tabularasa_regular" />

@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.salmi.bouchelaghem.studynet.Fragments.SubjectsFragmentDirections;
 import com.salmi.bouchelaghem.studynet.Models.Module;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.databinding.LayoutSubjectBinding;
@@ -37,8 +38,8 @@ public class ModulesAdapter extends RecyclerView.Adapter<ModulesAdapter.ViewHold
 
         holder.binding.subjectMainLayout.setOnClickListener(v -> {
             Module module = modules.get(holder.getAdapterPosition());
-            Navigation.createNavigateOnClickListener(R.id.action_nav_subjects_to_subjectDetailsFragment).onClick(holder.binding.getRoot());
-            // TODO: Send the module object as a safe arg
+            SubjectsFragmentDirections.ActionNavSubjectsToSubjectDetailsFragment action = SubjectsFragmentDirections.actionNavSubjectsToSubjectDetailsFragment(module);
+            Navigation.createNavigateOnClickListener(action).onClick(holder.binding.getRoot());
         });
 
         return holder;
