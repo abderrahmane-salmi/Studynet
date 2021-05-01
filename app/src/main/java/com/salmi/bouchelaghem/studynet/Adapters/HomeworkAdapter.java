@@ -1,6 +1,5 @@
 package com.salmi.bouchelaghem.studynet.Adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -18,7 +17,8 @@ import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.LayoutHomeworkBinding;
 
-import java.text.SimpleDateFormat;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.util.List;
 
 public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHolder> {
@@ -88,8 +88,8 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
 
         holder.binding.homeworkTitle.setText(homework.getTitle());
         holder.binding.homeworkSubject.setText(homework.getAssignment().getModuleName());
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        holder.binding.homeworkDate.setText(dateFormat.format(homework.getDueDate()));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        holder.binding.homeworkDate.setText(formatter.format(homework.getDueDate()));
     }
 
     @Override

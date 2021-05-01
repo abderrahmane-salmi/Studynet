@@ -130,4 +130,6 @@
     <string name="homework_deleted_msg">Homework deleted successfully</string>
     <string name="select_due_time">Select due time</string>
     <string name="select_due_date">Select due date</string>
+    <string name="title_msg">Title can\'t be empty</string>
+    <string name="update_homework">Update Homework</string>
 </resources>

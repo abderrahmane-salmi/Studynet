@@ -85,7 +85,10 @@ public class AddClassActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String action = intent.getStringExtra(Utils.ACTION);
 
-        fillSpinners();
+        // Init Sections spinner
+        getSections(currentTeacher.getId());
+        // Init Days spinner
+        initDays();
 
         binding.btnClose.setOnClickListener(v -> finish());
 
@@ -179,11 +182,37 @@ public class AddClassActivity extends AppCompatActivity {
                 fillFields(id);
 
                 // When the user clicks on save we update an existing session
-                binding.btnSave.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Same as 'add' but we only update the session object in the database
+                binding.btnSave.setOnClickListener(v -> {
+
+                    if (sectionSelected & moduleSelected & classTypeSelected
+                            & groupSelected & daySelected & validateMeetingLink()
+                            & startTime != null & endTime != null){
+                        Toast.makeText(this, "Save", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (!sectionSelected){
+                            binding.classSectionTextLayout.setError(getString(R.string.empty_msg3));
+                        }
+                        if (!moduleSelected){
+                            binding.classModuleLayout.setError(getString(R.string.empty_msg5));
+                        }
+                        if (!classTypeSelected){
+                            binding.classTypeTextLayout.setError(getString(R.string.empty_msg6));
+                        }
+                        if (!groupSelected){
+                            binding.classGroup.setError("");
+                        }
+                        if (!daySelected){
+                            binding.classDayTextLayout.setError(getString(R.string.empty_msg7));
+                        }
+                        if (startTime == null){
+                            binding.btnSelectStartTime.setError("");
+                        }
+                        if (endTime == null){
+                            binding.btnSelectEndTime.setError("");
+                        }
                     }
+
+
                 });
                 break;
         }
@@ -212,46 +241,40 @@ public class AddClassActivity extends AppCompatActivity {
             getModules(currentTeacher.getId(), section.getCode());
         });
 
-        binding.classModule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get selected item
-                moduleSelected = true;
-                module = modules.get(position);
-                binding.classModuleLayout.setError(null);
+        binding.classModule.setOnItemClickListener((parent, view14, position, id) -> {
+            // Get selected item
+            moduleSelected = true;
+            module = modules.get(position);
+            binding.classModuleLayout.setError(null);
 
-                // Disable other spinners
-                binding.classType.setText("");
-                classTypeSelected = false;
+            // Disable other spinners
+            binding.classType.setText("");
+            classTypeSelected = false;
 
-                binding.classGroup.setEnabled(false);
-                binding.classGroup.setText("");
-                binding.classGroup.setHint(R.string.group);
-                groupSelected = false;
+            binding.classGroup.setEnabled(false);
+            binding.classGroup.setText("");
+            binding.classGroup.setHint(R.string.group);
+            groupSelected = false;
 
-                // Setup the next spinner
-                binding.classTypeTextLayout.setEnabled(true);
-                getModuleTypes(currentTeacher.getId(), section.getCode(), module.getCode());
-            }
+            // Setup the next spinner
+            binding.classTypeTextLayout.setEnabled(true);
+            getModuleTypes(currentTeacher.getId(), section.getCode(), module.getCode());
         });
 
-        binding.classType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get selected item
-                classTypeSelected = true;
-                classType = classTypes.get(position);
-                binding.classTypeTextLayout.setError(null);
+        binding.classType.setOnItemClickListener((parent, view13, position, id) -> {
+            // Get selected item
+            classTypeSelected = true;
+            classType = classTypes.get(position);
+            binding.classTypeTextLayout.setError(null);
 
-                // Disable other spinners
-                binding.classGroup.setText("");
-                binding.classGroup.setHint(R.string.group);
-                groupSelected = false;
+            // Disable other spinners
+            binding.classGroup.setText("");
+            binding.classGroup.setHint(R.string.group);
+            groupSelected = false;
 
-                // Setup the next spinner
-                binding.classGroup.setEnabled(true);
-                getGroups(currentTeacher.getId(), section);
-            }
+            // Setup the next spinner
+            binding.classGroup.setEnabled(true);
+            getGroups(currentTeacher.getId(), section);
         });
 
         binding.classGroup.setOnClickListener(v -> {
@@ -330,24 +353,21 @@ public class AddClassActivity extends AppCompatActivity {
             picker.addOnCancelListener(dialog -> picker.dismiss());
         });
 
-        binding.btnSelectEndTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MaterialTimePicker picker;
-                if (startTime != null){ // If we have already a selected time
-                    picker = openTimePicker("Select End time", endTime.getHour(), endTime.getMinute());
-                } else { // Else: make 8:00 the default time
-                    picker = openTimePicker("Select End time", 8, 0);
-                }
-                picker.addOnPositiveButtonClickListener(v12 -> {
-                    int hour = picker.getHour();
-                    int minute = picker.getMinute();
-                    endTime = LocalTime.of(hour, minute);
-                    binding.btnSelectEndTime.setText(endTime.toString());
-                    binding.btnSelectEndTime.setError(null);
-                });
-                picker.addOnCancelListener(dialog -> picker.dismiss());
+        binding.btnSelectEndTime.setOnClickListener(v -> {
+            MaterialTimePicker picker;
+            if (startTime != null){ // If we have already a selected time
+                picker = openTimePicker("Select End time", endTime.getHour(), endTime.getMinute());
+            } else { // Else: make 8:00 the default time
+                picker = openTimePicker("Select End time", 8, 0);
             }
+            picker.addOnPositiveButtonClickListener(v12 -> {
+                int hour = picker.getHour();
+                int minute = picker.getMinute();
+                endTime = LocalTime.of(hour, minute);
+                binding.btnSelectEndTime.setText(endTime.toString());
+                binding.btnSelectEndTime.setError(null);
+            });
+            picker.addOnCancelListener(dialog -> picker.dismiss());
         });
 
     }
@@ -376,12 +396,14 @@ public class AddClassActivity extends AppCompatActivity {
         if (session != null){
 
             // Sections
+            sectionSelected = true;
             String sectionCode = session.getAssignment().getSectionCode();
             getSection(sectionCode);
             // Set selected item
             binding.classSection.setText(sectionCode, false);
 
             // Module
+            moduleSelected = true;
             String moduleCode = session.getAssignment().getModuleCode();
             getModule(moduleCode);
             // Fill the spinner
@@ -391,6 +413,7 @@ public class AddClassActivity extends AppCompatActivity {
             binding.classModule.setText(moduleCode, false);
 
             // Class type
+            classTypeSelected = true;
             String classType = session.getAssignment().getModuleType();
             // Fill the spinner
             getModuleTypes(currentTeacher.getId(), sectionCode, moduleCode);
@@ -399,6 +422,7 @@ public class AddClassActivity extends AppCompatActivity {
             binding.classType.setText(classType, false);
 
             // Groups
+            groupSelected = true;
             getGroups(currentTeacher.getId(), section);
             // Fill the selected groups
             setSelectedGroups(session.getConcernedGroups());
@@ -421,6 +445,7 @@ public class AddClassActivity extends AppCompatActivity {
 
             // Day
             initDays();
+            daySelected = true;
             binding.classDay.setText(days.get(session.getDay()-1));
 
             // Time
@@ -459,13 +484,6 @@ public class AddClassActivity extends AppCompatActivity {
         }
     }
 
-    private void fillSpinners(){
-        // Sections
-        getSections(currentTeacher.getId());
-        // Days
-        initDays();
-    }
-
     private void initDays() {
         days = Arrays.asList(getResources().getStringArray(R.array.days));
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddClassActivity.this, R.layout.dropdown_item, days);
@@ -485,8 +503,10 @@ public class AddClassActivity extends AppCompatActivity {
     // Set the selected groups in case of update
     private void setSelectedGroups(List<Integer> concernedGroups) {
 
+        selectedGroupsString = new ArrayList<>();
         for (int grp:concernedGroups){
             groupsStates[grp-1] = true;
+            selectedGroupsString.add(String.valueOf(grp));
         }
 
     }

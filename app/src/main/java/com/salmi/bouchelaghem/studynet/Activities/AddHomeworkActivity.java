@@ -2,21 +2,20 @@ package com.salmi.bouchelaghem.studynet.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.google.android.material.datepicker.CalendarConstraints;
-import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.jakewharton.threetenabp.AndroidThreeTen;
+import com.salmi.bouchelaghem.studynet.Models.Homework;
 import com.salmi.bouchelaghem.studynet.Models.Module;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
@@ -30,10 +29,8 @@ import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
 import org.threeten.bp.ZoneId;
-import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -56,11 +53,6 @@ public class AddHomeworkActivity extends AppCompatActivity {
     private ArrayList<Integer> selectedGroupsInt; // The groups selected by the user (as a int)
     private boolean[] groupsStates; // We need this just for the dialog
     private boolean groupSelected = false;
-
-    private String dayName;
-    private int day;
-    private List<String> days;
-    private boolean daySelected = false;
 
     private LocalDate dueDate;
     private LocalTime dueTime;
@@ -93,10 +85,65 @@ public class AddHomeworkActivity extends AppCompatActivity {
             case Utils.ACTION_ADD:
                 // When the user clicks on save we create a new homework
                 binding.btnSave.setOnClickListener(v -> {
+                    if (sectionSelected & moduleSelected & groupSelected & validateTitle()
+                    & dueDate != null & dueTime != null){
 
+                        Toast.makeText(this, "Save", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        if (!sectionSelected){
+                            binding.txtHomeworkSection.setError(getString(R.string.empty_msg3));
+                        }
+                        if (!moduleSelected){
+                            binding.txtHomeworkSubject.setError(getString(R.string.empty_msg5));
+                        }
+                        if (!groupSelected){
+                            binding.txtHomeworkGroup.setError("");
+                        }
+                        if (dueDate == null){
+                            binding.btnSelectDueDate.setError("");
+                        }
+                        if (dueTime == null){
+                            binding.btnSelectDueTime.setError("");
+                        }
+                    }
                 });
                 break;
             case Utils.ACTION_UPDATE:
+                // Change activity's title
+                binding.title.setText(getString(R.string.update_homework));
+
+                // Get the homework
+                Homework homework = intent.getParcelableExtra(Utils.HOMEWORK);
+
+                fillFields(homework);
+
+                // When the user clicks on save we update an existing session
+                binding.btnSave.setOnClickListener(v -> {
+                    if (sectionSelected & moduleSelected & groupSelected & validateTitle()
+                            & dueDate != null & dueTime != null){
+                        // TODO: Test if the user updated anything
+                        Toast.makeText(this, "Save", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        if (!sectionSelected){
+                            binding.txtHomeworkSection.setError(getString(R.string.empty_msg3));
+                        }
+                        if (!moduleSelected){
+                            binding.txtHomeworkSubject.setError(getString(R.string.empty_msg5));
+                        }
+                        if (!groupSelected){
+                            binding.txtHomeworkGroup.setError("");
+                        }
+                        if (dueDate == null){
+                            binding.btnSelectDueDate.setError("");
+                        }
+                        if (dueTime == null){
+                            binding.btnSelectDueTime.setError("");
+                        }
+                    }
+                });
+
                 break;
         }
 
@@ -286,6 +333,92 @@ public class AddHomeworkActivity extends AppCompatActivity {
         if (!sectionsNames.isEmpty()) {
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddHomeworkActivity.this, R.layout.dropdown_item, sectionsNames);
             binding.classSection.setAdapter(arrayAdapter);
+        }
+    }
+
+    private void fillFields(Homework homework){
+        // Section
+        sectionSelected = true;
+        String sectionCode = homework.getAssignment().getSectionCode();
+        binding.classSection.setText(sectionCode, false);
+        getSection(sectionCode);
+
+        // Module
+        moduleSelected = true;
+        String moduleCode = homework.getAssignment().getModuleCode();
+        // Fill the spinner
+        getModules(currentTeacher.getId(), sectionCode);
+        binding.txtHomeworkSubject.setEnabled(true);
+        // Set selected item
+        binding.classModule.setText(moduleCode, false);
+
+        // Groups
+        groupSelected = true;
+        getGroups(currentTeacher.getId(), section);
+        // Fill the selected groups
+        setSelectedGroups(homework.getConcernedGroups());
+        binding.txtHomeworkGroup.setEnabled(true);
+
+        // Set the selected groups to the text view
+        int nbGroups = homework.getConcernedGroups().size();
+        if (nbGroups == 1){ // If there is only one group
+            binding.txtHomeworkGroup.setText(String.valueOf(homework.getConcernedGroups().get(0)));
+        } else {
+            binding.txtHomeworkGroup.setText("");
+            for (int i = 0; i< homework.getConcernedGroups().size()-1; i++){
+                // Show the selected groups in the text view
+                binding.txtHomeworkGroup.append(homework.getConcernedGroups().get(i) + ", ");
+            }
+            binding.txtHomeworkGroup.append(String.valueOf(homework.getConcernedGroups().get(nbGroups-1)));
+        }
+
+        // Title
+        binding.txtHomeworkTitle.getEditText().setText(homework.getTitle());
+
+        // Date
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        dueDate = homework.getDueDate();
+        binding.btnSelectDueDate.setText(formatter.format(dueDate));
+
+        // Time
+        dueTime = homework.getDueTime();
+        binding.btnSelectDueTime.setText(dueTime.toString());
+
+        // Notes
+        if (homework.getComment() != null)
+            binding.txtHomeworkNotes.getEditText().setText(homework.getComment());
+    }
+
+    // Set the selected groups in case of update
+    private void setSelectedGroups(List<Integer> concernedGroups) {
+
+        selectedGroupsString = new ArrayList<>();
+        for (int grp:concernedGroups){
+            groupsStates[grp-1] = true;
+            selectedGroupsString.add(String.valueOf(grp));
+        }
+
+    }
+
+    // Get the section object from its code (From the API)
+    private void getSection(String sectionCode) {
+        for (Section s:testAPI.getSections()){
+            if (s.getCode().equals(sectionCode)){
+                section = s;
+            }
+        }
+    }
+
+    // Validation methods
+    public boolean validateTitle(){
+        String data = binding.txtHomeworkTitle.getEditText().getText().toString().trim();
+
+        if (data.isEmpty()){
+            binding.txtHomeworkTitle.setError(getString(R.string.title_msg));
+            return false;
+        } else {
+            binding.txtHomeworkTitle.setError(null);
+            return true;
         }
     }
 }
