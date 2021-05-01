@@ -109,7 +109,7 @@
             android:layout_marginEnd="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
-            app:layout_constraintTop_toBottomOf="@+id/txtHomeworkSection"
+            app:layout_constraintTop_toBottomOf="@+id/txtHomeworkSubject"
             app:drawableEndCompat="@drawable/ic_arrow_drop_down"
             android:background="@drawable/rectangle_border_2"
             android:paddingEnd="12dp"
@@ -139,7 +139,7 @@
             android:layout_marginEnd="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
-            app:layout_constraintTop_toBottomOf="@+id/txtHomeworkGroup"
+            app:layout_constraintTop_toBottomOf="@+id/txtHomeworkSection"
             android:enabled="false">
 
             <AutoCompleteTextView
@@ -177,7 +177,7 @@
             android:layout_marginEnd="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView4"
-            app:layout_constraintTop_toBottomOf="@+id/txtHomeworkSubject">
+            app:layout_constraintTop_toBottomOf="@+id/txtHomeworkGroup">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"

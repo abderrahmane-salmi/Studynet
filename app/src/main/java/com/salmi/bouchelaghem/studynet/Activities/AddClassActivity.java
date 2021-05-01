@@ -254,108 +254,80 @@ public class AddClassActivity extends AppCompatActivity {
             }
         });
 
-        binding.classGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.classGroup.setError(null);
-                // Init builder
-                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(AddClassActivity.this, R.style.MyAlertDialogTheme);
-                // Set title
-                builder.setTitle(R.string.select_groups);
-                // No cancel
-                builder.setCancelable(false);
+        binding.classGroup.setOnClickListener(v -> {
+            binding.classGroup.setError(null);
+            // Init builder
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(AddClassActivity.this, R.style.MyAlertDialogTheme);
+            // Set title
+            builder.setTitle(R.string.select_groups);
+            // No cancel
+            builder.setCancelable(false);
 
-                builder.setMultiChoiceItems(groupsArray, groupsStates, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+            builder.setMultiChoiceItems(groupsArray, groupsStates, (dialog, which, isChecked) -> {
 
-                        // Get the current item
-                        String currentGroup = groupsArray[which];
-                        if (isChecked){ // If its selected then add it to the selected items list
-                            selectedGroupsString.add(currentGroup);
-                        } else { // if not then remove it from the list
-                            selectedGroupsString.remove(currentGroup);
-                        }
+                // Get the current item
+                String currentGroup = groupsArray[which];
+                if (isChecked){ // If its selected then add it to the selected items list
+                    selectedGroupsString.add(currentGroup);
+                } else { // if not then remove it from the list
+                    selectedGroupsString.remove(currentGroup);
+                }
+            });
+
+            builder.setPositiveButton(R.string.save, (dialog, which) -> {
+
+                binding.classGroup.setText("");
+                selectedGroupsInt = new ArrayList<>();
+
+                if (!selectedGroupsString.isEmpty()){
+                    groupSelected = true;
+                    Collections.sort(selectedGroupsString);
+
+                    for (int i = 0; i< selectedGroupsString.size()-1; i++){
+                        // Show the selected groups in the text view
+                        binding.classGroup.append(selectedGroupsString.get(i) + ", ");
+                        // Save the selected groups as integers
+                        selectedGroupsInt.add(Integer.parseInt(selectedGroupsString.get(i)));
                     }
-                });
+                    binding.classGroup.append(selectedGroupsString.get(selectedGroupsString.size()-1));
+                    selectedGroupsInt.add(Integer.parseInt(selectedGroupsString.get(selectedGroupsString.size()-1)));
+                } else {
+                    groupSelected = false;
+                    binding.classGroup.setHint(R.string.group);
+                }
+            });
 
-                builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+            builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
 
-                        binding.classGroup.setText("");
-                        selectedGroupsInt = new ArrayList<>();
+            builder.show();
 
-                        if (!selectedGroupsString.isEmpty()){
-                            groupSelected = true;
-                            Collections.sort(selectedGroupsString);
-
-                            for (int i = 0; i< selectedGroupsString.size()-1; i++){
-                                // Show the selected groups in the text view
-                                binding.classGroup.append(selectedGroupsString.get(i) + ", ");
-                                // Save the selected groups as integers
-                                selectedGroupsInt.add(Integer.parseInt(selectedGroupsString.get(i)));
-                            }
-                            binding.classGroup.append(selectedGroupsString.get(selectedGroupsString.size()-1));
-                            selectedGroupsInt.add(Integer.parseInt(selectedGroupsString.get(selectedGroupsString.size()-1)));
-                        } else {
-                            groupSelected = false;
-                            binding.classGroup.setHint(R.string.group);
-                        }
-                    }
-                });
-
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-                builder.show();
-
-            }
         });
 
-        binding.classDay.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get selected item
-                daySelected = true;
-                dayName = days.get(position);
-                day = position+1;
-                binding.classDayTextLayout.setError(null);
-            }
+        binding.classDay.setOnItemClickListener((parent, view12, position, id) -> {
+            // Get selected item
+            daySelected = true;
+            dayName = days.get(position);
+            day = position+1;
+            binding.classDayTextLayout.setError(null);
         });
 
         // Time pickers
-        binding.btnSelectStartTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MaterialTimePicker picker;
-                if (startTime != null){ // If we have already a selected time
-                    picker = openTimePicker("Select Start time", startTime.getHour(), startTime.getMinute());
-                } else { // Else: make 8:00 the default time
-                    picker = openTimePicker("Select Start time", 8, 0);
-                }
-
-                picker.addOnPositiveButtonClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int hour = picker.getHour();
-                        int minute = picker.getMinute();
-                        startTime = LocalTime.of(hour, minute);
-                        binding.btnSelectStartTime.setText(startTime.toString());
-                        binding.btnSelectStartTime.setError(null);
-                    }
-                });
-                picker.addOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        picker.dismiss();
-                    }
-                });
+        binding.btnSelectStartTime.setOnClickListener(v -> {
+            MaterialTimePicker picker;
+            if (startTime != null){ // If we have already a selected time
+                picker = openTimePicker("Select Start time", startTime.getHour(), startTime.getMinute());
+            } else { // Else: make 8:00 the default time
+                picker = openTimePicker("Select Start time", 8, 0);
             }
+
+            picker.addOnPositiveButtonClickListener(v1 -> {
+                int hour = picker.getHour();
+                int minute = picker.getMinute();
+                startTime = LocalTime.of(hour, minute);
+                binding.btnSelectStartTime.setText(startTime.toString());
+                binding.btnSelectStartTime.setError(null);
+            });
+            picker.addOnCancelListener(dialog -> picker.dismiss());
         });
 
         binding.btnSelectEndTime.setOnClickListener(new View.OnClickListener() {
@@ -367,22 +339,14 @@ public class AddClassActivity extends AppCompatActivity {
                 } else { // Else: make 8:00 the default time
                     picker = openTimePicker("Select End time", 8, 0);
                 }
-                picker.addOnPositiveButtonClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int hour = picker.getHour();
-                        int minute = picker.getMinute();
-                        endTime = LocalTime.of(hour, minute);
-                        binding.btnSelectEndTime.setText(endTime.toString());
-                        binding.btnSelectEndTime.setError(null);
-                    }
+                picker.addOnPositiveButtonClickListener(v12 -> {
+                    int hour = picker.getHour();
+                    int minute = picker.getMinute();
+                    endTime = LocalTime.of(hour, minute);
+                    binding.btnSelectEndTime.setText(endTime.toString());
+                    binding.btnSelectEndTime.setError(null);
                 });
-                picker.addOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        picker.dismiss();
-                    }
-                });
+                picker.addOnCancelListener(dialog -> picker.dismiss());
             }
         });
 

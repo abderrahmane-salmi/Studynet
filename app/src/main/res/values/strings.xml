@@ -128,4 +128,6 @@
     <string name="types">Types:</string>
     <string name="types2">Types</string>
     <string name="homework_deleted_msg">Homework deleted successfully</string>
+    <string name="select_due_time">Select due time</string>
+    <string name="select_due_date">Select due date</string>
 </resources>

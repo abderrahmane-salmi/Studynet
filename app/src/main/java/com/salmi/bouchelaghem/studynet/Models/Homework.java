@@ -3,6 +3,7 @@ package com.salmi.bouchelaghem.studynet.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
 
 import java.util.ArrayList;
@@ -15,14 +16,14 @@ public class Homework implements Parcelable {
     private Assignment assignment;
     private ArrayList<Integer> concernedGroups;
     private String title;
-    private Date dueDate;
+    private LocalDate dueDate;
     private LocalTime dueTime;
     private String comment;
 
     public Homework() {
     }
 
-    public Homework(int id, Assignment assignment, ArrayList<Integer> concernedGroups, String title, Date dueDate, LocalTime dueTime, String comment) {
+    public Homework(int id, Assignment assignment, ArrayList<Integer> concernedGroups, String title, LocalDate dueDate, LocalTime dueTime, String comment) {
         this.id = id;
         this.assignment = assignment;
         this.concernedGroups = concernedGroups;
@@ -38,7 +39,7 @@ public class Homework implements Parcelable {
         assignment = in.readTypedObject(Assignment.CREATOR);
         concernedGroups = (ArrayList<Integer>) in.readSerializable();
         title = in.readString();
-        dueDate = (java.util.Date) in.readSerializable();
+        dueDate = (org.threeten.bp.LocalDate) in.readSerializable();
         dueTime = (org.threeten.bp.LocalTime) in.readSerializable();
         comment = in.readString();
     }
@@ -103,11 +104,11 @@ public class Homework implements Parcelable {
         this.title = title;
     }
 
-    public Date getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 
