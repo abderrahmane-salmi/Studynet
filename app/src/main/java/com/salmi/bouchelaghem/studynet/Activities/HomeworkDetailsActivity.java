@@ -11,6 +11,8 @@ import com.salmi.bouchelaghem.studynet.Models.Homework;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityHomeworkDetailsBinding;
 
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.text.SimpleDateFormat;
 
 public class HomeworkDetailsActivity extends AppCompatActivity {
@@ -37,8 +39,8 @@ public class HomeworkDetailsActivity extends AppCompatActivity {
         binding.txtSubject.setText(homework.getAssignment().getModuleName());
         binding.txtSubjectCode.setText(homework.getAssignment().getModuleCode());
 
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        binding.txtHomeworkDueDate.setText(dateFormat.format(homework.getDueDate()));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        binding.txtHomeworkDueDate.setText(formatter.format(homework.getDueDate()));
         binding.txtHomeworkDueHour.setText(homework.getDueTime().toString());
 
         binding.txtHomeworkTitle.setText(homework.getTitle());

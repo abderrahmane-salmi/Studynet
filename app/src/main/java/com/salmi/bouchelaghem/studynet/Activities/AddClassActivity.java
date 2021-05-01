@@ -338,9 +338,9 @@ public class AddClassActivity extends AppCompatActivity {
         binding.btnSelectStartTime.setOnClickListener(v -> {
             MaterialTimePicker picker;
             if (startTime != null){ // If we have already a selected time
-                picker = openTimePicker("Select Start time", startTime.getHour(), startTime.getMinute());
+                picker = openTimePicker(getString(R.string.select_start_time), startTime.getHour(), startTime.getMinute());
             } else { // Else: make 8:00 the default time
-                picker = openTimePicker("Select Start time", 8, 0);
+                picker = openTimePicker(getString(R.string.select_start_time), 8, 0);
             }
 
             picker.addOnPositiveButtonClickListener(v1 -> {
@@ -356,9 +356,9 @@ public class AddClassActivity extends AppCompatActivity {
         binding.btnSelectEndTime.setOnClickListener(v -> {
             MaterialTimePicker picker;
             if (startTime != null){ // If we have already a selected time
-                picker = openTimePicker("Select End time", endTime.getHour(), endTime.getMinute());
+                picker = openTimePicker(getString(R.string.select_end_time), endTime.getHour(), endTime.getMinute());
             } else { // Else: make 8:00 the default time
-                picker = openTimePicker("Select End time", 8, 0);
+                picker = openTimePicker(getString(R.string.select_end_time), 8, 0);
             }
             picker.addOnPositiveButtonClickListener(v12 -> {
                 int hour = picker.getHour();
