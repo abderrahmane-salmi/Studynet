@@ -1,22 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary_color"
-    app:layoutDescription="@xml/activity_splash_scene"
-    tools:context=".Activities.SplashActivity"
-    android:id="@+id/splashMotionLayout">
+    tools:context=".Activities.SplashActivity">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="140dp"
         android:layout_height="140dp"
+        android:src="@drawable/app_logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/app_logo"
         tools:ignore="ContentDescription" />
-</androidx.constraintlayout.motion.widget.MotionLayout>
+
+    <!--    No internet message-->
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/noInternetMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="imgEmpty, txtEmpty, btnTryAgain" />
+
+    <ImageView
+        android:id="@+id/imgEmpty"
+        android:layout_width="0dp"
+        android:layout_height="250dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        android:src="@drawable/ic_page_not_found"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.30"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/txtEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/tabularasa_medium"
+        android:text="@string/no_internet_connection"
+        android:textColor="@color/primary_text_color"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="@id/imgEmpty"
+        app:layout_constraintStart_toStartOf="@id/imgEmpty"
+        app:layout_constraintTop_toBottomOf="@id/imgEmpty" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnTryAgain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="64dp"
+        android:fontFamily="@font/tabularasa_medium"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:text="@string/try_again"
+        android:textSize="15sp"
+        app:cornerRadius="14dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtEmpty"
+        app:layout_constraintVertical_bias="0.3" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

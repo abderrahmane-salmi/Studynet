@@ -1,18 +1,25 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
-import com.salmi.bouchelaghem.studynet.databinding.ActivitySignUpBinding;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
+
+import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.databinding.ActivitySplashBinding;
 
 public class SplashActivity extends AppCompatActivity {
 
     private ActivitySplashBinding binding;
+
+    private boolean loggedIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,34 +28,34 @@ public class SplashActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-//        binding.splashMotionLayout.addTransitionListener(new MotionLayout.TransitionListener() {
-//            @Override
-//            public void onTransitionStarted(MotionLayout motionLayout, int i, int i1) {
-//
-//            }
-//
-//            @Override
-//            public void onTransitionChange(MotionLayout motionLayout, int i, int i1, float v) {
-//
-//            }
-//
-//            @Override
-//            public void onTransitionCompleted(MotionLayout motionLayout, int i) {
-//                startActivity(new Intent(SplashActivity.this, OnboardingActivity.class));
-//            }
-//
-//            @Override
-//            public void onTransitionTrigger(MotionLayout motionLayout, int i, boolean b, float v) {
-//
-//            }
-//        });
+        // Set light theme as the default theme
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(SplashActivity.this, OnboardingActivity.class));
+        verifyInternet();
+
+        binding.btnTryAgain.setOnClickListener(v -> verifyInternet());
+    }
+
+    private void verifyInternet (){
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo network = connectivityManager.getActiveNetworkInfo();
+        if (network == null) { // No internet
+
+            binding.mainLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+            binding.noInternetMsg.setVisibility(View.VISIBLE);
+
+        } else {
+
+            new Handler().postDelayed(() -> {
+                loggedIn = true;
+                if (loggedIn){
+                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                } else {
+                    startActivity(new Intent(SplashActivity.this, OnboardingActivity.class));
+                }
                 finish();
-            }
-        }, 1500);
+            }, 1000);
+
+        }
     }
 }
