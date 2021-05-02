@@ -7,7 +7,7 @@ public class Admin extends User {
     public Admin() {
     }
 
-    public Admin(int id, String email, String firstName, String lastName, String userType, Date dateJoined) {
-        super(id, email, firstName, lastName, userType, dateJoined);
+    public Admin(int id, String email, String firstName, String lastName, Date dateJoined) {
+        super(id, email, firstName, lastName, dateJoined);
     }
 }

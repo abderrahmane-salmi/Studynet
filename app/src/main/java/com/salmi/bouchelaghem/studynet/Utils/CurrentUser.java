@@ -12,7 +12,9 @@ public class CurrentUser extends Application {
     private Student currentStudent;
     private Teacher currentTeacher;
     private Admin currentAdmin;
+    private String token;
     private static CurrentUser instance;
+
 
     public static void setInstance(CurrentUser instance) {
         CurrentUser.instance = instance;
@@ -59,4 +61,13 @@ public class CurrentUser extends Application {
     public void setCurrentAdmin(Admin currentAdmin) {
         this.currentAdmin = currentAdmin;
     }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
 }

@@ -10,8 +10,8 @@ public class Teacher extends User {
     public Teacher() {
     }
 
-    public Teacher(int id, String email, String firstName, String lastName, String userType, Date dateJoined, String grade) {
-        super(id, email, firstName, lastName, userType, dateJoined);
+    public Teacher(int id, String email, String firstName, String lastName, Date dateJoined, String grade) {
+        super(id, email, firstName, lastName, dateJoined);
         this.grade = grade;
     }
 

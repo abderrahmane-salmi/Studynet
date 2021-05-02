@@ -5,18 +5,17 @@ import java.util.Date;
 public class User {
 
     private int id;
-    private String email, firstName, lastName, userType;
+    private String email, firstName, lastName;
     private Date dateJoined;
 
     public User() {
     }
 
-    public User(int id, String email, String firstName, String lastName, String userType, Date dateJoined) {
+    public User(int id, String email, String firstName, String lastName, Date dateJoined) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userType = userType;
         this.dateJoined = dateJoined;
     }
 
@@ -52,13 +51,6 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getUserType() {
-        return userType;
-    }
-
-    public void setUserType(String userType) {
-        this.userType = userType;
-    }
 
     public Date getDateJoined() {
         return dateJoined;

@@ -16,6 +16,7 @@ import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Specialty;
 import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.R;
+import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -92,16 +94,19 @@ public class SignUpActivity extends AppCompatActivity {
                     // TODO: Figure out how to do with the password
                     String password = binding.txtPassword.getEditText().getText().toString().trim();
 
+                    //Setup the current user as being this student
+                    CurrentUser currentUser = CurrentUser.getInstance();
+                    currentUser.setUserType(Utils.STUDENT_ACCOUNT);
+
                     Student student = new Student();
                     student.setRegistrationNumber(registrationNumber);
                     student.setFirstName(firstName);
                     student.setLastName(lastName);
                     student.setEmail(email);
-                    student.setUserType(Utils.STUDENT_ACCOUNT);
                     student.setDateJoined(new Date());
                     student.setSection(studentSection);
                     student.setGroup(group);
-
+                    currentUser.setCurrentStudent(student);
                     Toast.makeText(SignUpActivity.this, "Done", Toast.LENGTH_LONG).show();
                 } else {
                     if (!departmentSelected){

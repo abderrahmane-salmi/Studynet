@@ -59,25 +59,25 @@ public class LoginActivity extends AppCompatActivity {
 
                 // Default
                 currentUser.setUserType(Utils.STUDENT_ACCOUNT);
-                currentUser.setCurrentStudent(new Student(testAPI.getUsers().get(0).getId(), testAPI.getUsers().get(0).getEmail(), testAPI.getUsers().get(0).getFirstName(), testAPI.getUsers().get(0).getLastName(), testAPI.getUsers().get(0).getUserType(), testAPI.getUsers().get(0).getDateJoined(), "181831033883", testAPI.getSections().get(0), 2));
+                currentUser.setCurrentStudent(new Student(testAPI.getUsers().get(0).getId(), testAPI.getUsers().get(0).getEmail(), testAPI.getUsers().get(0).getFirstName(), testAPI.getUsers().get(0).getLastName(), testAPI.getUsers().get(0).getDateJoined(), "181831033883", testAPI.getSections().get(0), 2));
 
                 if (binding.txtLoginEmail.getEditText().getText().toString().equals("e") ){
 
                     // If its a student
                     currentUser.setUserType(Utils.STUDENT_ACCOUNT);
-                    currentUser.setCurrentStudent(new Student(testAPI.getUsers().get(0).getId(), testAPI.getUsers().get(0).getEmail(), testAPI.getUsers().get(0).getFirstName(), testAPI.getUsers().get(0).getLastName(), testAPI.getUsers().get(0).getUserType(), testAPI.getUsers().get(0).getDateJoined(), "181831033883", testAPI.getSections().get(0), 2));
+                    currentUser.setCurrentStudent(new Student(testAPI.getUsers().get(0).getId(), testAPI.getUsers().get(0).getEmail(), testAPI.getUsers().get(0).getFirstName(), testAPI.getUsers().get(0).getLastName(), testAPI.getUsers().get(0).getDateJoined(), "181831033883", testAPI.getSections().get(0), 2));
 
                 } else if (binding.txtLoginEmail.getEditText().getText().toString().equals("t")){
 
                     // If its a teacher
                     currentUser.setUserType(Utils.TEACHER_ACCOUNT);
-                    currentUser.setCurrentTeacher(new Teacher(testAPI.getUsers().get(1).getId(), testAPI.getUsers().get(1).getEmail(), testAPI.getUsers().get(1).getFirstName(), testAPI.getUsers().get(1).getLastName(), testAPI.getUsers().get(1).getUserType(), testAPI.getUsers().get(1).getDateJoined(), "MCB"));
+                    currentUser.setCurrentTeacher(new Teacher(testAPI.getUsers().get(1).getId(), testAPI.getUsers().get(1).getEmail(), testAPI.getUsers().get(1).getFirstName(), testAPI.getUsers().get(1).getLastName(), testAPI.getUsers().get(1).getDateJoined(), "MCB"));
 
                 } else if (binding.txtLoginEmail.getEditText().getText().toString().equals("a") ){
 
                     // If its an admin
                     currentUser.setUserType(Utils.ADMIN_ACCOUNT);
-                    currentUser.setCurrentAdmin(new Admin(5, "email5@me.com", "User5", "User5", Utils.ADMIN_ACCOUNT, new Date()));
+                    currentUser.setCurrentAdmin(new Admin(5, "email5@me.com", "User5", "User5", new Date()));
 
                 }
                 startActivity(new Intent(LoginActivity.this, NavigationActivity.class));

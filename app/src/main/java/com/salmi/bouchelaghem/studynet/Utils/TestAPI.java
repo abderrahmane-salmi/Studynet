@@ -47,16 +47,16 @@ public class TestAPI extends Application {
 
     public TestAPI() {
         users = new ArrayList<>();
-        users.add(new User(1, "email1@me.com", "User1", "User1", Utils.STUDENT_ACCOUNT, new Date()));
-        users.add(new User(2, "email2@me.com", "User2", "User2", Utils.TEACHER_ACCOUNT, new Date()));
-        users.add(new User(3, "email3@me.com", "User3", "User3", Utils.TEACHER_ACCOUNT, new Date()));
-        users.add(new User(4, "email4@me.com", "User4", "User4", Utils.TEACHER_ACCOUNT, new Date()));
-        users.add(new User(5, "email5@me.com", "User5", "User5", Utils.ADMIN_ACCOUNT, new Date()));
+        users.add(new User(1, "email1@me.com", "User1", "User1", new Date()));
+        users.add(new User(2, "email2@me.com", "User2", "User2", new Date()));
+        users.add(new User(3, "email3@me.com", "User3", "User3", new Date()));
+        users.add(new User(4, "email4@me.com", "User4", "User4", new Date()));
+        users.add(new User(5, "email5@me.com", "User5", "User5", new Date()));
 
         teachers = new ArrayList<>();
-        teachers.add(new Teacher(users.get(1).getId(), users.get(1).getEmail(), users.get(1).getFirstName(), users.get(1).getLastName(), users.get(1).getUserType(), users.get(1).getDateJoined(), "MCB"));
-        teachers.add(new Teacher(users.get(2).getId(), users.get(2).getEmail(), users.get(2).getFirstName(), users.get(2).getLastName(), users.get(2).getUserType(), users.get(2).getDateJoined(), "MCB"));
-        teachers.add(new Teacher(users.get(3).getId(), users.get(3).getEmail(), users.get(3).getFirstName(), users.get(3).getLastName(), users.get(3).getUserType(), users.get(3).getDateJoined(), "MCB"));
+        teachers.add(new Teacher(users.get(1).getId(), users.get(1).getEmail(), users.get(1).getFirstName(), users.get(1).getLastName(), users.get(1).getDateJoined(), "MCB"));
+        teachers.add(new Teacher(users.get(2).getId(), users.get(2).getEmail(), users.get(2).getFirstName(), users.get(2).getLastName(), users.get(2).getDateJoined(), "MCB"));
+        teachers.add(new Teacher(users.get(3).getId(), users.get(3).getEmail(), users.get(3).getFirstName(), users.get(3).getLastName(), users.get(3).getDateJoined(), "MCB"));
 
         modules = new ArrayList<>();
         modules.add(new Module("BD2", "Base de données", Arrays.asList("Cours", "TD", "TP")));
@@ -78,7 +78,7 @@ public class TestAPI extends Application {
         sections.add(new Section("L2 GENIE CIVIL A", 4, specialties.get(2).getCode()));
 
         students = new ArrayList<>();
-        students.add(new Student(users.get(0).getId(), users.get(0).getEmail(), users.get(0).getFirstName(), users.get(0).getLastName(), users.get(0).getUserType(), users.get(0).getDateJoined(), "181831033883", sections.get(0), 2));
+        students.add(new Student(users.get(0).getId(), users.get(0).getEmail(), users.get(0).getFirstName(), users.get(0).getLastName(), users.get(0).getDateJoined(), "181831033883", sections.get(0), 2));
 
         assignments = new ArrayList<>();
         assignments.add(new Assignment(1, sections.get(0).getCode(), teachers.get(0).getId(), modules.get(0).getName(), modules.get(0).getCode(), Utils.TD, new ArrayList<>(Arrays.asList(1, 2))));
