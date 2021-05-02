@@ -138,4 +138,5 @@
     <string name="try_again">Try Again</string>
     <string name="email_taken">This email is already taken.</string>
     <string name="student_registered">Student account registered.</string>
+    <string name="unknown_error">An unknown error occurred.</string>
 </resources>

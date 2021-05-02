@@ -85,61 +85,7 @@ public class SignUpActivity extends AppCompatActivity {
         // Setup departments list
         getAllDepartments();
 
-        binding.btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateRegistrationNumber() & validateFirstName() & validateLastName() & validateEmail() & validatePassword() &
-                departmentSelected & specialitySelected & sectionSelected & groupSelected){
-
-                    String registrationNumber = binding.txtRegistrationNumber.getEditText().getText().toString().trim();
-                    String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
-                    String lastName = binding.txtLastName.getEditText().getText().toString().trim();
-                    String email = binding.txtEmail.getEditText().getText().toString().trim();
-                    String password = binding.txtPassword.getEditText().getText().toString().trim();
-                    //Create the json data to send to the api.
-                    JsonObject studentData = Serializers.studentSerializer(email,password,firstName,lastName,registrationNumber,studentSection.getCode(),group);
-                    //Send the data to the API.
-                    Call<JsonObject> studentRegister = api.registerStudent(studentData);
-                    studentRegister.enqueue(new Callback<JsonObject>() {
-                        @Override
-                        public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                            switch (response.code())
-                            {
-                                case Utils.HttpResponses.HTTP_201_CREATED:
-                                    //The student has been successfully registered, we log him in using the data that was sent back by the API.
-                                    Utils.loginStudent(response.body());
-                                    Toast.makeText(SignUpActivity.this, getString(R.string.student_registered), Toast.LENGTH_SHORT).show();
-                                    CurrentUser currentUser = CurrentUser.getInstance();
-                                    startActivity(new Intent(SignUpActivity.this, NavigationActivity.class));
-                                    break;
-                                case Utils.HttpResponses.HTTP_400_BAD_REQUEST:
-                                    //The email is already taken.
-                                    binding.txtEmail.setError(getString(R.string.email_taken));
-
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<JsonObject> call, Throwable t) {
-                            Toast.makeText(SignUpActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                } else {
-                    if (!departmentSelected){
-                        binding.departmentTextInputLayout.setError(getString(R.string.empty_msg1));
-                    }
-                    if (!specialitySelected){
-                        binding.specialityTextInputLayout.setError(getString(R.string.empty_msg2));
-                    }
-                    if (!sectionSelected) {
-                        binding.sectionTextInputLayout.setError(getString(R.string.empty_msg3));
-                    }
-                    if (!groupSelected){
-                        binding.groupTextInputLayout.setError(getString(R.string.empty_msg4));
-                    }
-                }
-            }
-        });
+        binding.btnSignUp.setOnClickListener(v -> performSignup());
 
         // When the user chooses a department
         binding.txtDepartment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -390,6 +336,61 @@ public class SignUpActivity extends AppCompatActivity {
         } else {
             binding.txtPassword.setError(null);
             return true;
+        }
+    }
+
+    private void performSignup()
+    {
+        if (validateRegistrationNumber() & validateFirstName() & validateLastName() & validateEmail() & validatePassword() &
+                departmentSelected & specialitySelected & sectionSelected & groupSelected){
+
+            String registrationNumber = binding.txtRegistrationNumber.getEditText().getText().toString().trim();
+            String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
+            String lastName = binding.txtLastName.getEditText().getText().toString().trim();
+            String email = binding.txtEmail.getEditText().getText().toString().trim();
+            String password = binding.txtPassword.getEditText().getText().toString().trim();
+            //Create the json data to send to the api.
+            JsonObject studentData = Serializers.studentSerializer(email,password,firstName,lastName,registrationNumber,studentSection.getCode(),group);
+            //Send the data to the API.
+            Call<JsonObject> studentRegister = api.registerStudent(studentData);
+            studentRegister.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                    switch (response.code())
+                    {
+                        case Utils.HttpResponses.HTTP_201_CREATED:
+                            //The student has been successfully registered, we log him in using the data that was sent back by the API.
+                            Utils.loginStudent(response.body());
+                            Toast.makeText(SignUpActivity.this, getString(R.string.student_registered), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(SignUpActivity.this, NavigationActivity.class));
+                            break;
+                        case Utils.HttpResponses.HTTP_400_BAD_REQUEST:
+                            //The email is already taken.
+                            binding.txtEmail.setError(getString(R.string.email_taken));
+                            break;
+                        default:
+                            Toast.makeText(SignUpActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Toast.makeText(SignUpActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } else {
+            if (!departmentSelected){
+                binding.departmentTextInputLayout.setError(getString(R.string.empty_msg1));
+            }
+            if (!specialitySelected){
+                binding.specialityTextInputLayout.setError(getString(R.string.empty_msg2));
+            }
+            if (!sectionSelected) {
+                binding.sectionTextInputLayout.setError(getString(R.string.empty_msg3));
+            }
+            if (!groupSelected){
+                binding.groupTextInputLayout.setError(getString(R.string.empty_msg4));
+            }
         }
     }
 }
