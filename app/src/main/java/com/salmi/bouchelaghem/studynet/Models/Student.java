@@ -1,5 +1,7 @@
 package com.salmi.bouchelaghem.studynet.Models;
 
+import org.threeten.bp.ZonedDateTime;
+
 import java.util.Date;
 
 public class Student extends User {
@@ -11,8 +13,8 @@ public class Student extends User {
     public Student() {
     }
 
-    public Student(int id, String email, String firstName, String lastName, String userType, Date dateJoined, String registrationNumber, Section section, int group) {
-        super(id, email, firstName, lastName, userType, dateJoined);
+    public Student(int id, String email, String firstName, String lastName, ZonedDateTime dateJoined, String registrationNumber, Section section, int group) {
+        super(id, email, firstName, lastName, dateJoined);
         this.registrationNumber = registrationNumber;
         this.section = section;
         this.group = group;

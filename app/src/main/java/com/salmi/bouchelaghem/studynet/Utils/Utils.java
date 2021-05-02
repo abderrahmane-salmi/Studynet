@@ -1,5 +1,10 @@
 package com.salmi.bouchelaghem.studynet.Utils;
 
+import android.content.ContentUris;
+
+import com.google.gson.JsonObject;
+import com.salmi.bouchelaghem.studynet.Models.Student;
+
 public class Utils {
 
     // Api base url
@@ -40,4 +45,31 @@ public class Utils {
     public static final String ACTION_UPDATE = "Update";
     public static final String ACTION_DELETE = "Delete";
 
+    /** Logs in the student given in the student data. (takes care of the token too)*/
+    public static CurrentUser loginStudent(JsonObject student)
+    {
+        CurrentUser currentUser = CurrentUser.getInstance();
+        //Set the current user
+        currentUser.setUserType(Utils.STUDENT_ACCOUNT);
+        currentUser.setCurrentStudent(Serializers.StudentDeserializer(student));
+        currentUser.setToken(student.get("token").getAsString());
+        return currentUser;
+    }
+    public class HttpResponses
+    {
+        public static final int HTTP_200_OK = 200;
+        public static final int HTTP_201_CREATED = 201;
+        public static final int HTTP_202_ACCEPTED = 202;
+        public static final int HTTP_203_NON_AUTHORITATIVE_INFORMATION = 203;
+        public static final int HTTP_204_NO_CONTENT = 204;
+        public static final int HTTP_302_FOUND = 302;
+        public static final int HTTP_304_NOT_MODIFIED = 304;
+        public static final int HTTP_400_BAD_REQUEST = 400;
+        public static final int HTTP_401_UNAUTHORIZED = 401;
+        public static final int HTTP_403_FORBIDDEN = 403;
+        public static final int HTTP_404_NOT_FOUND = 404;
+        public static final int HTTP_405_METHOD_NOT_ALLOWED = 405;
+        public static final int HTTP_406_NOT_ACCEPTABLE = 406;
+        public static final int HTTP_410_GONE = 410;
+    }
 }
