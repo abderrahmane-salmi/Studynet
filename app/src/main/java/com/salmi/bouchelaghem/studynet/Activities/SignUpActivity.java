@@ -22,6 +22,8 @@ import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivitySignUpBinding;
 
+import org.threeten.bp.ZonedDateTime;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -103,7 +105,7 @@ public class SignUpActivity extends AppCompatActivity {
                     student.setFirstName(firstName);
                     student.setLastName(lastName);
                     student.setEmail(email);
-                    student.setDateJoined(new Date());
+                    student.setDateJoined(ZonedDateTime.now());
                     student.setSection(studentSection);
                     student.setGroup(group);
                     currentUser.setCurrentStudent(student);

@@ -1,17 +1,19 @@
 package com.salmi.bouchelaghem.studynet.Models;
 
+import org.threeten.bp.ZonedDateTime;
+
 import java.util.Date;
 
 public class User {
 
     private int id;
     private String email, firstName, lastName;
-    private Date dateJoined;
+    private ZonedDateTime dateJoined;
 
     public User() {
     }
 
-    public User(int id, String email, String firstName, String lastName, Date dateJoined) {
+    public User(int id, String email, String firstName, String lastName, ZonedDateTime dateJoined) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -52,11 +54,11 @@ public class User {
     }
 
 
-    public Date getDateJoined() {
+    public ZonedDateTime getDateJoined() {
         return dateJoined;
     }
 
-    public void setDateJoined(Date dateJoined) {
+    public void setDateJoined(ZonedDateTime dateJoined) {
         this.dateJoined = dateJoined;
     }
 }

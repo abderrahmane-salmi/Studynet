@@ -17,6 +17,8 @@ import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityLoginBinding;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityNavigationBinding;
 
+import org.threeten.bp.ZonedDateTime;
+
 import java.util.Date;
 
 public class LoginActivity extends AppCompatActivity {
@@ -77,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     // If its an admin
                     currentUser.setUserType(Utils.ADMIN_ACCOUNT);
-                    currentUser.setCurrentAdmin(new Admin(5, "email5@me.com", "User5", "User5", new Date()));
+                    currentUser.setCurrentAdmin(new Admin(5, "email5@me.com", "User5", "User5", ZonedDateTime.now()));
 
                 }
                 startActivity(new Intent(LoginActivity.this, NavigationActivity.class));

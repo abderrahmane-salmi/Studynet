@@ -18,6 +18,8 @@ import com.salmi.bouchelaghem.studynet.Models.User;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
+import org.threeten.bp.ZonedDateTime;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -47,11 +49,11 @@ public class TestAPI extends Application {
 
     public TestAPI() {
         users = new ArrayList<>();
-        users.add(new User(1, "email1@me.com", "User1", "User1", new Date()));
-        users.add(new User(2, "email2@me.com", "User2", "User2", new Date()));
-        users.add(new User(3, "email3@me.com", "User3", "User3", new Date()));
-        users.add(new User(4, "email4@me.com", "User4", "User4", new Date()));
-        users.add(new User(5, "email5@me.com", "User5", "User5", new Date()));
+        users.add(new User(1, "email1@me.com", "User1", "User1", ZonedDateTime.now()));
+        users.add(new User(2, "email2@me.com", "User2", "User2", ZonedDateTime.now()));
+        users.add(new User(3, "email3@me.com", "User3", "User3", ZonedDateTime.now()));
+        users.add(new User(4, "email4@me.com", "User4", "User4", ZonedDateTime.now()));
+        users.add(new User(5, "email5@me.com", "User5", "User5", ZonedDateTime.now()));
 
         teachers = new ArrayList<>();
         teachers.add(new Teacher(users.get(1).getId(), users.get(1).getEmail(), users.get(1).getFirstName(), users.get(1).getLastName(), users.get(1).getDateJoined(), "MCB"));

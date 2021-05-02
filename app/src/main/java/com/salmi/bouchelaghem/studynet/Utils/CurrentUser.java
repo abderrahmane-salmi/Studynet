@@ -2,6 +2,7 @@ package com.salmi.bouchelaghem.studynet.Utils;
 
 import android.app.Application;
 
+import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.salmi.bouchelaghem.studynet.Models.Admin;
 import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
@@ -15,7 +16,12 @@ public class CurrentUser extends Application {
     private String token;
     private static CurrentUser instance;
 
+    @Override
+    public void onCreate() {
 
+        super.onCreate();
+        AndroidThreeTen.init(this);
+    }
     public static void setInstance(CurrentUser instance) {
         CurrentUser.instance = instance;
     }
