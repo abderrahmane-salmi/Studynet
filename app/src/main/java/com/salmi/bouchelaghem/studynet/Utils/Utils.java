@@ -1,5 +1,10 @@
 package com.salmi.bouchelaghem.studynet.Utils;
 
+import android.content.ContentUris;
+
+import com.google.gson.JsonObject;
+import com.salmi.bouchelaghem.studynet.Models.Student;
+
 public class Utils {
 
     // Api base url
@@ -39,5 +44,16 @@ public class Utils {
     public static final String ACTION_ADD = "Add";
     public static final String ACTION_UPDATE = "Update";
     public static final String ACTION_DELETE = "Delete";
+
+    /** Logs in the student given in the student data. (takes care of the token too)*/
+    public CurrentUser loginStudent(JsonObject student)
+    {
+        CurrentUser currentUser = CurrentUser.getInstance();
+        //Set the current user
+        currentUser.setUserType(Utils.STUDENT_ACCOUNT);
+        currentUser.setCurrentStudent(Serializers.StudentDeserializer(student));
+        currentUser.setToken(student.get("token").getAsString());
+        return currentUser;
+    }
 
 }

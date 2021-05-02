@@ -25,33 +25,29 @@ public class Serializers {
         student.addProperty("section",section);
         return student;
     }
-    
-    /** Fills the data returned by the registration of a student into the current user (takes care of the returned token too).*/
-    public static CurrentUser RegisterStudentDeserializer(JsonObject studentLoginData)
+
+    /** Creates a student object from JsonObject (assumes that the section is detailed)*/
+    public static Student StudentDeserializer(JsonObject studentData)
     {
-        JsonObject userData = studentLoginData.getAsJsonObject("user");
-        JsonObject sectionData = studentLoginData.getAsJsonObject("section");
-        CurrentUser currentUser = CurrentUser.getInstance();
+        JsonObject userData = studentData.getAsJsonObject("user");
+        JsonObject sectionData = studentData.getAsJsonObject("section");
+
         //Create the section of this student.
         Section section = new Section(
                 sectionData.get("code").getAsString(),
                 sectionData.get("number_of_groups").getAsInt(),
                 sectionData.get("specialty").getAsString());
-        //Create the student that we will be setting as the current user.
+        //Create the student.
         Student student = new Student(
                 userData.get("id").getAsInt(),
                 userData.get("email").getAsString(),
                 userData.get("first_name").getAsString(),
                 userData.get("last_name").getAsString(),
                 ZonedDateTime.parse(userData.get("date_joined").getAsString(), DateTimeFormatter.ISO_DATE_TIME),
-                studentLoginData.get("registration_number").getAsString(),
+                studentData.get("registration_number").getAsString(),
                 section,
-                studentLoginData.get("group").getAsInt()
+                studentData.get("group").getAsInt()
                 );
-        //Create the current user.
-        currentUser.setUserType(Utils.STUDENT_ACCOUNT);
-        currentUser.setCurrentStudent(student);
-        currentUser.setToken(studentLoginData.get("token").getAsString());
-        return currentUser;
+        return student;
     }
 }
