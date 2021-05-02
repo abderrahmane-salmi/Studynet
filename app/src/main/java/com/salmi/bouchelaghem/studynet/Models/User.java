@@ -53,7 +53,6 @@ public class User {
         this.lastName = lastName;
     }
 
-
     public ZonedDateTime getDateJoined() {
         return dateJoined;
     }
@@ -61,4 +60,5 @@ public class User {
     public void setDateJoined(ZonedDateTime dateJoined) {
         this.dateJoined = dateJoined;
     }
+
 }
