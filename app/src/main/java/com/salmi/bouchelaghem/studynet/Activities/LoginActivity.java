@@ -19,6 +19,8 @@ import com.salmi.bouchelaghem.studynet.databinding.ActivityNavigationBinding;
 
 import org.threeten.bp.ZonedDateTime;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 public class LoginActivity extends AppCompatActivity {
@@ -73,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     // If its a teacher
                     currentUser.setUserType(Utils.TEACHER_ACCOUNT);
-                    currentUser.setCurrentTeacher(new Teacher(testAPI.getUsers().get(1).getId(), testAPI.getUsers().get(1).getEmail(), testAPI.getUsers().get(1).getFirstName(), testAPI.getUsers().get(1).getLastName(), testAPI.getUsers().get(1).getDateJoined(), "MCB"));
+                    currentUser.setCurrentTeacher(new Teacher(testAPI.getUsers().get(1).getId(), testAPI.getUsers().get(1).getEmail(), testAPI.getUsers().get(1).getFirstName(), testAPI.getUsers().get(1).getLastName(), testAPI.getUsers().get(1).getDateJoined(), "MCB",new ArrayList<String>(Arrays.asList("L2 ISIL C","L3 ISIL C"))));
 
                 } else if (binding.txtLoginEmail.getEditText().getText().toString().equals("a") ){
 

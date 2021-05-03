@@ -1,11 +1,17 @@
 package com.salmi.bouchelaghem.studynet.Utils;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.salmi.bouchelaghem.studynet.Models.Admin;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Student;
+import com.salmi.bouchelaghem.studynet.Models.Teacher;
 
 import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class Serializers {
     /** Creates a json student object from student data. */
@@ -49,5 +55,43 @@ public class Serializers {
                 studentData.get("group").getAsInt()
                 );
         return student;
+    }
+
+    /** Creates an admin object from JsonObject*/
+    public static Admin AdminDeserializer(JsonObject adminData)
+    {
+        //Create the admin
+        Admin admin = new Admin(
+                adminData.get("id").getAsInt(),
+                adminData.get("email").getAsString(),
+                adminData.get("first_name").getAsString(),
+                adminData.get("last_name").getAsString(),
+                ZonedDateTime.parse(adminData.get("date_joined").getAsString(),DateTimeFormatter.BASIC_ISO_DATE));
+        return admin;
+    }
+
+    /** Creates a teacher object from JsonObject*/
+    public static Teacher TeacherDeserializer(JsonObject teacherData)
+    {
+        JsonObject userData = teacherData.get("user").getAsJsonObject();
+        JsonArray sections = teacherData.get("sections").getAsJsonArray();
+
+        //Create the array of sections
+        ArrayList<String> sectionsArray = new ArrayList<String>();
+        for(int i = 0 ; i < sections.size();++i)
+        {
+            sectionsArray.add(sections.get(i).getAsString());
+        }
+        //Create the teacher object
+        Teacher teacher = new Teacher(
+                userData.get("id").getAsInt(),
+                userData.get("email").getAsString(),
+                userData.get("first_name").getAsString(),
+                userData.get("last_name").getAsString(),
+                ZonedDateTime.parse(userData.get("date_joined").getAsString(),DateTimeFormatter.BASIC_ISO_DATE),
+                teacherData.get("grade").getAsString(),
+                sectionsArray
+        );
+        return teacher;
     }
 }

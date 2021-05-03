@@ -56,9 +56,9 @@ public class TestAPI extends Application {
         users.add(new User(5, "email5@me.com", "User5", "User5", ZonedDateTime.now()));
 
         teachers = new ArrayList<>();
-        teachers.add(new Teacher(users.get(1).getId(), users.get(1).getEmail(), users.get(1).getFirstName(), users.get(1).getLastName(), users.get(1).getDateJoined(), "MCB"));
-        teachers.add(new Teacher(users.get(2).getId(), users.get(2).getEmail(), users.get(2).getFirstName(), users.get(2).getLastName(), users.get(2).getDateJoined(), "MCB"));
-        teachers.add(new Teacher(users.get(3).getId(), users.get(3).getEmail(), users.get(3).getFirstName(), users.get(3).getLastName(), users.get(3).getDateJoined(), "MCB"));
+        teachers.add(new Teacher(users.get(1).getId(), users.get(1).getEmail(), users.get(1).getFirstName(), users.get(1).getLastName(), users.get(1).getDateJoined(), "MCB",new ArrayList<String>(Arrays.asList("L2 ISIL C","L3 ISIL C"))));
+        teachers.add(new Teacher(users.get(2).getId(), users.get(2).getEmail(), users.get(2).getFirstName(), users.get(2).getLastName(), users.get(2).getDateJoined(), "MCB",new ArrayList<String>(Arrays.asList("L2 ISIL D","L3 ISIL D"))));
+        teachers.add(new Teacher(users.get(3).getId(), users.get(3).getEmail(), users.get(3).getFirstName(), users.get(3).getLastName(), users.get(3).getDateJoined(), "MCB",new ArrayList<String>(Arrays.asList("L2 ISIL E","L3 ISIL E"))));
 
         modules = new ArrayList<>();
         modules.add(new Module("BD2", "Base de données", Arrays.asList("Cours", "TD", "TP")));
