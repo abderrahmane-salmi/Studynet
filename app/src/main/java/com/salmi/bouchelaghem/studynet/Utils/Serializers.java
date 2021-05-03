@@ -1,6 +1,7 @@
 package com.salmi.bouchelaghem.studynet.Utils;
 
 import com.google.gson.JsonObject;
+import com.salmi.bouchelaghem.studynet.Models.Admin;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Student;
 
@@ -49,5 +50,18 @@ public class Serializers {
                 studentData.get("group").getAsInt()
                 );
         return student;
+    }
+
+    /** Creates an admin object from JsonObject*/
+    public static Admin AdminDeserializer(JsonObject adminData)
+    {
+        //Create the admin
+        Admin admin = new Admin(
+                adminData.get("id").getAsInt(),
+                adminData.get("email").getAsString(),
+                adminData.get("first_name").getAsString(),
+                adminData.get("last_name").getAsString(),
+                ZonedDateTime.parse(adminData.get("date_joined").getAsString(),DateTimeFormatter.BASIC_ISO_DATE));
+        return admin;
     }
 }
