@@ -11,6 +11,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.salmi.bouchelaghem.studynet.Adapters.AssignmentsAdapter;
+import com.salmi.bouchelaghem.studynet.Models.Assignment;
 import com.salmi.bouchelaghem.studynet.Models.Department;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
@@ -39,6 +41,12 @@ public class AddTeacherActivity extends AppCompatActivity {
     private boolean[] sectionsStates; // We need this just for the dialog
     private boolean sectionsSelected = false;
 
+    // Recycler view
+    private List<Assignment> assignments;
+    private AssignmentsAdapter adapter;
+
+    private int step = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,23 +65,47 @@ public class AddTeacherActivity extends AppCompatActivity {
         switch (action){
             case Utils.ACTION_ADD:
                 binding.btnNext.setOnClickListener(v -> {
-                    if (validateFirstName() & validateLastName() & validateEmail() & validatePassword() & grade != null & department != null & sectionsSelected){
-                        String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
-                        String lastName = binding.txtLastName.getEditText().getText().toString().trim();
-                        String email = binding.txtEmail.getEditText().getText().toString().trim();
-                        String password = binding.txtPassword.getEditText().getText().toString().trim();
+                    switch (step){
+                        case 1: // Step1: Fill the teacher's basic info
+//                            if (validateFirstName() & validateLastName() & validateEmail() & validatePassword() & grade != null & department != null & sectionsSelected){
+//                                step = 2;
+//                                binding.teacherInfoLayout.setVisibility(View.GONE);
+//                                binding.assignmentsRecView.setVisibility(View.VISIBLE);
+//                                binding.btnAdd.setVisibility(View.VISIBLE);
+//                                // Show back button
+//                                binding.btnStepBack.setVisibility(View.VISIBLE);
+//                                // Show empty msg
+//                                binding.emptyMsg.setVisibility(View.VISIBLE);
+//                            } else {
+//                                if (grade == null){
+//                                    binding.txtGradeLayout.setError(getString(R.string.empty_grade_msg));
+//                                }
+//                                if (department == null){
+//                                    binding.txtDepartmentLayout.setError(getString(R.string.empty_msg1));
+//                                }
+//                                if (grade == null){
+//                                    binding.txtSectionsList.setError("");
+//                                }
+//                            }
+                            // Go to the next step
+                            step = 2;
+                            binding.teacherInfoLayout.setVisibility(View.GONE);
+                            binding.assignmentsRecView.setVisibility(View.VISIBLE);
+                            binding.btnAdd.setVisibility(View.VISIBLE);
+                            // Show back button
+                            binding.btnStepBack.setVisibility(View.VISIBLE);
+                            // Show empty msg
+                            binding.emptyMsg.setVisibility(View.VISIBLE);
+                            break;
+                        case 2: // Step 2: Add assignments
+                            // Save the teacher's info
+                            String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
+                            String lastName = binding.txtLastName.getEditText().getText().toString().trim();
+                            String email = binding.txtEmail.getEditText().getText().toString().trim();
+                            String password = binding.txtPassword.getEditText().getText().toString().trim();
 
-                        Toast.makeText(AddTeacherActivity.this, "Save", Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (grade == null){
-                            binding.txtGradeLayout.setError(getString(R.string.empty_grade_msg));
-                        }
-                        if (department == null){
-                            binding.txtDepartmentLayout.setError(getString(R.string.empty_msg1));
-                        }
-                        if (grade == null){
-                            binding.txtSectionsList.setError("");
-                        }
+                            Toast.makeText(AddTeacherActivity.this, "Save", Toast.LENGTH_SHORT).show();
+                            break;
                     }
                 });
                 break;
