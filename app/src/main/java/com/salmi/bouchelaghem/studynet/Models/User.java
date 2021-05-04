@@ -1,10 +1,13 @@
 package com.salmi.bouchelaghem.studynet.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.threeten.bp.ZonedDateTime;
 
 import java.util.Date;
 
-public class User {
+public class User implements Parcelable {
 
     private int id;
     private String email, firstName, lastName;
@@ -20,6 +23,25 @@ public class User {
         this.lastName = lastName;
         this.dateJoined = dateJoined;
     }
+
+    protected User(Parcel in) {
+        id = in.readInt();
+        email = in.readString();
+        firstName = in.readString();
+        lastName = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -61,4 +83,16 @@ public class User {
         this.dateJoined = dateJoined;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(email);
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+    }
 }

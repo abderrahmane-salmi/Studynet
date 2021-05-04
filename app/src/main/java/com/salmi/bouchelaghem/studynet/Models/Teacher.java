@@ -1,12 +1,14 @@
 package com.salmi.bouchelaghem.studynet.Models;
 
+import android.os.Parcelable;
+
 import org.threeten.bp.ZonedDateTime;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Teacher extends User {
+public class Teacher extends User implements Parcelable {
 
     private String grade;
     private ArrayList<String> sections;

@@ -41,7 +41,7 @@ public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.ViewHo
         holder.binding.teacherMainLayout.setOnClickListener(v -> {
             Teacher teacher = teachers.get(holder.getAdapterPosition());
             // TODO: Send the teacher object with safe args
-            NavDirections action = TeachersFragmentDirections.actionNavTeachersToTeacherDetailsFragment();
+            NavDirections action = TeachersFragmentDirections.actionNavTeachersToTeacherDetailsFragment(teacher);
             Navigation.createNavigateOnClickListener(action).onClick(holder.binding.getRoot());
         });
 
