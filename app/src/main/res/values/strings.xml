@@ -155,4 +155,5 @@
     <string name="empty_grade_msg">Grade can\'t be empty</string>
     <string name="teacher_deleted_msg">teacher_deleted successfully</string>
     <string name="could_not_logout">Could not logout.</string>
+    <string name="connection_failed">Connection failed, please check your internet access and try again.</string>
 </resources>

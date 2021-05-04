@@ -1,5 +1,6 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
@@ -10,26 +11,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
-import com.salmi.bouchelaghem.studynet.Models.Admin;
-import com.salmi.bouchelaghem.studynet.Models.Student;
-import com.salmi.bouchelaghem.studynet.Models.Teacher;
-import com.salmi.bouchelaghem.studynet.Models.User;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.Serializers;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
-import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityLoginBinding;
-import com.salmi.bouchelaghem.studynet.databinding.ActivityNavigationBinding;
 
-import org.threeten.bp.ZonedDateTime;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-
-import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -131,21 +119,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /** Logs in the admin given in the admin data. (takes care of the token too)*/
-    public static CurrentUser loginAdmin(JsonObject admin)
+    public static void loginAdmin(JsonObject admin)
     {
         CurrentUser currentUser = CurrentUser.getInstance();
         //Set the current user
         currentUser.setUserType(Utils.ADMIN_ACCOUNT);
         currentUser.setCurrentAdmin(Serializers.AdminDeserializer(admin));
         currentUser.setToken(admin.get("token").getAsString());
-        return currentUser;
     }
 
     /** Callback logic for the login process.*/
     private class LoginCallback implements Callback<JsonObject> {
 
         @Override
-        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+        public void onResponse(@NonNull Call<JsonObject> call, Response<JsonObject> response) {
             switch (response.code())
             {
                 case Utils.HttpResponses.HTTP_201_CREATED:
@@ -194,8 +181,8 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onFailure(Call<JsonObject> call, Throwable t) {
-
+        public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
+            Toast.makeText(LoginActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
         }
     }
 }

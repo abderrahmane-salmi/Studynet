@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
@@ -84,7 +85,7 @@ public class NavigationActivity extends AppCompatActivity {
     {
 
         @Override
-        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        public void onResponse(@NonNull Call<ResponseBody> call, Response<ResponseBody> response) {
             switch(response.code())
             {
 
@@ -102,7 +103,7 @@ public class NavigationActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onFailure(Call<ResponseBody> call, Throwable t) {
+        public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
             Toast.makeText(NavigationActivity.this, getString(R.string.could_not_logout), Toast.LENGTH_LONG).show();
 
         }
