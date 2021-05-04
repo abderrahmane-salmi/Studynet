@@ -4,28 +4,28 @@
     package="com.salmi.bouchelaghem.studynet">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".Utils.CurrentUser"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Studynet"
-        android:name=".Utils.CurrentUser"
         tools:ignore="AllowBackup">
-        <activity android:name="com.salmi.bouchelaghem.studynet.Activities.SplashActivity">
-        </activity>
-        <activity android:name="com.salmi.bouchelaghem.studynet.Activities.OnboardingActivity" />
-        <activity android:name="com.salmi.bouchelaghem.studynet.Activities.AddHomeworkActivity" />
-        <activity android:name="com.salmi.bouchelaghem.studynet.Activities.HomeworkDetailsActivity" />
-        <activity android:name="com.salmi.bouchelaghem.studynet.Activities.AddClassActivity" />
-        <activity android:name="com.salmi.bouchelaghem.studynet.Activities.ClassDetailsActivity" />
-        <activity android:name="com.salmi.bouchelaghem.studynet.Activities.NavigationActivity" />
-        <activity android:name="com.salmi.bouchelaghem.studynet.Activities.ResetPasswordActivity" />
-        <activity android:name="com.salmi.bouchelaghem.studynet.Activities.SignUpActivity" />
-        <activity android:name="com.salmi.bouchelaghem.studynet.Activities.LoginActivity">
+        <activity android:name=".Activities.AddTeacherActivity"></activity>
+        <activity android:name=".Activities.SplashActivity"></activity>
+        <activity android:name=".Activities.OnboardingActivity" />
+        <activity android:name=".Activities.AddHomeworkActivity" />
+        <activity android:name=".Activities.HomeworkDetailsActivity" />
+        <activity android:name=".Activities.AddClassActivity" />
+        <activity android:name=".Activities.ClassDetailsActivity" />
+        <activity android:name=".Activities.NavigationActivity" />
+        <activity android:name=".Activities.ResetPasswordActivity" />
+        <activity android:name=".Activities.SignUpActivity" />
+        <activity android:name=".Activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
