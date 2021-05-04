@@ -38,4 +38,7 @@ public interface StudynetAPI {
     @POST("students/")
     Call<JsonObject> registerStudent(@Body JsonObject student);
 
+    @POST("login/")
+    Call<JsonObject> login(@Body JsonObject credentials);
+
 }

@@ -23,9 +23,9 @@ public class Utils {
     public static final String MEETING_PASSWORD = "Meeting Password";
 
     // User types
-    public static final String STUDENT_ACCOUNT = "Student";
-    public static final String TEACHER_ACCOUNT = "Teacher";
-    public static final String ADMIN_ACCOUNT = "Admin";
+    public static final String STUDENT_ACCOUNT = "student";
+    public static final String TEACHER_ACCOUNT = "teacher";
+    public static final String ADMIN_ACCOUNT = "administrator";
 
     // Homework filter
     // TODO: take this to a string array (so we can translate it)
