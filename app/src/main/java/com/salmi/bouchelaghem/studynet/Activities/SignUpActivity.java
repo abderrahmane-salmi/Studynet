@@ -1,6 +1,8 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -11,11 +13,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Models.Department;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Specialty;
 import com.salmi.bouchelaghem.studynet.R;
+import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.Serializers;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
@@ -343,6 +347,9 @@ public class SignUpActivity extends AppCompatActivity {
                         case Utils.HttpResponses.HTTP_201_CREATED:
                             //The student has been successfully registered, we log him in using the data that was sent back by the API.
                             Utils.loginStudent(response.body());
+                            //We save his data locally.
+                            saveCurrentUser();
+                            //Take him to the navigation activity.
                             Toast.makeText(SignUpActivity.this, getString(R.string.student_registered), Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(SignUpActivity.this, NavigationActivity.class));
                             finish();
@@ -375,5 +382,17 @@ public class SignUpActivity extends AppCompatActivity {
                 binding.groupTextInputLayout.setError(getString(R.string.empty_msg4));
             }
         }
+    }
+
+    private void saveCurrentUser()
+    {
+        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        //Convert the current user object to json
+        String currentUserJson = new Gson().toJson(CurrentUser.getInstance());
+        //Save the json string.
+        SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
+        prefsEditor.putString("currentUser",currentUserJson);
+        prefsEditor.putBoolean("loggedIn",true);
+        prefsEditor.apply();
     }
 }
