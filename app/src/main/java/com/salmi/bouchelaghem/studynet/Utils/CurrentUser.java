@@ -26,7 +26,7 @@ public class CurrentUser extends Application {
         CurrentUser.instance = instance;
     }
 
-    // This class is a singleton
+    /** This class is a singleton */
     public static CurrentUser getInstance(){
         if (instance == null)
             instance = new CurrentUser();
@@ -36,6 +36,16 @@ public class CurrentUser extends Application {
     public CurrentUser() {
     }
 
+    /** Remove all the data. */
+    public void logout()
+    {
+
+        userType = null;
+        currentStudent = null;
+        currentTeacher = null;
+        currentAdmin = null;
+        token = null;
+    }
     public String getUserType() {
         return userType;
     }

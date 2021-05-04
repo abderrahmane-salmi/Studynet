@@ -8,9 +8,11 @@ import com.salmi.bouchelaghem.studynet.Models.Specialty;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -40,5 +42,11 @@ public interface StudynetAPI {
 
     @POST("login/")
     Call<JsonObject> login(@Body JsonObject credentials);
+
+    @POST("logout/")
+    Call<ResponseBody> logout(@Header("Authorization") String token);
+
+    @POST("logoutall/")
+    Call<ResponseBody> logoutAll(@Header("Authorization") String token);
 
 }

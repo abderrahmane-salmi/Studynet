@@ -154,4 +154,5 @@
     <string name="no_changes_msg">There are no changes to save</string>
     <string name="empty_grade_msg">Grade can\'t be empty</string>
     <string name="teacher_deleted_msg">teacher_deleted successfully</string>
+    <string name="could_not_logout">Could not logout.</string>
 </resources>
