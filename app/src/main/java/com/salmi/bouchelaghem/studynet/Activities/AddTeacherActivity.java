@@ -39,7 +39,7 @@ public class AddTeacherActivity extends AppCompatActivity {
 
         switch (action){
             case Utils.ACTION_ADD:
-                binding.btnSave.setOnClickListener(v -> {
+                binding.btnNext.setOnClickListener(v -> {
                     if (validateFirstName() & validateLastName() & validateEmail() & validatePassword() & grade != null){
                         String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
                         String lastName = binding.txtLastName.getEditText().getText().toString().trim();
@@ -63,7 +63,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                 Teacher teacher = intent.getParcelableExtra(Utils.TEACHER);
                 fillFields(teacher);
                 // Save button
-                binding.btnSave.setOnClickListener(v -> {
+                binding.btnNext.setOnClickListener(v -> {
                     if (validateFirstName() & validateLastName() & validateEmail() & grade != null){
                         String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
                         String lastName = binding.txtLastName.getEditText().getText().toString().trim();
@@ -86,7 +86,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                 break;
         }
 
-        binding.txtGrade.setOnItemClickListener((parent, view1, position, id) -> {
+        binding.txtGradeSpinner.setOnItemClickListener((parent, view1, position, id) -> {
             binding.txtGradeLayout.setError(null);
             grade = grades.get(position);
         });
@@ -97,7 +97,7 @@ public class AddTeacherActivity extends AppCompatActivity {
     private void setupGradesSpinner() {
         grades = Arrays.asList(getResources().getStringArray(R.array.grades));
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddTeacherActivity.this, R.layout.dropdown_item, grades);
-        binding.txtGrade.setAdapter(arrayAdapter);
+        binding.txtGradeSpinner.setAdapter(arrayAdapter);
     }
 
     private void fillFields(Teacher teacher) {
@@ -105,7 +105,7 @@ public class AddTeacherActivity extends AppCompatActivity {
         binding.txtLastName.getEditText().setText(teacher.getLastName());
         binding.txtEmail.getEditText().setText(teacher.getEmail());
         grade = teacher.getGrade();
-        binding.txtGrade.setText(grade, false);
+        binding.txtGradeSpinner.setText(grade, false);
     }
 
     // Validation methods
