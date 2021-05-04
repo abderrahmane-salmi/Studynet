@@ -2,6 +2,7 @@ package com.salmi.bouchelaghem.studynet.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -12,13 +13,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 
+import com.google.gson.Gson;
 import com.salmi.bouchelaghem.studynet.R;
+import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
+import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivitySplashBinding;
 
 public class SplashActivity extends AppCompatActivity {
 
     private ActivitySplashBinding binding;
-
+    private SharedPreferences sharedPreferences;
     private boolean loggedIn;
 
     @Override
@@ -27,7 +31,8 @@ public class SplashActivity extends AppCompatActivity {
         binding = ActivitySplashBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-
+        //Get the shared preferences.
+        sharedPreferences = getApplicationContext().getSharedPreferences(Utils.SHARED_PREFERENCES_USER_DATA,MODE_PRIVATE);
         // Set light theme as the default theme
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
@@ -47,8 +52,16 @@ public class SplashActivity extends AppCompatActivity {
         } else {
 
             new Handler().postDelayed(() -> {
-                loggedIn = true;
-                if (loggedIn){
+                //Check if the user is already logged in using shared preferences.
+                boolean testbool = sharedPreferences.getBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,false);
+                if (sharedPreferences.getBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,false))
+                {
+                    //The user is already logged in.
+                    Gson gson = new Gson();
+                    String temptest = sharedPreferences.getString(Utils.SHARED_PREFERENCES_CURRENT_USER, "");
+                    String json = temptest;
+                    CurrentUser test = gson.fromJson(json, CurrentUser.class);
+                    //CurrentUser.setInstance()
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 } else {
                     startActivity(new Intent(SplashActivity.this, OnboardingActivity.class));

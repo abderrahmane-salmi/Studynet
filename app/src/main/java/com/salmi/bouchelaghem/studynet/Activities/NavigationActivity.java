@@ -1,6 +1,7 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +34,7 @@ public class NavigationActivity extends AppCompatActivity {
     private final CurrentUser currentUser = CurrentUser.getInstance();
     private StudynetAPI api;
     public ImageView btnFilter;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,8 @@ public class NavigationActivity extends AppCompatActivity {
         binding = ActivityNavigationBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+        //Get the shared preferences.
+        sharedPreferences = getApplicationContext().getSharedPreferences(Utils.SHARED_PREFERENCES_CURRENT_USER,MODE_PRIVATE);
         // Init retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Utils.API_BASE_URL)
@@ -92,6 +96,11 @@ public class NavigationActivity extends AppCompatActivity {
                 case Utils.HttpResponses.HTTP_204_NO_CONTENT: //Logout successful.
                 case Utils.HttpResponses.HTTP_401_UNAUTHORIZED: //Expired token, logout anyway since this token cannot be used.
                     currentUser.logout();
+                    //Save that the user is no longer logged in locally.
+                    SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
+                    prefsEditor.putBoolean("loggedIn",false);
+                    prefsEditor.commit();
+                    //Take the user to the login page.
                     Toast.makeText(NavigationActivity.this, getString(R.string.logout_msg), Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(NavigationActivity.this, LoginActivity.class));
                     finish();

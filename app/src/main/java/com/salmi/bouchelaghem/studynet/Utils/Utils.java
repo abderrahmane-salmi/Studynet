@@ -27,6 +27,12 @@ public class Utils {
     public static final String TEACHER_ACCOUNT = "teacher";
     public static final String ADMIN_ACCOUNT = "administrator";
 
+    //Shared preferences data
+    public static final String SHARED_PREFERENCES_USER_DATA = "userData";
+    public static final String SHARED_PREFERENCES_CURRENT_USER = "currentUser";
+
+    public static final String SHARED_PREFERENCES_LOGGED_IN = "loggedIn";
+
     // Homework filter
     // TODO: take this to a string array (so we can translate it)
     public static final String YESTERDAY = "Yesterday";

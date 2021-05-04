@@ -386,13 +386,13 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void saveCurrentUser()
     {
-        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(Utils.SHARED_PREFERENCES_USER_DATA,MODE_PRIVATE);
         //Convert the current user object to json
         String currentUserJson = new Gson().toJson(CurrentUser.getInstance());
         //Save the json string.
         SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
-        prefsEditor.putString("currentUser",currentUserJson);
-        prefsEditor.putBoolean("loggedIn",true);
-        prefsEditor.apply();
+        prefsEditor.putString(Utils.SHARED_PREFERENCES_CURRENT_USER,currentUserJson);
+        prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,true);
+        prefsEditor.commit();
     }
 }

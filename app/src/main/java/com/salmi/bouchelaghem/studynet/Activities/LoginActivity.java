@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         // Set the light theme is the default theme.
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         //Get the shared preferences.
-        sharedPreferences = getPreferences(MODE_PRIVATE);
+        sharedPreferences = getApplicationContext().getSharedPreferences(Utils.SHARED_PREFERENCES_USER_DATA,MODE_PRIVATE);
         // Init retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Utils.API_BASE_URL)
@@ -196,13 +196,12 @@ public class LoginActivity extends AppCompatActivity {
     /** Saves the current user using shared preferences.*/
     private void saveCurrentUser()
     {
-        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         //Convert the current user object to json
         String currentUserJson = new Gson().toJson(currentUser);
         //Save the json string.
         SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
-        prefsEditor.putString("currentUser",currentUserJson);
-        prefsEditor.putBoolean("loggedIn",true);
-        prefsEditor.apply();
+        prefsEditor.putString(Utils.SHARED_PREFERENCES_CURRENT_USER,currentUserJson);
+        prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,true);
+        prefsEditor.commit();
     }
 }
