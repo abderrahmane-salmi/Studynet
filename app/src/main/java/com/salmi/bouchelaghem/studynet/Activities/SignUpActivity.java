@@ -1,37 +1,30 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Models.Department;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Specialty;
-import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.R;
-import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.Serializers;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivitySignUpBinding;
 
-import org.threeten.bp.ZonedDateTime;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -88,84 +81,72 @@ public class SignUpActivity extends AppCompatActivity {
         binding.btnSignUp.setOnClickListener(v -> performSignup());
 
         // When the user chooses a department
-        binding.txtDepartment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get the selected item
-                departmentSelected = true;
-                department = departments.get(position).getName();
-                binding.departmentTextInputLayout.setError(null);
+        binding.txtDepartment.setOnItemClickListener((parent, view14, position, id) -> {
+            // Get the selected item
+            departmentSelected = true;
+            department = departments.get(position).getName();
+            binding.departmentTextInputLayout.setError(null);
 
-                // Disable other spinners
-                binding.txtSpeciality.setText("");
-                specialitySelected = false;
+            // Disable other spinners
+            binding.txtSpeciality.setText("");
+            specialitySelected = false;
 
-                binding.sectionTextInputLayout.setEnabled(false);
-                binding.txtSection.setText("");
-                sectionSelected = false;
+            binding.sectionTextInputLayout.setEnabled(false);
+            binding.txtSection.setText("");
+            sectionSelected = false;
 
-                binding.groupTextInputLayout.setEnabled(false);
-                binding.txtGroup.setText("");
-                groupSelected = false;
+            binding.groupTextInputLayout.setEnabled(false);
+            binding.txtGroup.setText("");
+            groupSelected = false;
 
-                // Set up the specialities spinner
-                binding.specialityTextInputLayout.setEnabled(true);
-                setupSpecialitiesSpinner(departments.get(position));
-            }
+            // Set up the specialities spinner
+            binding.specialityTextInputLayout.setEnabled(true);
+            setupSpecialitiesSpinner(departments.get(position));
         });
 
         // When the user chooses a speciality
-        binding.txtSpeciality.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get the selected item
-                specialitySelected = true;
-                speciality = specialties.get(position).getName();
-                binding.specialityTextInputLayout.setError(null);
+        binding.txtSpeciality.setOnItemClickListener((parent, view13, position, id) -> {
+            // Get the selected item
+            specialitySelected = true;
+            speciality = specialties.get(position).getName();
+            binding.specialityTextInputLayout.setError(null);
 
-                // Disable other spinners
-                binding.txtSection.setText("");
-                sectionSelected = false;
+            // Disable other spinners
+            binding.txtSection.setText("");
+            sectionSelected = false;
 
-                binding.groupTextInputLayout.setEnabled(false);
-                binding.txtGroup.setText("");
-                groupSelected = false;
+            binding.groupTextInputLayout.setEnabled(false);
+            binding.txtGroup.setText("");
+            groupSelected = false;
 
-                // Set up the sections spinner
-                binding.sectionTextInputLayout.setEnabled(true);
-                setupSectionsSpinner(specialties.get(position));
-            }
+            // Set up the sections spinner
+            binding.sectionTextInputLayout.setEnabled(true);
+            setupSectionsSpinner(specialties.get(position));
         });
 
         // When the user chooses a section
-        binding.txtSection.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get the selected item
-                sectionSelected = true;
-                studentSection = sections.get(position);
-                section = studentSection.getCode();
-                binding.sectionTextInputLayout.setError(null);
+        binding.txtSection.setOnItemClickListener((parent, view12, position, id) -> {
+            // Get the selected item
+            sectionSelected = true;
+            studentSection = sections.get(position);
+            section = studentSection.getCode();
+            binding.sectionTextInputLayout.setError(null);
 
-                // Disable other spinners
-                binding.txtGroup.setText("");
-                groupSelected = false;
+            // Disable other spinners
+            binding.txtGroup.setText("");
+            groupSelected = false;
 
-                // Set up the groups spinner
-                binding.groupTextInputLayout.setEnabled(true);
-                setupGroupsSpinner(sections.get(position).getNbGroups());
-            }
+            // Set up the groups spinner
+            binding.groupTextInputLayout.setEnabled(true);
+            setupGroupsSpinner(sections.get(position).getNbGroups());
         });
 
         // When the user chooses a group
-        binding.txtGroup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get the selected item
-                groupSelected = true;
-                group = position+1;
-                binding.groupTextInputLayout.setError(null);
-            }
+        binding.txtGroup.setOnItemClickListener((parent, view1, position, id) -> {
+            // Get the selected item
+            groupSelected = true;
+            group = position+1;
+            binding.groupTextInputLayout.setError(null);
         });
 
     }
