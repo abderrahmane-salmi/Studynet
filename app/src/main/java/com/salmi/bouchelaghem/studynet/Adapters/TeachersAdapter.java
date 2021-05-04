@@ -78,6 +78,10 @@ public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.ViewHo
         notifyDataSetChanged();
     }
 
+    public List<Teacher> getTeachers() {
+        return teachers;
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder{
 
         LayoutTeacherBinding binding;

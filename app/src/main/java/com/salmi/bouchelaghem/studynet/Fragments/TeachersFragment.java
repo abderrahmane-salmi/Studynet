@@ -1,20 +1,27 @@
 package com.salmi.bouchelaghem.studynet.Fragments;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.salmi.bouchelaghem.studynet.Activities.AddTeacherActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
 import com.salmi.bouchelaghem.studynet.Adapters.TeachersAdapter;
 import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
+import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
@@ -22,6 +29,8 @@ import com.salmi.bouchelaghem.studynet.databinding.FragmentTeachersBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class TeachersFragment extends Fragment {
 
@@ -65,6 +74,13 @@ public class TeachersFragment extends Fragment {
         teachers = new ArrayList<>();
         binding.teachersRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new TeachersAdapter(getContext(), userType);
+
+        // Swipe to action in rec view
+        if (userType.equals(Utils.ADMIN_ACCOUNT)){
+            // If its a teacher then show delete + edit buttons
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(adminCallBack);
+            itemTouchHelper.attachToRecyclerView(binding.teachersRecView);
+        }
     }
 
     @Override
@@ -116,4 +132,60 @@ public class TeachersFragment extends Fragment {
             binding.emptyMsg.setVisibility(View.VISIBLE);
         }
     }
+
+    // Swipe to delete and edit in the recycler view
+    ItemTouchHelper.SimpleCallback adminCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            int position = viewHolder.getAdapterPosition();
+            Teacher currentTeacher = adapter.getTeachers().get(position);
+
+            switch (direction){
+                case ItemTouchHelper.LEFT: // Swipe left to right <- : Delete item
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage(R.string.are_you_sure);
+                    builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+                        teachers.remove(currentTeacher);
+                        adapter.getTeachers().remove(currentTeacher);
+                        adapter.notifyItemRemoved(position);
+                        Toast.makeText(getContext(), getString(R.string.teacher_deleted_msg), Toast.LENGTH_SHORT).show();
+                    });
+                    builder.setNegativeButton(R.string.no, (dialog, which) -> {
+                        // Do Nothing
+                        adapter.notifyItemChanged(position); // To reset the item on the screen
+                    });
+                    builder.create().show();
+                    break;
+                case ItemTouchHelper.RIGHT: // Swipe right to left -> : Edit item
+                    Intent intent = new Intent(getContext(), AddTeacherActivity.class);
+                    intent.putExtra(Utils.ACTION, Utils.ACTION_UPDATE);
+                    intent.putExtra(Utils.TEACHER, currentTeacher);
+                    startActivity(intent);
+                    adapter.notifyItemChanged(position); // To reset the item on the screen
+                    break;
+            }
+        }
+
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red))
+                    .addSwipeLeftActionIcon(R.drawable.ic_delete)
+                    .addSwipeRightBackgroundColor(ContextCompat.getColor(requireContext(), R.color.green))
+                    .addSwipeRightActionIcon(R.drawable.ic_modify)
+                    .create()
+                    .decorate();
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+    };
+
 }

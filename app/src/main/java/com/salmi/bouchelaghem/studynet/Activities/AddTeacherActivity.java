@@ -64,7 +64,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                 fillFields(teacher);
                 // Save button
                 binding.btnSave.setOnClickListener(v -> {
-                    if (validateFirstName() & validateLastName() & validateEmail() & validatePassword() & grade != null){
+                    if (validateFirstName() & validateLastName() & validateEmail() & grade != null){
                         String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
                         String lastName = binding.txtLastName.getEditText().getText().toString().trim();
                         String email = binding.txtEmail.getEditText().getText().toString().trim();
@@ -87,7 +87,7 @@ public class AddTeacherActivity extends AppCompatActivity {
         }
 
         binding.txtGrade.setOnItemClickListener((parent, view1, position, id) -> {
-            binding.txtGradeLayout.setError(getString(R.string.empty_grade_msg));
+            binding.txtGradeLayout.setError(null);
             grade = grades.get(position);
         });
 
@@ -104,7 +104,8 @@ public class AddTeacherActivity extends AppCompatActivity {
         binding.txtFirstName.getEditText().setText(teacher.getFirstName());
         binding.txtLastName.getEditText().setText(teacher.getLastName());
         binding.txtEmail.getEditText().setText(teacher.getEmail());
-        binding.txtGrade.setText(teacher.getFirstName(), false);
+        grade = teacher.getGrade();
+        binding.txtGrade.setText(grade, false);
     }
 
     // Validation methods
