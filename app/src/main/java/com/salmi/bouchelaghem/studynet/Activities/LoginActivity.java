@@ -152,25 +152,39 @@ public class LoginActivity extends AppCompatActivity {
                     JsonObject responseData = response.body();
                     //Determine the type of the user
                     assert responseData != null; //The response is not supposed to be null.
-                    if (responseData.has("student"))
+                    if (responseData.has(Utils.STUDENT_ACCOUNT))
                     {
-                        //Tt's a student
-                        Utils.loginStudent(responseData.getAsJsonObject("student"));
+                        //It's a student
+                        Utils.loginStudent(responseData.getAsJsonObject(Utils.STUDENT_ACCOUNT));
                         Toast.makeText(LoginActivity.this, "Successfully logged in as a student.", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LoginActivity.this, NavigationActivity.class));
-                        finish();
-                        break;
                     }
-                    if (responseData.has("teacher"))
+                    else
                     {
-                        break;
+                        if (responseData.has(Utils.TEACHER_ACCOUNT))
+                        {
+                            //It's a teacher
+                            loginTeacher(responseData.getAsJsonObject(Utils.TEACHER_ACCOUNT));
+                            Toast.makeText(LoginActivity.this, "Successfully logged in as a teacher.", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            if (responseData.has(Utils.ADMIN_ACCOUNT))
+                            {
+                                //It's an administrator
+                                loginAdmin(responseData.getAsJsonObject(Utils.ADMIN_ACCOUNT));
+                                Toast.makeText(LoginActivity.this, "Successfully logged in as an administrator.", Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                //Unexpected response from the server.
+                                Toast.makeText(LoginActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                                break;
+                            }
+                        }
+
                     }
-                    if (responseData.has("administrator"))
-                    {
-                        break;
-                    }
-                    //Unexpected response from the server.
-                    Toast.makeText(LoginActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(LoginActivity.this, NavigationActivity.class));
+                    finish();
                     break;
                 case Utils.HttpResponses.HTTP_400_BAD_REQUEST:
                     //The credentials are invalid.
