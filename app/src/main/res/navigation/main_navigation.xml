@@ -53,6 +53,9 @@
         <action
             android:id="@+id/action_teacherDetailsFragment_to_nav_teachers"
             app:destination="@id/nav_teachers" />
+        <argument
+            android:name="teacher"
+            app:argType="com.salmi.bouchelaghem.studynet.Models.Teacher" />
     </dialog>
     <dialog
         android:id="@+id/nav_contact_us"
