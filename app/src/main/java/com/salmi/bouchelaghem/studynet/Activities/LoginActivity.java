@@ -83,47 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                     credentials.addProperty("email",binding.txtLoginEmail.getEditText().getText().toString().trim());
                     credentials.addProperty("password",binding.txtLoginPassword.getEditText().getText().toString());
                     Call<JsonObject> login = api.login(credentials);
-                    login.enqueue(new Callback<JsonObject>() {
-                        @Override
-                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                            switch (response.code())
-                            {
-                                case Utils.HttpResponses.HTTP_201_CREATED:
-                                    JsonObject responseData = response.body();
-                                    //Determine the type of the user
-                                    assert responseData != null; //The response is not supposed to be null.
-                                    if (responseData.has("student"))
-                                    {
-                                        //it's a student
-                                        Utils.loginStudent(responseData.getAsJsonObject("student"));
-                                        Toast.makeText(LoginActivity.this, "Successfully logged in as a student.", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(LoginActivity.this, NavigationActivity.class));
-                                        finish();
-                                        break;
-                                    }
-                                    if (responseData.has("teacher"))
-                                    {
-                                        break;
-                                    }
-                                    if (responseData.has("administrator"))
-                                    {
-                                        break;
-                                    }
-                                    //Unexpected response from the server.
-                                    Toast.makeText(LoginActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
-                                    break;
-                                case Utils.HttpResponses.HTTP_400_BAD_REQUEST:
-                                    //The credentials are invalid.
-                                    binding.txtLoginEmail.setError("Invalid credentials");
-                                    break;
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                        }
-                    });
+                    login.enqueue(new LoginCallback());
                 }
             }
         });
@@ -155,6 +115,49 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             binding.txtLoginPassword.setError(null);
             return true;
+        }
+    }
+
+    private class LoginCallback implements Callback<JsonObject> {
+
+        @Override
+        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+            switch (response.code())
+            {
+                case Utils.HttpResponses.HTTP_201_CREATED:
+                    JsonObject responseData = response.body();
+                    //Determine the type of the user
+                    assert responseData != null; //The response is not supposed to be null.
+                    if (responseData.has("student"))
+                    {
+                        //it's a student
+                        Utils.loginStudent(responseData.getAsJsonObject("student"));
+                        Toast.makeText(LoginActivity.this, "Successfully logged in as a student.", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(LoginActivity.this, NavigationActivity.class));
+                        finish();
+                        break;
+                    }
+                    if (responseData.has("teacher"))
+                    {
+                        break;
+                    }
+                    if (responseData.has("administrator"))
+                    {
+                        break;
+                    }
+                    //Unexpected response from the server.
+                    Toast.makeText(LoginActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                    break;
+                case Utils.HttpResponses.HTTP_400_BAD_REQUEST:
+                    //The credentials are invalid.
+                    binding.txtLoginEmail.setError("Invalid credentials");
+                    break;
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JsonObject> call, Throwable t) {
+
         }
     }
 }
