@@ -16,6 +16,7 @@ import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.Models.User;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
+import com.salmi.bouchelaghem.studynet.Utils.Serializers;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
@@ -118,6 +119,29 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /** Logs in the teacher given in the teacher data. (takes care of the token too)*/
+    public static CurrentUser loginTeacher(JsonObject teacher)
+    {
+        CurrentUser currentUser = CurrentUser.getInstance();
+        //Set the current user
+        currentUser.setUserType(Utils.TEACHER_ACCOUNT);
+        currentUser.setCurrentTeacher(Serializers.TeacherDeserializer(teacher));
+        currentUser.setToken(teacher.get("token").getAsString());
+        return currentUser;
+    }
+
+    /** Logs in the admin given in the admin data. (takes care of the token too)*/
+    public static CurrentUser loginAdmin(JsonObject admin)
+    {
+        CurrentUser currentUser = CurrentUser.getInstance();
+        //Set the current user
+        currentUser.setUserType(Utils.ADMIN_ACCOUNT);
+        currentUser.setCurrentAdmin(Serializers.AdminDeserializer(admin));
+        currentUser.setToken(admin.get("token").getAsString());
+        return currentUser;
+    }
+
+    /** Callback logic for the login process.*/
     private class LoginCallback implements Callback<JsonObject> {
 
         @Override
@@ -130,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                     assert responseData != null; //The response is not supposed to be null.
                     if (responseData.has("student"))
                     {
-                        //it's a student
+                        //Tt's a student
                         Utils.loginStudent(responseData.getAsJsonObject("student"));
                         Toast.makeText(LoginActivity.this, "Successfully logged in as a student.", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(LoginActivity.this, NavigationActivity.class));
