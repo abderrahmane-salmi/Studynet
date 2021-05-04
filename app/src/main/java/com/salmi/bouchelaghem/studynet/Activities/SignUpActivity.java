@@ -329,7 +329,8 @@ public class SignUpActivity extends AppCompatActivity {
             String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
             String lastName = binding.txtLastName.getEditText().getText().toString().trim();
             String email = binding.txtEmail.getEditText().getText().toString().trim();
-            String password = binding.txtPassword.getEditText().getText().toString().trim();
+            //Get the raw password (no trim either).
+            String password = binding.txtPassword.getEditText().getText().toString();
             //Create the json data to send to the api.
             JsonObject studentData = Serializers.studentSerializer(email,password,firstName,lastName,registrationNumber,studentSection.getCode(),group);
             //Send the data to the API.
