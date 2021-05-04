@@ -345,6 +345,7 @@ public class SignUpActivity extends AppCompatActivity {
                             Utils.loginStudent(response.body());
                             Toast.makeText(SignUpActivity.this, getString(R.string.student_registered), Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(SignUpActivity.this, NavigationActivity.class));
+                            finish();
                             break;
                         case Utils.HttpResponses.HTTP_400_BAD_REQUEST:
                             //The email is already taken.

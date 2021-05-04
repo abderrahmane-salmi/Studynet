@@ -98,19 +98,22 @@ public class LoginActivity extends AppCompatActivity {
                                         Utils.loginStudent(responseData.getAsJsonObject("student"));
                                         Toast.makeText(LoginActivity.this, "Successfully logged in as a student.", Toast.LENGTH_SHORT).show();
                                         startActivity(new Intent(LoginActivity.this, NavigationActivity.class));
+                                        finish();
                                         break;
                                     }
                                     if (responseData.has("teacher"))
                                     {
                                         break;
                                     }
-                                    if(responseData.has("administrator"))
+                                    if (responseData.has("administrator"))
                                     {
                                         break;
                                     }
+                                    //Unexpected response from the server.
+                                    Toast.makeText(LoginActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
                                     break;
                                 case Utils.HttpResponses.HTTP_400_BAD_REQUEST:
-                                    //The email is already taken.
+                                    //The credentials are invalid.
                                     binding.txtLoginEmail.setError("Invalid credentials");
                                     break;
                             }
