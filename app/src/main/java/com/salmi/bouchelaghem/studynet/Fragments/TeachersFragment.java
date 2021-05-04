@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
@@ -13,12 +12,12 @@ import android.view.ViewGroup;
 
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
 import com.salmi.bouchelaghem.studynet.Adapters.TeachersAdapter;
+import com.salmi.bouchelaghem.studynet.Models.Admin;
 import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
-import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
-import com.salmi.bouchelaghem.studynet.databinding.FragmentSubjectsBinding;
+import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.FragmentTeachersBinding;
 
 import java.util.ArrayList;
@@ -32,7 +31,8 @@ public class TeachersFragment extends Fragment {
     private List<Teacher> teachers;
     private TeachersAdapter adapter;
 
-    private Student currentStudent;
+    private final CurrentUser currentUser = CurrentUser.getInstance();
+    private String userType;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -40,7 +40,7 @@ public class TeachersFragment extends Fragment {
         binding = FragmentTeachersBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        currentStudent = CurrentUser.getInstance().getCurrentStudent();
+        userType = currentUser.getUserType();
         initRecView();
 
         // Hide filter button
@@ -54,7 +54,7 @@ public class TeachersFragment extends Fragment {
     private void initRecView() {
         teachers = new ArrayList<>();
         binding.teachersRecView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new TeachersAdapter(getContext());
+        adapter = new TeachersAdapter(getContext(), userType);
     }
 
     @Override
@@ -62,8 +62,17 @@ public class TeachersFragment extends Fragment {
         super.onStart();
         if (teachers != null && teachers.isEmpty()) {
             // if its the first time we launch the activity so go ahead and get the data from the database
-            getTeachers(currentStudent.getSection().getCode());
-        } else { // if we already retrieved the data from the database, just keep using them
+            switch (userType){
+                case Utils.STUDENT_ACCOUNT:
+                    // Get the current student
+                    Student currentStudent = CurrentUser.getInstance().getCurrentStudent();
+                    getMyTeachers(currentStudent.getSection().getCode());
+                    break;
+                case Utils.ADMIN_ACCOUNT:
+                    getAllTeachers();
+                    break;
+            }
+        } else { // if we already retrieved the data from the database, just keep using it
             adapter.setTeachers(teachers);
             binding.teachersRecView.setAdapter(adapter);
             binding.teachersRecView.setVisibility(View.VISIBLE);
@@ -72,7 +81,20 @@ public class TeachersFragment extends Fragment {
     }
 
     // Get the current section's teachers
-    private void getTeachers(String section){
+    private void getMyTeachers(String section){
+        teachers = TestAPI.getInstance().getTeachers();
+        if (!teachers.isEmpty()) {
+            adapter.setTeachers(teachers);
+            binding.teachersRecView.setAdapter(adapter);
+            binding.teachersRecView.setVisibility(View.VISIBLE);
+            binding.emptyMsg.setVisibility(View.GONE);
+        } else {
+            binding.teachersRecView.setVisibility(View.GONE);
+            binding.emptyMsg.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void getAllTeachers() {
         teachers = TestAPI.getInstance().getTeachers();
         if (!teachers.isEmpty()) {
             adapter.setTeachers(teachers);
