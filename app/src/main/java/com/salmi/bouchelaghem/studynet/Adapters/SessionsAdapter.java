@@ -3,7 +3,6 @@ package com.salmi.bouchelaghem.studynet.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -31,18 +30,15 @@ public class SessionsAdapter extends RecyclerView.Adapter<SessionsAdapter.ViewHo
         LayoutClassBinding binding = LayoutClassBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         ViewHolder holder = new ViewHolder(binding);
 
-        holder.binding.classMainLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Get the session's id
-                int id = sessions.get(holder.getAdapterPosition()).getId();
+        holder.binding.classMainLayout.setOnClickListener(v -> {
+            // Get the session's id
+            int id = sessions.get(holder.getAdapterPosition()).getId();
 
-                Intent intent = new Intent(context, ClassDetailsActivity.class);
-                intent.putExtra(Utils.ID, id);
-                context.startActivity(intent);
+            Intent intent = new Intent(context, ClassDetailsActivity.class);
+            intent.putExtra(Utils.ID, id);
+            context.startActivity(intent);
 
-                /* TODO: We can send the whole session object to optimize the nb of reads from the db*/
-            }
+            /* TODO: We can send the whole session object to optimize the nb of reads from the db*/
         });
 
         return holder;
@@ -57,7 +53,7 @@ public class SessionsAdapter extends RecyclerView.Adapter<SessionsAdapter.ViewHo
             int nbGroups = session.getConcernedGroups().size();
             holder.binding.txtClassGroup.setText("");
             for (int grp=0; grp<nbGroups-1; grp++){
-                holder.binding.txtClassGroup.append(String.valueOf(grp+1) + ", ");
+                holder.binding.txtClassGroup.append((grp + 1) + ", ");
             }
             holder.binding.txtClassGroup.append(String.valueOf(nbGroups)); // The last group doesn't have a ',' after it
 

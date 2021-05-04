@@ -78,14 +78,17 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(validateEmail() && validatePassword())
-                {
-                    JsonObject credentials = new JsonObject();
-                    credentials.addProperty("email",binding.txtLoginEmail.getEditText().getText().toString().trim());
-                    credentials.addProperty("password",binding.txtLoginPassword.getEditText().getText().toString());
-                    Call<JsonObject> login = api.login(credentials);
-                    login.enqueue(new LoginCallback());
-                }
+//                if(validateEmail() && validatePassword())
+//                {
+//                    JsonObject credentials = new JsonObject();
+//                    credentials.addProperty("email",binding.txtLoginEmail.getEditText().getText().toString().trim());
+//                    credentials.addProperty("password",binding.txtLoginPassword.getEditText().getText().toString());
+//                    Call<JsonObject> login = api.login(credentials);
+//                    login.enqueue(new LoginCallback());
+//                }
+                currentUser.setUserType(Utils.ADMIN_ACCOUNT);
+                currentUser.setCurrentAdmin(new Admin(5, "email5@me.com", "User5", "User5", ZonedDateTime.now()));
+                startActivity(new Intent(LoginActivity.this, NavigationActivity.class));
             }
         });
     }
