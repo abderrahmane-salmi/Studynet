@@ -156,4 +156,6 @@
     <string name="teacher_deleted_msg">teacher_deleted successfully</string>
     <string name="sections">Sections</string>
     <string name="back">Back</string>
+    <string name="select_section">Select Sections</string>
+    <string name="no_sections_selected_msg">No sections are selected</string>
 </resources>
