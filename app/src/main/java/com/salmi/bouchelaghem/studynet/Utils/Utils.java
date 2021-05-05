@@ -31,6 +31,7 @@ public class Utils {
     public static final String SHARED_PREFERENCES_USER_DATA = "userData";
     public static final String SHARED_PREFERENCES_CURRENT_USER = "currentUser";
     public static final String SHARED_PREFERENCES_LOGGED_IN = "loggedIn";
+    public static final String SHARED_PREFERENCES_USER_TYPE = "userType";
 
     // Homework filter
     // TODO: take this to a string array (so we can translate it)

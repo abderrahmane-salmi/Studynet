@@ -394,7 +394,7 @@ public class SignUpActivity extends AppCompatActivity {
         SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
 
         prefsEditor.putString(Utils.SHARED_PREFERENCES_CURRENT_USER,studentJson);
-        prefsEditor.putString("userType",Utils.STUDENT_ACCOUNT);
+        prefsEditor.putString(Utils.SHARED_PREFERENCES_USER_TYPE,Utils.STUDENT_ACCOUNT);
         prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,true);
         prefsEditor.apply();
     }

@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(validateEmail() && validatePassword())
+                if(validateEmail() & validatePassword())
                 {
                     JsonObject credentials = new JsonObject();
                     credentials.addProperty("email",binding.txtLoginEmail.getEditText().getText().toString().trim());
@@ -204,17 +204,17 @@ public class LoginActivity extends AppCompatActivity {
             case Utils.STUDENT_ACCOUNT:
                 //We save the student data.
                 currentUserJson = new Gson().toJson(currentUser.getCurrentStudent());
-                prefsEditor.putString("userType",Utils.STUDENT_ACCOUNT);
+                prefsEditor.putString(Utils.SHARED_PREFERENCES_USER_TYPE,Utils.STUDENT_ACCOUNT);
                 break;
             case Utils.TEACHER_ACCOUNT:
                 //We save the student data.
                 currentUserJson = new Gson().toJson(currentUser.getCurrentTeacher());
-                prefsEditor.putString("userType",Utils.TEACHER_ACCOUNT);
+                prefsEditor.putString(Utils.SHARED_PREFERENCES_USER_TYPE,Utils.TEACHER_ACCOUNT);
                 break;
             case Utils.ADMIN_ACCOUNT:
                 //We save the admin data.
                 currentUserJson= new Gson().toJson(currentUser.getCurrentAdmin());
-                prefsEditor.putString("userType",Utils.ADMIN_ACCOUNT);
+                prefsEditor.putString(Utils.SHARED_PREFERENCES_USER_TYPE,Utils.ADMIN_ACCOUNT);
 
                 break;
         }
