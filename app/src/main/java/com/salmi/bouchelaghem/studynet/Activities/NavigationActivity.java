@@ -44,7 +44,7 @@ public class NavigationActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
         //Get the shared preferences.
-        sharedPreferences = getApplicationContext().getSharedPreferences(Utils.SHARED_PREFERENCES_CURRENT_USER,MODE_PRIVATE);
+        sharedPreferences = getApplicationContext().getSharedPreferences(Utils.SHARED_PREFERENCES_USER_DATA,MODE_PRIVATE);
         // Init retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Utils.API_BASE_URL)
@@ -98,8 +98,8 @@ public class NavigationActivity extends AppCompatActivity {
                     currentUser.logout();
                     //Save that the user is no longer logged in locally.
                     SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
-                    prefsEditor.putBoolean("loggedIn",false);
-                    prefsEditor.commit();
+                    prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,false);
+                    prefsEditor.apply();
                     //Take the user to the login page.
                     Toast.makeText(NavigationActivity.this, getString(R.string.logout_msg), Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(NavigationActivity.this, LoginActivity.class));

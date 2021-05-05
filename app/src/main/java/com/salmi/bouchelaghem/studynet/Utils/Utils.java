@@ -30,7 +30,6 @@ public class Utils {
     //Shared preferences data
     public static final String SHARED_PREFERENCES_USER_DATA = "userData";
     public static final String SHARED_PREFERENCES_CURRENT_USER = "currentUser";
-
     public static final String SHARED_PREFERENCES_LOGGED_IN = "loggedIn";
 
     // Homework filter

@@ -53,18 +53,16 @@ public class SplashActivity extends AppCompatActivity {
 
             new Handler().postDelayed(() -> {
                 //Check if the user is already logged in using shared preferences.
-                boolean testbool = sharedPreferences.getBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,false);
                 if (sharedPreferences.getBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,false))
                 {
                     //The user is already logged in.
                     Gson gson = new Gson();
-                    String temptest = sharedPreferences.getString(Utils.SHARED_PREFERENCES_CURRENT_USER, "");
-                    String json = temptest;
-                    CurrentUser test = gson.fromJson(json, CurrentUser.class);
-                    //CurrentUser.setInstance()
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                    String json = sharedPreferences.getString(Utils.SHARED_PREFERENCES_CURRENT_USER, "");
+                    CurrentUser currentUserData = gson.fromJson(json, CurrentUser.class);
+                    CurrentUser.setInstance(currentUserData);
+                    startActivity(new Intent(SplashActivity.this, NavigationActivity.class));
                 } else {
-                    startActivity(new Intent(SplashActivity.this, OnboardingActivity.class));
+                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 }
                 finish();
             }, 1000);
