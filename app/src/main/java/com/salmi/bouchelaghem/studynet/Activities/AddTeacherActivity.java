@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -23,7 +22,6 @@ import com.salmi.bouchelaghem.studynet.databinding.ActivityAddTeacherBinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class AddTeacherActivity extends AppCompatActivity {
@@ -37,7 +35,7 @@ public class AddTeacherActivity extends AppCompatActivity {
     private List<String> departments;
 
     private String[] sectionsArray; // All sections as an array
-    private List<String> selectedSections; // The sections selected by the user
+    private ArrayList<String> selectedSections; // The sections selected by the user
     private boolean[] sectionsStates; // We need this just for the dialog
     private boolean sectionsSelected = false;
 
@@ -108,6 +106,16 @@ public class AddTeacherActivity extends AppCompatActivity {
                             break;
                     }
                 });
+
+                // Add new assignment
+                binding.btnAdd.setOnClickListener(v -> {
+                    Intent intent1 = new Intent(AddTeacherActivity.this, AddAssignmentActivity.class);
+                    intent1.putExtra(Utils.ACTION, Utils.ACTION_ADD);
+                    // TODO: get the teacher id
+                    intent1.putExtra(Utils.ID, 1);
+                    intent1.putExtra(Utils.SECTIONS, selectedSections);
+                    startActivity(intent1);
+                });
                 break;
             case Utils.ACTION_UPDATE:
                 // Change title
@@ -137,6 +145,15 @@ public class AddTeacherActivity extends AppCompatActivity {
                             binding.txtGradeLayout.setError(getString(R.string.empty_grade_msg));
                         }
                     }
+                });
+
+                // Add new assignment
+                binding.btnAdd.setOnClickListener(v -> {
+                    Intent intent1 = new Intent(AddTeacherActivity.this, AddAssignmentActivity.class);
+                    intent1.putExtra(Utils.ACTION, Utils.ACTION_ADD);
+                    intent1.putExtra(Utils.ID, teacher.getId());
+                    intent1.putExtra(Utils.SECTIONS, selectedSections);
+                    startActivity(intent1);
                 });
                 break;
         }
@@ -201,19 +218,16 @@ public class AddTeacherActivity extends AppCompatActivity {
 
         binding.btnClose.setOnClickListener(v -> finish());
 
-        binding.btnStepBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (step == 2){
-                    step = 1;
-                    // Hide step2
-                    binding.assignmentsRecView.setVisibility(View.GONE);
-                    binding.emptyMsg.setVisibility(View.GONE);
-                    binding.btnAdd.setVisibility(View.GONE);
-                    binding.btnStepBack.setVisibility(View.INVISIBLE);
-                    // Show step1
-                    binding.teacherInfoLayout.setVisibility(View.VISIBLE);
-                }
+        binding.btnStepBack.setOnClickListener(v -> {
+            if (step == 2){
+                step = 1;
+                // Hide step2
+                binding.assignmentsRecView.setVisibility(View.GONE);
+                binding.emptyMsg.setVisibility(View.GONE);
+                binding.btnAdd.setVisibility(View.GONE);
+                binding.btnStepBack.setVisibility(View.INVISIBLE);
+                // Show step1
+                binding.teacherInfoLayout.setVisibility(View.VISIBLE);
             }
         });
     }

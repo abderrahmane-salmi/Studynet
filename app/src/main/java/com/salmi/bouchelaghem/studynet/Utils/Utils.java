@@ -16,6 +16,7 @@ public class Utils {
 
     // Fields
     public static final String ID = "id";
+    public static final String SECTIONS = "Sections";
 
     // Session
     public static final String MEETING_LINK = "Meeting Link";

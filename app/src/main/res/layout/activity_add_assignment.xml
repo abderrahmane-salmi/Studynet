@@ -57,14 +57,14 @@
             app:layout_constraintTop_toBottomOf="@id/title">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/classSectionTextLayout"
+                android:id="@+id/txtSectionTextLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/secondary_text_color">
 
                 <AutoCompleteTextView
-                    android:id="@+id/classSection"
+                    android:id="@+id/txtSectionSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/tabularasa_regular"
@@ -75,7 +75,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/classModuleLayout"
+                android:id="@+id/txtModuleLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
                 android:enabled="false">
 
                 <AutoCompleteTextView
-                    android:id="@+id/classModule"
+                    android:id="@+id/txtModuleSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/tabularasa_regular"
@@ -95,7 +95,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/moduleTypeTextLayout"
+                android:id="@+id/txtModuleTypeTextLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -103,26 +103,26 @@
                 android:textColorHint="@color/secondary_text_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView4"
-                app:layout_constraintTop_toBottomOf="@+id/classModuleLayout"
+                app:layout_constraintTop_toBottomOf="@+id/txtModuleLayout"
                 android:enabled="false">
 
                 <AutoCompleteTextView
-                    android:id="@+id/moduleType"
+                    android:id="@+id/txtModuleTypeSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/tabularasa_regular"
-                    android:hint="@string/class_type"
+                    android:hint="@string/module_type"
                     android:inputType="none"
                     android:textSize="15sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/classGroup"
+                android:id="@+id/txtGroup"
                 android:layout_width="match_parent"
                 android:layout_height="57dp"
-                android:layout_marginTop="12dp"
-                android:hint="@string/group"
+                android:layout_marginTop="16dp"
+                android:hint="@string/groups"
                 android:textSize="15sp"
                 android:fontFamily="@font/tabularasa_regular"
                 android:gravity="center_vertical"
@@ -145,9 +145,9 @@
             android:layout_marginBottom="24dp"
             android:fontFamily="@font/tabularasa_medium"
             android:paddingStart="64dp"
-            android:paddingTop="10dp"
+            android:paddingTop="11dp"
             android:paddingEnd="64dp"
-            android:paddingBottom="10dp"
+            android:paddingBottom="11dp"
             android:stateListAnimator="@null"
             android:text="@string/save"
             android:textColor="@color/secondary_text_color"

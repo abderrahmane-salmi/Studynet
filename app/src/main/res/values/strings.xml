@@ -163,4 +163,6 @@
     <string name="module2">Module:</string>
     <string name="no_assignments_msg">No Assignments</string>
     <string name="new_assignment">New Assignment</string>
+    <string name="module_type">Module Type</string>
+    <string name="groups">Groups</string>
 </resources>
