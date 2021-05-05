@@ -14,6 +14,9 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
+import com.salmi.bouchelaghem.studynet.Models.Admin;
+import com.salmi.bouchelaghem.studynet.Models.Student;
+import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
@@ -55,11 +58,36 @@ public class SplashActivity extends AppCompatActivity {
                 //Check if the user is already logged in using shared preferences.
                 if (sharedPreferences.getBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,false))
                 {
-                    //The user is already logged in.
                     Gson gson = new Gson();
-                    String json = sharedPreferences.getString(Utils.SHARED_PREFERENCES_CURRENT_USER, "");
-                    CurrentUser currentUserData = gson.fromJson(json, CurrentUser.class);
-                    CurrentUser.setInstance(currentUserData);
+                    CurrentUser currentUser = CurrentUser.getInstance();
+                    //The user is already logged in, we determine which type of user this is.
+                    String userType = sharedPreferences.getString("userType","");
+                    switch(userType)
+                    {
+                        case Utils.STUDENT_ACCOUNT:
+                            //We load the student data.
+                            String studentJson = sharedPreferences.getString(Utils.SHARED_PREFERENCES_CURRENT_USER, "");
+                            Student student = gson.fromJson(studentJson,Student.class);
+                            currentUser.setCurrentStudent(student);
+                            currentUser.setUserType(Utils.STUDENT_ACCOUNT);
+
+                            break;
+                        case Utils.TEACHER_ACCOUNT:
+                            //We load the teacher data.
+                            String teacherJson = sharedPreferences.getString(Utils.SHARED_PREFERENCES_CURRENT_USER, "");
+                            Teacher teacher = gson.fromJson(teacherJson,Teacher.class);
+                            currentUser.setCurrentTeacher(teacher);
+                            currentUser.setUserType(Utils.TEACHER_ACCOUNT);
+
+                            break;
+                        case Utils.ADMIN_ACCOUNT:
+                            //We load the admin data.
+                            String adminJson = sharedPreferences.getString(Utils.SHARED_PREFERENCES_CURRENT_USER, "");
+                            Admin admin = gson.fromJson(adminJson,Admin.class);
+                            currentUser.setCurrentAdmin(admin);
+                            currentUser.setUserType(Utils.ADMIN_ACCOUNT);
+                            break;
+                    }
                     startActivity(new Intent(SplashActivity.this, NavigationActivity.class));
                 } else {
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
