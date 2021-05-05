@@ -153,7 +153,7 @@
     <string name="update_teacher">Update Teacher</string>
     <string name="no_changes_msg">There are no changes to save</string>
     <string name="empty_grade_msg">Grade can\'t be empty</string>
-    <string name="teacher_deleted_msg">teacher_deleted successfully</string>
+    <string name="teacher_deleted_msg">Teacher was deleted successfully</string>
     <string name="could_not_logout">Could not logout.</string>
     <string name="connection_failed">Connection failed, please check your internet access and try again.</string>
     <string name="sections">Sections</string>
@@ -165,4 +165,5 @@
     <string name="new_assignment">New Assignment</string>
     <string name="module_type">Module Type</string>
     <string name="groups">Groups</string>
+    <string name="assignment_deleted_msg">Assignment was deleted successfully</string>
 </resources>
