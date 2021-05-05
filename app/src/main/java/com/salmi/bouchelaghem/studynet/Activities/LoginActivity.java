@@ -4,11 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
@@ -102,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = binding.txtLoginPassword.getEditText().getText().toString().trim();
 
         if (password.isEmpty()){
-            binding.txtLoginPassword.setError(getString(R.string.password_msg));
+            binding.txtLoginPassword.setError(getString(R.string.empty_password_msg));
             return false;
         } else if (password.length() < 6) {
             binding.txtLoginPassword.setError(getString(R.string.password_msg2));
