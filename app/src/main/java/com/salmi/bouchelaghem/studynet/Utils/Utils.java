@@ -13,6 +13,7 @@ public class Utils {
     // Tables
     public static final String HOMEWORK = "Homework";
     public static final String TEACHER = "Teacher";
+    public static final String ASSIGNMENT = "Assignment";
 
     // Fields
     public static final String ID = "id";

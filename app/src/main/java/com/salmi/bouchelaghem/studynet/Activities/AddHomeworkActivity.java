@@ -92,10 +92,10 @@ public class AddHomeworkActivity extends AppCompatActivity {
 
                     } else {
                         if (!sectionSelected){
-                            binding.txtHomeworkSection.setError(getString(R.string.empty_msg3));
+                            binding.txtHomeworkSection.setError(getString(R.string.empty_section_msg));
                         }
                         if (!moduleSelected){
-                            binding.txtHomeworkSubject.setError(getString(R.string.empty_msg5));
+                            binding.txtHomeworkSubject.setError(getString(R.string.empty_module_msg));
                         }
                         if (!groupSelected){
                             binding.txtHomeworkGroup.setError("");
@@ -127,10 +127,10 @@ public class AddHomeworkActivity extends AppCompatActivity {
 
                     } else {
                         if (!sectionSelected){
-                            binding.txtHomeworkSection.setError(getString(R.string.empty_msg3));
+                            binding.txtHomeworkSection.setError(getString(R.string.empty_section_msg));
                         }
                         if (!moduleSelected){
-                            binding.txtHomeworkSubject.setError(getString(R.string.empty_msg5));
+                            binding.txtHomeworkSubject.setError(getString(R.string.empty_module_msg));
                         }
                         if (!groupSelected){
                             binding.txtHomeworkGroup.setError("");
@@ -414,7 +414,7 @@ public class AddHomeworkActivity extends AppCompatActivity {
         String data = binding.txtHomeworkTitle.getEditText().getText().toString().trim();
 
         if (data.isEmpty()){
-            binding.txtHomeworkTitle.setError(getString(R.string.title_msg));
+            binding.txtHomeworkTitle.setError(getString(R.string.empty_title_msg));
             return false;
         } else {
             binding.txtHomeworkTitle.setError(null);

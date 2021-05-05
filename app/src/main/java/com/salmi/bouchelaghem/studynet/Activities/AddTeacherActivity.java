@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.salmi.bouchelaghem.studynet.Adapters.AssignmentsAdapter;
-import com.salmi.bouchelaghem.studynet.Adapters.TeachersAdapter;
 import com.salmi.bouchelaghem.studynet.Models.Assignment;
 import com.salmi.bouchelaghem.studynet.Models.Department;
 import com.salmi.bouchelaghem.studynet.Models.Section;
@@ -178,6 +177,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                             binding.teacherInfoLayout.setVisibility(View.GONE);
                             binding.assignmentsRecView.setVisibility(View.VISIBLE);
                             binding.btnAdd.setVisibility(View.VISIBLE);
+                            binding.btnNext.setText(R.string.save);
                             // Show back button
                             binding.btnStepBack.setVisibility(View.VISIBLE);
                             // Show current teacher's assignments
@@ -275,6 +275,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                 binding.btnAdd.setVisibility(View.GONE);
                 binding.btnStepBack.setVisibility(View.INVISIBLE);
                 // Show step1
+                binding.btnNext.setText(R.string.next);
                 binding.teacherInfoLayout.setVisibility(View.VISIBLE);
             }
         });
@@ -381,7 +382,7 @@ public class AddTeacherActivity extends AppCompatActivity {
         String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
 
         if (firstName.isEmpty()) {
-            binding.txtFirstName.setError(getString(R.string.first_name_msg));
+            binding.txtFirstName.setError(getString(R.string.empty_first_name_msg));
             return false;
         } else {
             binding.txtFirstName.setError(null);
@@ -393,7 +394,7 @@ public class AddTeacherActivity extends AppCompatActivity {
         String lastName = binding.txtLastName.getEditText().getText().toString().trim();
 
         if (lastName.isEmpty()) {
-            binding.txtLastName.setError(getString(R.string.last_name_msg));
+            binding.txtLastName.setError(getString(R.string.empty_last_name_msg));
             return false;
         } else {
             binding.txtLastName.setError(null);
@@ -420,7 +421,7 @@ public class AddTeacherActivity extends AppCompatActivity {
         String password = binding.txtPassword.getEditText().getText().toString().trim();
 
         if (password.isEmpty()) {
-            binding.txtPassword.setError(getString(R.string.password_msg));
+            binding.txtPassword.setError(getString(R.string.empty_password_msg));
             return false;
         } else if (password.length() < 6) {
             binding.txtPassword.setError(getString(R.string.password_msg2));
@@ -468,6 +469,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                     // TODO: get the teacher's id
                     intent1.putExtra(Utils.ID, 1);
                     intent1.putExtra(Utils.SECTIONS, selectedSections);
+                    intent1.putExtra(Utils.ASSIGNMENT, currentAssignment);
                     startActivity(intent1);
                     adapter.notifyItemChanged(position); // To reset the item on the screen
                     break;

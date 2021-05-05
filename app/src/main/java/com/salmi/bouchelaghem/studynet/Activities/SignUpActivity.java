@@ -1,12 +1,10 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -262,7 +260,7 @@ public class SignUpActivity extends AppCompatActivity {
         String regNumber = binding.txtRegistrationNumber.getEditText().getText().toString().trim();
 
         if (regNumber.isEmpty()){
-            binding.txtRegistrationNumber.setError(getString(R.string.reg_number_msg));
+            binding.txtRegistrationNumber.setError(getString(R.string.empty_reg_number_msg));
             return false;
         } else {
             binding.txtRegistrationNumber.setError(null);
@@ -274,7 +272,7 @@ public class SignUpActivity extends AppCompatActivity {
         String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
 
         if (firstName.isEmpty()){
-            binding.txtFirstName.setError(getString(R.string.first_name_msg));
+            binding.txtFirstName.setError(getString(R.string.empty_first_name_msg));
             return false;
         } else {
             binding.txtFirstName.setError(null);
@@ -286,7 +284,7 @@ public class SignUpActivity extends AppCompatActivity {
         String lastName = binding.txtLastName.getEditText().getText().toString().trim();
 
         if (lastName.isEmpty()){
-            binding.txtLastName.setError(getString(R.string.last_name_msg));
+            binding.txtLastName.setError(getString(R.string.empty_last_name_msg));
             return false;
         } else {
             binding.txtLastName.setError(null);
@@ -313,7 +311,7 @@ public class SignUpActivity extends AppCompatActivity {
         String password = binding.txtPassword.getEditText().getText().toString().trim();
 
         if (password.isEmpty()){
-            binding.txtPassword.setError(getString(R.string.password_msg));
+            binding.txtPassword.setError(getString(R.string.empty_password_msg));
             return false;
         } else if (password.length() < 6) {
             binding.txtPassword.setError(getString(R.string.password_msg2));
@@ -370,16 +368,16 @@ public class SignUpActivity extends AppCompatActivity {
             });
         } else {
             if (!departmentSelected){
-                binding.departmentTextInputLayout.setError(getString(R.string.empty_msg1));
+                binding.departmentTextInputLayout.setError(getString(R.string.empty_department_msg));
             }
             if (!specialitySelected){
-                binding.specialityTextInputLayout.setError(getString(R.string.empty_msg2));
+                binding.specialityTextInputLayout.setError(getString(R.string.empty_speciality_msg));
             }
             if (!sectionSelected) {
-                binding.sectionTextInputLayout.setError(getString(R.string.empty_msg3));
+                binding.sectionTextInputLayout.setError(getString(R.string.empty_section_msg));
             }
             if (!groupSelected){
-                binding.groupTextInputLayout.setError(getString(R.string.empty_msg4));
+                binding.groupTextInputLayout.setError(getString(R.string.empty_group_msg));
             }
         }
     }

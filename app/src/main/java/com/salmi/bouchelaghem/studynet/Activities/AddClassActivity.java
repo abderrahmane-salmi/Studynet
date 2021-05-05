@@ -1,10 +1,8 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -145,19 +143,19 @@ public class AddClassActivity extends AppCompatActivity {
 
                     } else {
                         if (!sectionSelected){
-                            binding.classSectionTextLayout.setError(getString(R.string.empty_msg3));
+                            binding.classSectionTextLayout.setError(getString(R.string.empty_section_msg));
                         }
                         if (!moduleSelected){
-                            binding.classModuleLayout.setError(getString(R.string.empty_msg5));
+                            binding.classModuleLayout.setError(getString(R.string.empty_module_msg));
                         }
                         if (!classTypeSelected){
-                            binding.classTypeTextLayout.setError(getString(R.string.empty_msg6));
+                            binding.classTypeTextLayout.setError(getString(R.string.empty_type_msg));
                         }
                         if (!groupSelected){
                             binding.classGroup.setError("");
                         }
                         if (!daySelected){
-                            binding.classDayTextLayout.setError(getString(R.string.empty_msg7));
+                            binding.classDayTextLayout.setError(getString(R.string.empty_day_msg));
                         }
                         if (startTime == null){
                             binding.btnSelectStartTime.setError("");
@@ -190,19 +188,19 @@ public class AddClassActivity extends AppCompatActivity {
                         Toast.makeText(this, "Save", Toast.LENGTH_SHORT).show();
                     } else {
                         if (!sectionSelected){
-                            binding.classSectionTextLayout.setError(getString(R.string.empty_msg3));
+                            binding.classSectionTextLayout.setError(getString(R.string.empty_section_msg));
                         }
                         if (!moduleSelected){
-                            binding.classModuleLayout.setError(getString(R.string.empty_msg5));
+                            binding.classModuleLayout.setError(getString(R.string.empty_module_msg));
                         }
                         if (!classTypeSelected){
-                            binding.classTypeTextLayout.setError(getString(R.string.empty_msg6));
+                            binding.classTypeTextLayout.setError(getString(R.string.empty_type_msg));
                         }
                         if (!groupSelected){
                             binding.classGroup.setError("");
                         }
                         if (!daySelected){
-                            binding.classDayTextLayout.setError(getString(R.string.empty_msg7));
+                            binding.classDayTextLayout.setError(getString(R.string.empty_day_msg));
                         }
                         if (startTime == null){
                             binding.btnSelectStartTime.setError("");
