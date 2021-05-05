@@ -200,6 +200,22 @@ public class AddTeacherActivity extends AppCompatActivity {
         });
 
         binding.btnClose.setOnClickListener(v -> finish());
+
+        binding.btnStepBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (step == 2){
+                    step = 1;
+                    // Hide step2
+                    binding.assignmentsRecView.setVisibility(View.GONE);
+                    binding.emptyMsg.setVisibility(View.GONE);
+                    binding.btnAdd.setVisibility(View.GONE);
+                    binding.btnStepBack.setVisibility(View.INVISIBLE);
+                    // Show step1
+                    binding.teacherInfoLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     // Get all the sections in the selected department
