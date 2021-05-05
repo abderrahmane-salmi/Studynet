@@ -388,10 +388,13 @@ public class SignUpActivity extends AppCompatActivity {
     {
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(Utils.SHARED_PREFERENCES_USER_DATA,MODE_PRIVATE);
         //Convert the current user object to json
-        String currentUserJson = new Gson().toJson(CurrentUser.getInstance());
+        String studentJson = new Gson().toJson(CurrentUser.getInstance().getCurrentStudent());
+
         //Save the json string.
         SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
-        prefsEditor.putString(Utils.SHARED_PREFERENCES_CURRENT_USER,currentUserJson);
+
+        prefsEditor.putString(Utils.SHARED_PREFERENCES_CURRENT_USER,studentJson);
+        prefsEditor.putString(Utils.SHARED_PREFERENCES_USER_TYPE,Utils.STUDENT_ACCOUNT);
         prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,true);
         prefsEditor.apply();
     }

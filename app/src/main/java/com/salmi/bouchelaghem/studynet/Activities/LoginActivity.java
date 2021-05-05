@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(validateEmail() && validatePassword())
+                if(validateEmail() & validatePassword())
                 {
                     JsonObject credentials = new JsonObject();
                     credentials.addProperty("email",binding.txtLoginEmail.getEditText().getText().toString().trim());
@@ -196,10 +196,28 @@ public class LoginActivity extends AppCompatActivity {
     /** Saves the current user using shared preferences.*/
     private void saveCurrentUser()
     {
-        //Convert the current user object to json
-        String currentUserJson = new Gson().toJson(currentUser);
-        //Save the json string.
         SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
+        String currentUserJson = "";
+        //Convert the current user object to json
+        switch(currentUser.getUserType())
+        {
+            case Utils.STUDENT_ACCOUNT:
+                //We save the student data.
+                currentUserJson = new Gson().toJson(currentUser.getCurrentStudent());
+                prefsEditor.putString(Utils.SHARED_PREFERENCES_USER_TYPE,Utils.STUDENT_ACCOUNT);
+                break;
+            case Utils.TEACHER_ACCOUNT:
+                //We save the student data.
+                currentUserJson = new Gson().toJson(currentUser.getCurrentTeacher());
+                prefsEditor.putString(Utils.SHARED_PREFERENCES_USER_TYPE,Utils.TEACHER_ACCOUNT);
+                break;
+            case Utils.ADMIN_ACCOUNT:
+                //We save the admin data.
+                currentUserJson= new Gson().toJson(currentUser.getCurrentAdmin());
+                prefsEditor.putString(Utils.SHARED_PREFERENCES_USER_TYPE,Utils.ADMIN_ACCOUNT);
+
+                break;
+        }
         prefsEditor.putString(Utils.SHARED_PREFERENCES_CURRENT_USER,currentUserJson);
         prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,true);
         prefsEditor.apply();
