@@ -22,7 +22,7 @@
         <item>MAB</item>
         <item>MAA</item>
         <item>MCB</item>
-        <item>MCA week</item>
+        <item>MCA</item>
         <item>Pr</item>
         <item>Doc</item>
     </string-array>
@@ -158,4 +158,8 @@
     <string name="connection_failed">Connection failed, please check your internet access and try again.</string>
     <string name="sections">Sections</string>
     <string name="back">Back</string>
+    <string name="select_section">Select Sections</string>
+    <string name="no_sections_selected_msg">No sections are selected</string>
+    <string name="module2">Module:</string>
+    <string name="no_assignments_msg">No Assignments</string>
 </resources>
