@@ -17,7 +17,7 @@ public class Teacher extends User implements Parcelable {
     public Teacher() {
     }
 
-    public Teacher(int id, String email, String firstName, String lastName, ZonedDateTime dateJoined, String grade,ArrayList<String> sections) {
+    public Teacher(int id, String email, String firstName, String lastName, String dateJoined, String grade,ArrayList<String> sections) {
         super(id, email, firstName, lastName, dateJoined);
         this.grade = grade;
         this.sections = sections;
