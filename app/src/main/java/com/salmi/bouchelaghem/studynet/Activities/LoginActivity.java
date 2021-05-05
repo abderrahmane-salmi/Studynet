@@ -4,12 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
@@ -29,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private CurrentUser currentUser = CurrentUser.getInstance();
     private StudynetAPI api;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +42,17 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        // Set the light theme is the default theme
+        // Set the light theme is the default theme.
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
+        //Get the shared preferences.
+        sharedPreferences = getApplicationContext().getSharedPreferences(Utils.SHARED_PREFERENCES_USER_DATA,MODE_PRIVATE);
         // Init retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Utils.API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        // Init our api, this will implement the code of all the methods in the interface
+        // Init our api, this will implement the code of all the methods in the interface.
         api = retrofit.create(StudynetAPI.class);
 
         binding.btnGoToSignUp.setOnClickListener(new View.OnClickListener() {
@@ -170,6 +176,8 @@ public class LoginActivity extends AppCompatActivity {
                         }
 
                     }
+                    //Save the user data locally.
+                    saveCurrentUser();
                     startActivity(new Intent(LoginActivity.this, NavigationActivity.class));
                     finish();
                     break;
@@ -184,5 +192,16 @@ public class LoginActivity extends AppCompatActivity {
         public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
             Toast.makeText(LoginActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
         }
+    }
+    /** Saves the current user using shared preferences.*/
+    private void saveCurrentUser()
+    {
+        //Convert the current user object to json
+        String currentUserJson = new Gson().toJson(currentUser);
+        //Save the json string.
+        SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
+        prefsEditor.putString(Utils.SHARED_PREFERENCES_CURRENT_USER,currentUserJson);
+        prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,true);
+        prefsEditor.apply();
     }
 }

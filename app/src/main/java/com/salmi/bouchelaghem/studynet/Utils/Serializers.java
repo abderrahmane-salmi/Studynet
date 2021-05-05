@@ -49,7 +49,7 @@ public class Serializers {
                 userData.get("email").getAsString(),
                 userData.get("first_name").getAsString(),
                 userData.get("last_name").getAsString(),
-                ZonedDateTime.parse(userData.get("date_joined").getAsString(), DateTimeFormatter.ISO_DATE_TIME),
+                userData.get("date_joined").getAsString(),
                 studentData.get("registration_number").getAsString(),
                 section,
                 studentData.get("group").getAsInt()
@@ -66,7 +66,7 @@ public class Serializers {
                 adminData.get("email").getAsString(),
                 adminData.get("first_name").getAsString(),
                 adminData.get("last_name").getAsString(),
-                ZonedDateTime.parse(adminData.get("date_joined").getAsString(),DateTimeFormatter.ISO_DATE_TIME));
+                adminData.get("date_joined").getAsString());
         return admin;
     }
 
@@ -88,7 +88,7 @@ public class Serializers {
                 userData.get("email").getAsString(),
                 userData.get("first_name").getAsString(),
                 userData.get("last_name").getAsString(),
-                ZonedDateTime.parse(userData.get("date_joined").getAsString(),DateTimeFormatter.ISO_DATE_TIME),
+                userData.get("date_joined").getAsString(),
                 teacherData.get("grade").getAsString(),
                 sectionsArray
         );

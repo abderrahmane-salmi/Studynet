@@ -16,7 +16,13 @@
         android:theme="@style/Theme.Studynet"
         tools:ignore="AllowBackup">
         <activity android:name=".Activities.AddTeacherActivity"></activity>
-        <activity android:name=".Activities.SplashActivity"></activity>
+        <activity android:name=".Activities.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".Activities.OnboardingActivity" />
         <activity android:name=".Activities.AddHomeworkActivity" />
         <activity android:name=".Activities.HomeworkDetailsActivity" />
@@ -26,11 +32,7 @@
         <activity android:name=".Activities.ResetPasswordActivity" />
         <activity android:name=".Activities.SignUpActivity" />
         <activity android:name=".Activities.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

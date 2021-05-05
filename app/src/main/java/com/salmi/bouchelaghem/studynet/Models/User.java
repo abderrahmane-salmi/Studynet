@@ -11,12 +11,12 @@ public class User implements Parcelable {
 
     private int id;
     private String email, firstName, lastName;
-    private ZonedDateTime dateJoined;
+    private String dateJoined;
 
     public User() {
     }
 
-    public User(int id, String email, String firstName, String lastName, ZonedDateTime dateJoined) {
+    public User(int id, String email, String firstName, String lastName, String dateJoined) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -75,11 +75,11 @@ public class User implements Parcelable {
         this.lastName = lastName;
     }
 
-    public ZonedDateTime getDateJoined() {
+    public String getDateJoined() {
         return dateJoined;
     }
 
-    public void setDateJoined(ZonedDateTime dateJoined) {
+    public void setDateJoined(String dateJoined) {
         this.dateJoined = dateJoined;
     }
 
