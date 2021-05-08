@@ -78,27 +78,29 @@ public class SplashActivity extends AppCompatActivity {
         CurrentUser currentUser = CurrentUser.getInstance();
         //The user is already logged in, we determine which type of user this is.
         String userType = sharedPreferences.getString(Utils.SHARED_PREFERENCES_USER_TYPE,"");
+        String userData = sharedPreferences.getString(Utils.SHARED_PREFERENCES_CURRENT_USER, "");
+        String token = sharedPreferences.getString(Utils.SHARED_PREFERENCES_TOKEN, "");
         switch(userType)
         {
             case Utils.STUDENT_ACCOUNT:
                 //Load the student data.
-                String studentJson = sharedPreferences.getString(Utils.SHARED_PREFERENCES_CURRENT_USER, "");
-                Student student = gson.fromJson(studentJson,Student.class);
+                Student student = gson.fromJson(userData,Student.class);
                 currentUser.setCurrentStudent(student);
+                currentUser.setToken(token);
                 currentUser.setUserType(Utils.STUDENT_ACCOUNT);
                 return true;
             case Utils.TEACHER_ACCOUNT:
                 //Load the teacher data.
-                String teacherJson = sharedPreferences.getString(Utils.SHARED_PREFERENCES_CURRENT_USER, "");
-                Teacher teacher = gson.fromJson(teacherJson,Teacher.class);
+                Teacher teacher = gson.fromJson(userData,Teacher.class);
                 currentUser.setCurrentTeacher(teacher);
+                currentUser.setToken(token);
                 currentUser.setUserType(Utils.TEACHER_ACCOUNT);
                 return true;
             case Utils.ADMIN_ACCOUNT:
                 //Load the admin data.
-                String adminJson = sharedPreferences.getString(Utils.SHARED_PREFERENCES_CURRENT_USER, "");
-                Admin admin = gson.fromJson(adminJson,Admin.class);
+                Admin admin = gson.fromJson(userData,Admin.class);
                 currentUser.setCurrentAdmin(admin);
+                currentUser.setToken(token);
                 currentUser.setUserType(Utils.ADMIN_ACCOUNT);
                 return true;
             default:
