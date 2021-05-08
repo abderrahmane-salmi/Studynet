@@ -203,6 +203,7 @@ public class LoginActivity extends AppCompatActivity {
                 //We save the student data.
                 currentUserJson = new Gson().toJson(currentUser.getCurrentStudent());
                 prefsEditor.putString(Utils.SHARED_PREFERENCES_USER_TYPE,Utils.STUDENT_ACCOUNT);
+
                 break;
             case Utils.TEACHER_ACCOUNT:
                 //We save the student data.
@@ -216,7 +217,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 break;
         }
+        //Save the user data
         prefsEditor.putString(Utils.SHARED_PREFERENCES_CURRENT_USER,currentUserJson);
+        //Save the token.
+        prefsEditor.putString(Utils.SHARED_PREFERENCES_TOKEN, currentUser.getToken());
         prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,true);
         prefsEditor.apply();
     }
