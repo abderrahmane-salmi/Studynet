@@ -353,7 +353,7 @@ public class AddClassActivity extends AppCompatActivity {
 
         binding.btnSelectEndTime.setOnClickListener(v -> {
             MaterialTimePicker picker;
-            if (startTime != null){ // If we have already a selected time
+            if (endTime != null){ // If we have already a selected time
                 picker = openTimePicker(getString(R.string.select_end_time), endTime.getHour(), endTime.getMinute());
             } else { // Else: make 8:00 the default time
                 picker = openTimePicker(getString(R.string.select_end_time), 8, 0);
