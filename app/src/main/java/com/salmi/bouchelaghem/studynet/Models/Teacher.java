@@ -3,24 +3,29 @@ package com.salmi.bouchelaghem.studynet.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.threeten.bp.ZonedDateTime;
-
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class Teacher extends User implements Parcelable {
 
     private String grade;
     private ArrayList<String> sections;
-
+    private ArrayList<Assignment> assignments;
     public Teacher() {
     }
 
-    public Teacher(int id, String email, String firstName, String lastName, String dateJoined, String grade,ArrayList<String> sections) {
+    public Teacher(int id, String email, String firstName, String lastName, String dateJoined, String grade, ArrayList<String> sections, ArrayList<Assignment> assignments) {
         super(id, email, firstName, lastName, dateJoined);
         this.grade = grade;
         this.sections = sections;
+        this.assignments = assignments;
+    }
+
+    public ArrayList<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(ArrayList<Assignment> assignments) {
+        this.assignments = assignments;
     }
 
     protected Teacher(Parcel in) {

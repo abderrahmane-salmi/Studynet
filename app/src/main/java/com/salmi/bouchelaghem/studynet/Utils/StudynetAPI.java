@@ -36,6 +36,10 @@ public interface StudynetAPI {
     Call<List<Section>> getSections(@Query("specialty") String specialty);
     // sections/?specialty=ISIL
 
+    /** Get the user data using the token */
+    @GET("user_data")
+    Call<JsonObject> getUserData(@Header("Authorization") String token);
+
     /**Register a student */
     @POST("students/")
     Call<JsonObject> registerStudent(@Body JsonObject student);

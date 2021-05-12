@@ -56,9 +56,9 @@ public class TestAPI extends Application {
         users.add(new User(5, "email5@me.com", "User5", "User5", "2021-05-04T15:37:55.686454+01:00"));
 
         teachers = new ArrayList<>();
-        teachers.add(new Teacher(users.get(1).getId(), users.get(1).getEmail(), users.get(1).getFirstName(), users.get(1).getLastName(), users.get(1).getDateJoined(), "MCB",new ArrayList<>(Arrays.asList("L3 ACAD A","L3 ISIL B"))));
-        teachers.add(new Teacher(users.get(2).getId(), users.get(2).getEmail(), users.get(2).getFirstName(), users.get(2).getLastName(), users.get(2).getDateJoined(), "MCB",new ArrayList<>(Collections.singletonList("L3 ACAD A"))));
-        teachers.add(new Teacher(users.get(3).getId(), users.get(3).getEmail(), users.get(3).getFirstName(), users.get(3).getLastName(), users.get(3).getDateJoined(), "MCB",new ArrayList<>(Arrays.asList("L3 ISIL B","L2 GENIE CIVIL A"))));
+        teachers.add(new Teacher(users.get(1).getId(), users.get(1).getEmail(), users.get(1).getFirstName(), users.get(1).getLastName(), users.get(1).getDateJoined(), "MCB",new ArrayList<>(Arrays.asList("L3 ACAD A","L3 ISIL B")),new ArrayList<Assignment>()));
+        teachers.add(new Teacher(users.get(2).getId(), users.get(2).getEmail(), users.get(2).getFirstName(), users.get(2).getLastName(), users.get(2).getDateJoined(), "MCB",new ArrayList<>(Collections.singletonList("L3 ACAD A")),new ArrayList<Assignment>()));
+        teachers.add(new Teacher(users.get(3).getId(), users.get(3).getEmail(), users.get(3).getFirstName(), users.get(3).getLastName(), users.get(3).getDateJoined(), "MCB",new ArrayList<>(Arrays.asList("L3 ISIL B","L2 GENIE CIVIL A")),new ArrayList<Assignment>()));
 
         modules = new ArrayList<>();
         modules.add(new Module("BD2", "Base de données", Arrays.asList("Cours", "TD", "TP")));
@@ -83,12 +83,12 @@ public class TestAPI extends Application {
         students.add(new Student(users.get(0).getId(), users.get(0).getEmail(), users.get(0).getFirstName(), users.get(0).getLastName(), users.get(0).getDateJoined(), "181831033883", sections.get(0), 2));
 
         assignments = new ArrayList<>();
-        assignments.add(new Assignment(1, sections.get(0).getCode(), teachers.get(0).getId(), modules.get(0).getName(), modules.get(0).getCode(), Utils.TD, new ArrayList<>(Arrays.asList(1, 2))));
-        assignments.add(new Assignment(2, sections.get(1).getCode(), teachers.get(1).getId(), modules.get(1).getName(), modules.get(1).getCode(), Utils.TP, new ArrayList<>(Collections.singletonList(3))));
-        assignments.add(new Assignment(3, sections.get(2).getCode(), teachers.get(2).getId(), modules.get(2).getName(), modules.get(2).getCode(), Utils.COURS, new ArrayList<>(Arrays.asList(1, 2, 3))));
-        assignments.add(new Assignment(4, sections.get(0).getCode(), teachers.get(1).getId(), modules.get(1).getName(), modules.get(1).getCode(), Utils.TD, new ArrayList<>(Arrays.asList(1, 2))));
-        assignments.add(new Assignment(5, sections.get(0).getCode(), teachers.get(2).getId(), modules.get(1).getName(), modules.get(1).getCode(), Utils.TP, new ArrayList<>(Arrays.asList(1, 2))));
-        assignments.add(new Assignment(6, sections.get(0).getCode(), teachers.get(0).getId(), modules.get(2).getName(), modules.get(2).getCode(), Utils.COURS, new ArrayList<>(Arrays.asList(1, 2, 3))));
+        assignments.add(new Assignment(1, sections.get(0).getCode(), modules.get(0).getName(), modules.get(0).getCode(), Utils.TD, new ArrayList<>(Arrays.asList(1, 2))));
+        assignments.add(new Assignment(2, sections.get(1).getCode(), modules.get(1).getName(), modules.get(1).getCode(), Utils.TP, new ArrayList<>(Collections.singletonList(3))));
+        assignments.add(new Assignment(3, sections.get(2).getCode(), modules.get(2).getName(), modules.get(2).getCode(), Utils.COURS, new ArrayList<>(Arrays.asList(1, 2, 3))));
+        assignments.add(new Assignment(4, sections.get(0).getCode(), modules.get(1).getName(), modules.get(1).getCode(), Utils.TD, new ArrayList<>(Arrays.asList(1, 2))));
+        assignments.add(new Assignment(5, sections.get(0).getCode(), modules.get(1).getName(), modules.get(1).getCode(), Utils.TP, new ArrayList<>(Arrays.asList(1, 2))));
+        assignments.add(new Assignment(6, sections.get(0).getCode(), modules.get(2).getName(), modules.get(2).getCode(), Utils.COURS, new ArrayList<>(Arrays.asList(1, 2, 3))));
 
         sessions = new ArrayList<>();
         sessions.add(new Session(1, assignments.get(0), Collections.singletonList(1), LocalTime.of(8, 0), LocalTime.of(9, 30),  5, "https://facultydz.webex.com/facultydz/j.php?MTID=m275c959d1786501ca18107725f7f883d", "957 867 485", "mfgUdkOp"));
