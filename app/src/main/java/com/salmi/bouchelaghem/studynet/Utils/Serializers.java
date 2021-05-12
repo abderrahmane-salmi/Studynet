@@ -3,12 +3,10 @@ package com.salmi.bouchelaghem.studynet.Utils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Models.Admin;
+import com.salmi.bouchelaghem.studynet.Models.Assignment;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
-
-import org.threeten.bp.ZonedDateTime;
-import org.threeten.bp.format.DateTimeFormatter;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -75,12 +73,19 @@ public class Serializers {
     {
         JsonObject userData = teacherData.get("user").getAsJsonObject();
         JsonArray sections = teacherData.get("sections").getAsJsonArray();
+        JsonArray assignments = teacherData.get("assignments").getAsJsonArray();
 
         //Create the array of sections
         ArrayList<String> sectionsArray = new ArrayList<String>();
         for(int i = 0 ; i < sections.size();++i)
         {
             sectionsArray.add(sections.get(i).getAsString());
+        }
+        //Create the array of assignments
+        ArrayList<Assignment> assignmentArray = new ArrayList<Assignment>();
+        for(int i = 0; i < assignments.size(); ++i)
+        {
+            Assignment assignment = new Assignment();
         }
         //Create the teacher object
         Teacher teacher = new Teacher(
@@ -90,8 +95,9 @@ public class Serializers {
                 userData.get("last_name").getAsString(),
                 userData.get("date_joined").getAsString(),
                 teacherData.get("grade").getAsString(),
-                sectionsArray
-        );
+                sectionsArray,
+                new ArrayList<>());
+        //TODO:Fix above
         return teacher;
     }
 }
