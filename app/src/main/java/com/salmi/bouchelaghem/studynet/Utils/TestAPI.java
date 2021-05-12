@@ -83,12 +83,12 @@ public class TestAPI extends Application {
         students.add(new Student(users.get(0).getId(), users.get(0).getEmail(), users.get(0).getFirstName(), users.get(0).getLastName(), users.get(0).getDateJoined(), "181831033883", sections.get(0), 2));
 
         assignments = new ArrayList<>();
-        assignments.add(new Assignment(1, sections.get(0).getCode(), teachers.get(0).getId(), modules.get(0).getName(), modules.get(0).getCode(), Utils.TD, new ArrayList<>(Arrays.asList(1, 2))));
-        assignments.add(new Assignment(2, sections.get(1).getCode(), teachers.get(1).getId(), modules.get(1).getName(), modules.get(1).getCode(), Utils.TP, new ArrayList<>(Collections.singletonList(3))));
-        assignments.add(new Assignment(3, sections.get(2).getCode(), teachers.get(2).getId(), modules.get(2).getName(), modules.get(2).getCode(), Utils.COURS, new ArrayList<>(Arrays.asList(1, 2, 3))));
-        assignments.add(new Assignment(4, sections.get(0).getCode(), teachers.get(1).getId(), modules.get(1).getName(), modules.get(1).getCode(), Utils.TD, new ArrayList<>(Arrays.asList(1, 2))));
-        assignments.add(new Assignment(5, sections.get(0).getCode(), teachers.get(2).getId(), modules.get(1).getName(), modules.get(1).getCode(), Utils.TP, new ArrayList<>(Arrays.asList(1, 2))));
-        assignments.add(new Assignment(6, sections.get(0).getCode(), teachers.get(0).getId(), modules.get(2).getName(), modules.get(2).getCode(), Utils.COURS, new ArrayList<>(Arrays.asList(1, 2, 3))));
+        assignments.add(new Assignment(1, sections.get(0).getCode(), modules.get(0).getName(), modules.get(0).getCode(), Utils.TD, new ArrayList<>(Arrays.asList(1, 2))));
+        assignments.add(new Assignment(2, sections.get(1).getCode(), modules.get(1).getName(), modules.get(1).getCode(), Utils.TP, new ArrayList<>(Collections.singletonList(3))));
+        assignments.add(new Assignment(3, sections.get(2).getCode(), modules.get(2).getName(), modules.get(2).getCode(), Utils.COURS, new ArrayList<>(Arrays.asList(1, 2, 3))));
+        assignments.add(new Assignment(4, sections.get(0).getCode(), modules.get(1).getName(), modules.get(1).getCode(), Utils.TD, new ArrayList<>(Arrays.asList(1, 2))));
+        assignments.add(new Assignment(5, sections.get(0).getCode(), modules.get(1).getName(), modules.get(1).getCode(), Utils.TP, new ArrayList<>(Arrays.asList(1, 2))));
+        assignments.add(new Assignment(6, sections.get(0).getCode(), modules.get(2).getName(), modules.get(2).getCode(), Utils.COURS, new ArrayList<>(Arrays.asList(1, 2, 3))));
 
         sessions = new ArrayList<>();
         sessions.add(new Session(1, assignments.get(0), Collections.singletonList(1), LocalTime.of(8, 0), LocalTime.of(9, 30),  5, "https://facultydz.webex.com/facultydz/j.php?MTID=m275c959d1786501ca18107725f7f883d", "957 867 485", "mfgUdkOp"));

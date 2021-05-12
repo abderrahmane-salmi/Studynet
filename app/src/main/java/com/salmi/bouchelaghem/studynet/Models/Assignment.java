@@ -10,7 +10,6 @@ public class Assignment implements Parcelable {
 
     private int id;
     private String sectionCode;
-    private int teacherId;
     private String moduleName;
     private String moduleCode;
     private String moduleType;
@@ -19,10 +18,9 @@ public class Assignment implements Parcelable {
     public Assignment() {
     }
 
-    public Assignment(int id, String sectionCode, int teacherId, String moduleName, String moduleCode, String moduleType, ArrayList<Integer> concernedGroups) {
+    public Assignment(int id, String sectionCode, String moduleName, String moduleCode, String moduleType, ArrayList<Integer> concernedGroups) {
         this.id = id;
         this.sectionCode = sectionCode;
-        this.teacherId = teacherId;
         this.moduleName = moduleName;
         this.moduleCode = moduleCode;
         this.moduleType = moduleType;
@@ -32,7 +30,6 @@ public class Assignment implements Parcelable {
     protected Assignment(Parcel in) {
         id = in.readInt();
         sectionCode = in.readString();
-        teacherId = in.readInt();
         moduleName = in.readString();
         moduleCode = in.readString();
         moduleType = in.readString();
@@ -67,13 +64,6 @@ public class Assignment implements Parcelable {
         this.sectionCode = sectionCode;
     }
 
-    public int getTeacherId() {
-        return teacherId;
-    }
-
-    public void setTeacherId(int teacherId) {
-        this.teacherId = teacherId;
-    }
 
     public String getModuleName() {
         return moduleName;
@@ -116,7 +106,6 @@ public class Assignment implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeString(sectionCode);
-        dest.writeInt(teacherId);
         dest.writeString(moduleName);
         dest.writeString(moduleCode);
         dest.writeString(moduleType);

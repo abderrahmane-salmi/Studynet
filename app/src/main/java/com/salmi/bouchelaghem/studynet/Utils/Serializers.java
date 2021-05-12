@@ -85,7 +85,23 @@ public class Serializers {
         ArrayList<Assignment> assignmentArray = new ArrayList<Assignment>();
         for(int i = 0; i < assignments.size(); ++i)
         {
-            Assignment assignment = new Assignment();
+            JsonObject assignmentJson = assignments.get(i).getAsJsonObject();
+            JsonArray concernedGroupsJson = assignmentJson.get("concerned_groups").getAsJsonArray();
+            ArrayList<Integer> concernedGroups = new ArrayList<Integer>();
+            //Build the array of concerned groups for this assignment.
+            for (int j = 0; j < concernedGroupsJson.size(); ++j)
+            {
+                concernedGroups.add(concernedGroupsJson.get(j).getAsInt());
+            }
+            //Create the assignment and add it to the assignments.
+            Assignment assignment = new Assignment(
+                    assignmentJson.get("id").getAsInt(),
+                    assignmentJson.get("section").getAsString(),
+                    "TEMPORARY",
+                    assignmentJson.get("module").getAsString(),
+                    assignmentJson.get("module_type").getAsString(),
+                    concernedGroups);
+                    assignmentArray.add(assignment);
         }
         //Create the teacher object
         Teacher teacher = new Teacher(
@@ -96,8 +112,7 @@ public class Serializers {
                 userData.get("date_joined").getAsString(),
                 teacherData.get("grade").getAsString(),
                 sectionsArray,
-                new ArrayList<>());
-        //TODO:Fix above
+                assignmentArray);
         return teacher;
     }
 }

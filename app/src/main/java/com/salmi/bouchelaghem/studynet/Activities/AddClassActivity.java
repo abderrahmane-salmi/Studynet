@@ -130,7 +130,6 @@ public class AddClassActivity extends AppCompatActivity {
                         Assignment assignment = new Assignment();
                         // TODO: set id
                         assignment.setSectionCode(section.getCode());
-                        assignment.setTeacherId(currentTeacher.getId());
                         assignment.setModuleName(module.getName());
                         assignment.setModuleCode(module.getCode());
                         assignment.setModuleType(classType);
