@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -472,6 +473,26 @@ public class AddTeacherActivity extends AppCompatActivity {
             binding.txtEmail.setError(getString(R.string.email_msg2));
             return false;
         } else {
+            // TODO: Fix this
+            /*
+            The problem: The problem is we are trying to synchronously return the value of enqueue,
+            but it is an asynchronous method using a callback so we can't do that.
+             */
+            // Check if the email is used
+            Call<ResponseBody> call = api.checkEmail(email);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                    if (response.code() == Utils.HttpResponses.HTTP_302_FOUND){
+                        binding.txtEmail.setError(getString(R.string.email_msg2));
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+                    Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
             binding.txtEmail.setError(null);
             return true;
         }
