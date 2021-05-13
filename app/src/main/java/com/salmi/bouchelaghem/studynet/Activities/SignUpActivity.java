@@ -225,8 +225,6 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void getAllDepartments() {
-//        departments = testAPI.getDepartments();
-
         // Get the departments from the api
         Call<List<Department>> call = api.getDepartments();
         call.enqueue(new Callback<List<Department>>() {

@@ -18,18 +18,20 @@ import retrofit2.http.Query;
 
 public interface StudynetAPI {
 
-    // Departments
+    // *** Departments ***
 
     /** Get all departments */
     @GET("departments")
     Call<List<Department>> getDepartments();
 
-    // Specialities
+    // *** Specialities ***
 
     /** Get specialities based on department */
     @GET("specialties")
     Call<List<Specialty>> getSpecialities(@Query("department") String department);
     // This will generate 'specialties/?department=INFO'
+
+    // *** Sections ***
 
     /** Get sections based on specialty*/
     @GET("sections")

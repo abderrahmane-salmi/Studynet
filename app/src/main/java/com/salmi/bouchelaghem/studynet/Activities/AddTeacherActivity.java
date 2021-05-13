@@ -25,6 +25,7 @@ import com.salmi.bouchelaghem.studynet.Models.Department;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
+import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityAddTeacherBinding;
@@ -34,6 +35,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AddTeacherActivity extends AppCompatActivity {
 
@@ -54,6 +60,9 @@ public class AddTeacherActivity extends AppCompatActivity {
     private List<Assignment> assignments;
     private AssignmentsAdapter adapter;
 
+    // Studynet Api
+    private StudynetAPI api;
+
     private int step = 1;
 
     @Override
@@ -62,6 +71,15 @@ public class AddTeacherActivity extends AppCompatActivity {
         binding = ActivityAddTeacherBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        // Init retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Utils.API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // Init our api
+        api = retrofit.create(StudynetAPI.class);
 
         initRecView();
 
@@ -320,12 +338,34 @@ public class AddTeacherActivity extends AppCompatActivity {
     }
 
     private void setupDepartmentsSpinner() {
-        departments = new ArrayList<>();
-        for (Department department : TestAPI.getInstance().getDepartments()) {
-            departments.add(department.getCode());
-        }
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddTeacherActivity.this, R.layout.dropdown_item, departments);
-        binding.txtDepartmentSpinner.setAdapter(arrayAdapter);
+        // Get the departments from the api
+        Call<List<Department>> call = api.getDepartments();
+        call.enqueue(new Callback<List<Department>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Department>> call, @NonNull Response<List<Department>> response) {
+                if (response.isSuccessful()){
+                    List<Department> departmentsList = response.body();
+
+                    // Get the names of the departments
+                    departments = new ArrayList<>();
+                    assert departmentsList != null;
+                    for (Department department:departmentsList){
+                        departments.add(department.getName());
+                    }
+
+                    // Set up spinner
+                    ArrayAdapter<String> departmentsAdapter = new ArrayAdapter<>(AddTeacherActivity.this, R.layout.dropdown_item, departments);
+                    binding.txtDepartmentSpinner.setAdapter(departmentsAdapter);
+                } else {
+                    Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Department>> call, @NonNull Throwable t) {
+                Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setupGradesSpinner() {
