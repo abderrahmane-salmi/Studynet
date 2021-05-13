@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Models.Department;
 import com.salmi.bouchelaghem.studynet.Models.Section;
@@ -166,7 +165,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     // Get all the sections for the selected spec
     private void setupSectionsSpinner(Specialty s) {
-        Call<List<Section>> call = api.getSections(s.getCode());
+        Call<List<Section>> call = api.getSpecialitySections(s.getCode());
         call.enqueue(new Callback<List<Section>>() {
             @Override
             public void onResponse(@NonNull Call<List<Section>> call, @NonNull Response<List<Section>> response) {

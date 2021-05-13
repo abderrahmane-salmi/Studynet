@@ -168,4 +168,5 @@
     <string name="assignment_deleted_msg">Assignment was deleted successfully</string>
     <string name="update_assignment">Update Assignment</string>
     <string name="session_expired">Session expired, please login again.</string>
+    <string name="no_sections_in_department">No sections were found in this department</string>
 </resources>

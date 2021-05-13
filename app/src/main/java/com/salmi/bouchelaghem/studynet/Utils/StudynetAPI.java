@@ -35,8 +35,13 @@ public interface StudynetAPI {
 
     /** Get sections based on specialty*/
     @GET("sections")
-    Call<List<Section>> getSections(@Query("specialty") String specialty);
+    Call<List<Section>> getSpecialitySections(@Query("specialty") String specialty);
     // sections/?specialty=ISIL
+
+    /** Get sections based on department*/
+    @GET("sections")
+    Call<List<Section>> getDepartmentSections(@Query("department") String department);
+    // sections/?department=INFO
 
     /** Get the user data using the token */
     @GET("user_data")

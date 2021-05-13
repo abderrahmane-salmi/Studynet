@@ -240,45 +240,49 @@ public class AddTeacherActivity extends AppCompatActivity {
         });
 
         binding.txtSectionsList.setOnClickListener(v -> {
-            binding.txtSectionsList.setError(null);
-            // Init builder
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(AddTeacherActivity.this, R.style.MyAlertDialogTheme);
-            // Set title
-            builder.setTitle(R.string.select_section);
-            // No cancel
-            builder.setCancelable(false);
+            if (sectionsArray != null && sectionsArray.length != 0){
+                binding.txtSectionsList.setError(null);
+                // Init builder
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(AddTeacherActivity.this, R.style.MyAlertDialogTheme);
+                // Set title
+                builder.setTitle(R.string.select_section);
+                // No cancel
+                builder.setCancelable(false);
 
-            builder.setMultiChoiceItems(sectionsArray, sectionsStates, (dialog, which, isChecked) -> {
+                builder.setMultiChoiceItems(sectionsArray, sectionsStates, (dialog, which, isChecked) -> {
 
-                // Get the current item
-                String currentSection = sectionsArray[which];
-                if (isChecked) { // If its selected then add it to the selected items list
-                    selectedSections.add(currentSection);
-                } else { // if not then remove it from the list
-                    selectedSections.remove(currentSection);
-                }
-            });
-
-            builder.setPositiveButton(R.string.save, (dialog, which) -> {
-
-                binding.txtSectionsList.setText("");
-
-                if (!selectedSections.isEmpty()) {
-                    sectionsSelected = true;
-                    for (int i = 0; i < selectedSections.size() - 1; i++) {
-                        // Show the selected groups in the text view
-                        binding.txtSectionsList.append(selectedSections.get(i) + ", ");
+                    // Get the current item
+                    String currentSection = sectionsArray[which];
+                    if (isChecked) { // If its selected then add it to the selected items list
+                        selectedSections.add(currentSection);
+                    } else { // if not then remove it from the list
+                        selectedSections.remove(currentSection);
                     }
-                    binding.txtSectionsList.append(selectedSections.get(selectedSections.size() - 1));
-                } else {
-                    sectionsSelected = false;
-                    binding.txtSectionsList.setHint(R.string.group);
-                }
-            });
+                });
 
-            builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+                builder.setPositiveButton(R.string.save, (dialog, which) -> {
 
-            builder.show();
+                    binding.txtSectionsList.setText("");
+
+                    if (!selectedSections.isEmpty()) {
+                        sectionsSelected = true;
+                        for (int i = 0; i < selectedSections.size() - 1; i++) {
+                            // Show the selected groups in the text view
+                            binding.txtSectionsList.append(selectedSections.get(i) + ", ");
+                        }
+                        binding.txtSectionsList.append(selectedSections.get(selectedSections.size() - 1));
+                    } else {
+                        sectionsSelected = false;
+                        binding.txtSectionsList.setHint(R.string.sections);
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+
+                builder.show();
+            } else {
+                Toast.makeText(this, getString(R.string.no_sections_in_department), Toast.LENGTH_SHORT).show();
+            }
 
         });
 
@@ -323,18 +327,34 @@ public class AddTeacherActivity extends AppCompatActivity {
 
     // Get all the sections in the selected department
     private void setupSectionsSpinner(String department) {
-        // Get sections
-        List<Section> sectionList = TestAPI.getInstance().getSections();
+        Call<List<Section>> call = api.getDepartmentSections(department);
+        call.enqueue(new Callback<List<Section>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Section>> call, @NonNull Response<List<Section>> response) {
+                if (response.isSuccessful()){
+                    // Get sections
+                    List<Section> sectionList = response.body();
 
-        // Init lists
-        sectionsArray = new String[sectionList.size()];
-        sectionsStates = new boolean[sectionList.size()];
-        selectedSections = new ArrayList<>();
+                    // Init lists
+                    assert sectionList != null;
+                    sectionsArray = new String[sectionList.size()];
+                    sectionsStates = new boolean[sectionList.size()];
+                    selectedSections = new ArrayList<>();
 
-        // Fill the sections array
-        for (int i = 0; i < sectionList.size(); i++) {
-            sectionsArray[i] = sectionList.get(i).getCode();
-        }
+                    // Fill the sections array
+                    for (int i = 0; i < sectionList.size(); i++) {
+                        sectionsArray[i] = sectionList.get(i).getCode();
+                    }
+                } else {
+                    Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Section>> call, @NonNull Throwable t) {
+                Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setupDepartmentsSpinner() {
@@ -350,7 +370,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                     departments = new ArrayList<>();
                     assert departmentsList != null;
                     for (Department department:departmentsList){
-                        departments.add(department.getName());
+                        departments.add(department.getCode());
                     }
 
                     // Set up spinner
