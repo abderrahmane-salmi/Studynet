@@ -86,6 +86,14 @@ public class AddAssignmentActivity extends AppCompatActivity {
             case Utils.ACTION_ADD:
                 binding.btnSave.setOnClickListener(v -> {
                     if (sectionSelected && moduleSelected && moduleTypeSelected && groupSelected){
+                        Assignment assignment = new Assignment();
+                        assignment.setId(-1);
+                        assignment.setSectionCode(section);
+                        assignment.setModuleCode(module.getCode());
+                        assignment.setModuleName(module.getName());
+                        assignment.setModuleType(moduleType);
+                        assignment.setConcernedGroups(selectedGroupsInt);
+
                         Toast.makeText(AddAssignmentActivity.this, "Save", Toast.LENGTH_SHORT).show();
                     } else {
                         if (!sectionSelected){
@@ -116,6 +124,13 @@ public class AddAssignmentActivity extends AppCompatActivity {
                         !assignment.getModuleCode().equals(module.getCode()) ||
                                 !assignment.getModuleType().equals(moduleType) ||
                                 assignment.getConcernedGroups() != selectedGroupsInt){
+                            
+                            assignment.setSectionCode(section);
+                            assignment.setModuleCode(module.getCode());
+                            assignment.setModuleName(module.getName());
+                            assignment.setModuleType(moduleType);
+                            assignment.setConcernedGroups(selectedGroupsInt);
+
                             Toast.makeText(AddAssignmentActivity.this, "Save", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(this, getString(R.string.no_changes_msg), Toast.LENGTH_SHORT).show();
