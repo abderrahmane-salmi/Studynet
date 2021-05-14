@@ -1,5 +1,6 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -12,7 +13,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.salmi.bouchelaghem.studynet.Models.Assignment;
 import com.salmi.bouchelaghem.studynet.Models.Module;
 import com.salmi.bouchelaghem.studynet.Models.Section;
+import com.salmi.bouchelaghem.studynet.Models.Specialty;
 import com.salmi.bouchelaghem.studynet.R;
+import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityAddAssignmentBinding;
@@ -20,6 +23,12 @@ import com.salmi.bouchelaghem.studynet.databinding.ActivityAddAssignmentBinding;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AddAssignmentActivity extends AppCompatActivity {
 
@@ -47,12 +56,24 @@ public class AddAssignmentActivity extends AppCompatActivity {
 
     TestAPI testAPI = TestAPI.getInstance();
 
+    // Studynet Api
+    private StudynetAPI api;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityAddAssignmentBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        // Init retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Utils.API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // Init our api
+        api = retrofit.create(StudynetAPI.class);
 
         Intent intent = getIntent();
         String action = intent.getStringExtra(Utils.ACTION);
@@ -139,7 +160,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
 
             // Setup the next spinner
             binding.txtModuleLayout.setEnabled(true);
-            setupModulesSpinner(teacherId, section);
+            setupModulesSpinner(section);
         });
 
         binding.txtModuleSpinner.setOnItemClickListener((parent, view12, position, id) -> {
@@ -241,7 +262,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
         module = getModule(assignment.getModuleCode());
         assert module != null;
         // Setup spinner
-        setupModulesSpinner(teacherId, section);
+        setupModulesSpinner(section);
         binding.txtModuleSpinner.setText(module.getCode(), false);
 
         // Module types
@@ -316,15 +337,32 @@ public class AddAssignmentActivity extends AppCompatActivity {
         binding.txtModuleTypeSpinner.setAdapter(arrayAdapter);
     }
 
-    private void setupModulesSpinner(int teacherId, String section) {
-        modules = new ArrayList<>(testAPI.getModules());
-        // Get only names
-        List<String> modulesNames = new ArrayList<>();
-        for (Module module : modules) {
-            modulesNames.add(module.getCode());
-        }
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddAssignmentActivity.this, R.layout.dropdown_item, modulesNames);
-        binding.txtModuleSpinner.setAdapter(arrayAdapter);
+    private void setupModulesSpinner(String section) {
+        Call<List<Module>> call = api.getSectionModules(section);
+        call.enqueue(new Callback<List<Module>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Module>> call, @NonNull Response<List<Module>> response) {
+                if (response.isSuccessful()){
+                    assert response.body() != null;
+                    modules = new ArrayList<>(response.body());
+
+                    // Get only names
+                    List<String> modulesNames = new ArrayList<>();
+                    for (Module module : modules) {
+                        modulesNames.add(module.getCode());
+                    }
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddAssignmentActivity.this, R.layout.dropdown_item, modulesNames);
+                    binding.txtModuleSpinner.setAdapter(arrayAdapter);
+                } else {
+                    Toast.makeText(AddAssignmentActivity.this, getString(R.string.error)+response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Module>> call, @NonNull Throwable t) {
+                Toast.makeText(AddAssignmentActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setupSectionsSpinner() {

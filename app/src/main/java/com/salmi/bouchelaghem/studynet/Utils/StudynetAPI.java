@@ -3,6 +3,7 @@ package com.salmi.bouchelaghem.studynet.Utils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Models.Department;
+import com.salmi.bouchelaghem.studynet.Models.Module;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Specialty;
 
@@ -44,6 +45,14 @@ public interface StudynetAPI {
     @GET("sections")
     Call<List<Section>> getDepartmentSections(@Query("department") String department);
     // sections/?department=INFO
+
+    // *** Modules ***
+
+    /** Get modules based on section*/
+    @GET("modules")
+    Call<List<Module>> getSectionModules(@Query("section") String section);
+    // modules/?section=L3 ISIL B
+
 
     /** Get the user data using the token */
     @GET("user_data")
