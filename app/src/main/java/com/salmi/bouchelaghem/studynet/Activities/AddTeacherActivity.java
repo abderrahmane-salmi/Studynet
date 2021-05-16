@@ -360,14 +360,16 @@ public class AddTeacherActivity extends AppCompatActivity {
     private void getAssignments() {
         if (teacher != null){
             assignments = teacher.getAssignments();
-            if (!assignments.isEmpty()){
-                adapter.setAssignments(assignments);
-                binding.assignmentsRecView.setAdapter(adapter);
-                binding.assignmentsRecView.setVisibility(View.VISIBLE);
-                binding.emptyMsg.setVisibility(View.GONE);
-            } else {
-                binding.assignmentsRecView.setVisibility(View.GONE);
-                binding.emptyMsg.setVisibility(View.VISIBLE);
+            if (assignments != null){
+                if (!assignments.isEmpty()){
+                    adapter.setAssignments(assignments);
+                    binding.assignmentsRecView.setAdapter(adapter);
+                    binding.assignmentsRecView.setVisibility(View.VISIBLE);
+                    binding.emptyMsg.setVisibility(View.GONE);
+                } else {
+                    binding.assignmentsRecView.setVisibility(View.GONE);
+                    binding.emptyMsg.setVisibility(View.VISIBLE);
+                }
             }
         }
     }
@@ -460,27 +462,54 @@ public class AddTeacherActivity extends AppCompatActivity {
 
         // Get all sections (of the teacher's department) and setup the spinner
         binding.txtSectionsList.setEnabled(true);
-        setupSectionsSpinner(department);
+        Call<List<Section>> call = api.getDepartmentSections(department);
+        call.enqueue(new Callback<List<Section>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Section>> call, @NonNull Response<List<Section>> response) {
+                if (response.isSuccessful()){
+                    // Get sections
+                    List<Section> sectionList = response.body();
 
-        // Set the selected sections
-        selectedSections = teacher.getSections();
-        sectionsSelected = true;
-        setSelectedSections(selectedSections);
+                    // Init lists
+                    assert sectionList != null;
+                    sectionsArray = new String[sectionList.size()];
+                    sectionsStates = new boolean[sectionList.size()];
+                    selectedSections = new ArrayList<>();
 
-        // Set the selected sections to the text view
-        int nbSections = selectedSections.size();
-        if (nbSections == 0) {
-            binding.txtSectionsList.setText(R.string.no_sections_selected_msg);
-        } else if (nbSections == 1) {
-            binding.txtSectionsList.setText(selectedSections.get(0));
-        } else {
-            binding.txtSectionsList.setText("");
-            for (int i = 0; i < selectedSections.size() - 1; i++) {
-                // Show the selected sections in the text view
-                binding.txtSectionsList.append(selectedSections.get(i) + ", ");
+                    // Fill the sections array
+                    for (int i = 0; i < sectionList.size(); i++) {
+                        sectionsArray[i] = sectionList.get(i).getCode();
+                    }
+
+                    // Set the selected sections
+                    selectedSections = teacher.getSections();
+                    sectionsSelected = true;
+                    setSelectedSections(selectedSections);
+
+                    // Set the selected sections to the text view
+                    int nbSections = selectedSections.size();
+                    if (nbSections == 0) {
+                        binding.txtSectionsList.setText(R.string.no_sections_selected_msg);
+                    } else if (nbSections == 1) {
+                        binding.txtSectionsList.setText(selectedSections.get(0));
+                    } else {
+                        binding.txtSectionsList.setText("");
+                        for (int i = 0; i < selectedSections.size() - 1; i++) {
+                            // Show the selected sections in the text view
+                            binding.txtSectionsList.append(selectedSections.get(i) + ", ");
+                        }
+                        binding.txtSectionsList.append(selectedSections.get(nbSections - 1));
+                    }
+                } else {
+                    Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+response.code(), Toast.LENGTH_SHORT).show();
+                }
             }
-            binding.txtSectionsList.append(selectedSections.get(nbSections - 1));
-        }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Section>> call, @NonNull Throwable t) {
+                Toast.makeText(AddTeacherActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
