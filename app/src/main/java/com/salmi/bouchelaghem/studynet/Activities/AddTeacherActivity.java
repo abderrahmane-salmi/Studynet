@@ -618,7 +618,7 @@ public class AddTeacherActivity extends AppCompatActivity {
         if (password.isEmpty()) {
             binding.txtPassword.setError(getString(R.string.empty_password_msg));
             return false;
-        } else if (password.length() < 6) {
+        } else if (password.length() < 8) {
             binding.txtPassword.setError(getString(R.string.password_msg2));
             return false;
         } else {
