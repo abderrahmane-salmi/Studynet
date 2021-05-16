@@ -139,7 +139,6 @@ public class AddTeacherActivity extends AppCompatActivity {
                                             String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
                                             String lastName = binding.txtLastName.getEditText().getText().toString().trim();
                                             String email = binding.txtEmail.getEditText().getText().toString().trim();
-                                            assignments = new ArrayList<>();
 
                                             teacher = new Teacher();
                                             teacher.setId(-1);
