@@ -48,6 +48,17 @@ public class Assignment implements Parcelable {
         }
     };
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Assignment))  {
+            return false;
+        }
+        Assignment other = (Assignment) obj;
+        return sectionCode.equals(other.sectionCode)
+                && moduleCode.equals(other.moduleCode)
+                && moduleType.equals(other.moduleType);
+    }
+
     public int getId() {
         return id;
     }

@@ -83,10 +83,17 @@ public class AddAssignmentActivity extends AppCompatActivity {
                 assignment.setModuleName(module.getName());
                 assignment.setModuleType(moduleType);
                 assignment.setConcernedGroups(selectedGroupsInt);
+                ArrayList<Assignment> tempAssignments = AddTeacherActivity.getTeacher().getAssignments();
+                if(!tempAssignments.contains(assignment)){
+                    AddTeacherActivity.getTeacher().getAssignments().add(assignment);
+                    Toast.makeText(AddAssignmentActivity.this, "Save", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                else
+                {
+                    Toast.makeText(AddAssignmentActivity.this, getString(R.string.assignment_already_exists), Toast.LENGTH_LONG).show();
+                }
 
-                AddTeacherActivity.getTeacher().getAssignments().add(assignment);
-                Toast.makeText(AddAssignmentActivity.this, "Save", Toast.LENGTH_SHORT).show();
-                finish();
             } else {
                 if (!sectionSelected){
                     binding.txtSectionTextLayout.setError(getString(R.string.empty_section_msg));

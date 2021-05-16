@@ -172,4 +172,5 @@
     <string name="email_msg3">Please try to use another email</string>
     <string name="loading">Loading …</string>
     <string name="logged_in_msg">You have logged in successfully</string>
+    <string name="assignment_already_exists">This assignment already exists.</string>
 </resources>

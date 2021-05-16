@@ -195,7 +195,6 @@ public class AddTeacherActivity extends AppCompatActivity {
                             break;
                         case 2: // Step 2: Add assignments
                             // Save the teacher's info in the api
-                            //TODO: make the api teacher creation call here
                             String password = binding.txtPassword.getEditText().getText().toString().trim();
                             //Build the teacher json.
                             JsonObject teacherJson = Serializers.CreateTeacherSerializer(teacher,password);
