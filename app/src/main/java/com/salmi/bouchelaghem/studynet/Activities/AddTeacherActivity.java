@@ -60,12 +60,14 @@ public class AddTeacherActivity extends AppCompatActivity {
     private boolean sectionsSelected = false;
 
     // Recycler view
-    private List<Assignment> assignments;
+    private ArrayList<Assignment> assignments;
     private AssignmentsAdapter adapter;
 
     // Studynet Api
     private StudynetAPI api;
-    private CurrentUser currentUser = CurrentUser.getInstance();
+    private final CurrentUser currentUser = CurrentUser.getInstance();
+
+    private static Teacher teacher;
 
     private int step = 1;
 
@@ -114,6 +116,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                                             // The email is already used
                                             binding.txtEmail.setError(getString(R.string.email_taken));
                                         } else if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
+                                            // Go to the next step
                                             step = 2;
                                             binding.teacherInfoLayout.setVisibility(View.GONE);
                                             binding.assignmentsRecView.setVisibility(View.VISIBLE);
@@ -122,6 +125,24 @@ public class AddTeacherActivity extends AppCompatActivity {
                                             binding.btnStepBack.setVisibility(View.VISIBLE);
                                             // Show empty msg
                                             binding.emptyMsg.setVisibility(View.VISIBLE);
+
+                                            // Save the teacher's info
+                                            String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
+                                            String lastName = binding.txtLastName.getEditText().getText().toString().trim();
+                                            String email = binding.txtEmail.getEditText().getText().toString().trim();
+                                            String password = binding.txtPassword.getEditText().getText().toString().trim();
+                                            assignments = new ArrayList<>();
+
+                                            teacher = new Teacher();
+                                            teacher.setId(-1);
+                                            teacher.setFirstName(firstName);
+                                            teacher.setLastName(lastName);
+                                            teacher.setEmail(email);
+                                            teacher.setAssignments(assignments);
+                                            teacher.setSections(selectedSections);
+
+                                            getAssignments();
+
                                         } else {
                                             // There is a problem with this email
                                             binding.txtEmail.setError(getString(R.string.email_msg3));
@@ -155,11 +176,7 @@ public class AddTeacherActivity extends AppCompatActivity {
 //                            binding.emptyMsg.setVisibility(View.VISIBLE);
                             break;
                         case 2: // Step 2: Add assignments
-                            // Save the teacher's info
-                            String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
-                            String lastName = binding.txtLastName.getEditText().getText().toString().trim();
-                            String email = binding.txtEmail.getEditText().getText().toString().trim();
-                            String password = binding.txtPassword.getEditText().getText().toString().trim();
+                            // Save the teacher's info in the api
 
                             Toast.makeText(AddTeacherActivity.this, "Save", Toast.LENGTH_SHORT).show();
                             break;
@@ -182,7 +199,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                 // Hide password field
                 binding.txtPassword.setVisibility(View.GONE);
                 // Get teacher info
-                Teacher teacher = intent.getParcelableExtra(Utils.TEACHER);
+                teacher = intent.getParcelableExtra(Utils.TEACHER);
                 fillFields(teacher);
                 // Save button
                 binding.btnNext.setOnClickListener(v -> {
@@ -227,7 +244,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                             // Show back button
                             binding.btnStepBack.setVisibility(View.VISIBLE);
                             // Show current teacher's assignments
-                            getAssignments(teacher.getId());
+                            getAssignments();
                             break;
                         case 2: // Step 2: Add assignments
                             // Save the teacher's info
@@ -340,17 +357,25 @@ public class AddTeacherActivity extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(binding.assignmentsRecView);
     }
 
-    private void getAssignments(int teacherId) {
-        assignments = new ArrayList<>(TestAPI.getInstance().getAssignments());
-        if (!assignments.isEmpty()){
-            adapter.setAssignments(assignments);
-            binding.assignmentsRecView.setAdapter(adapter);
-            binding.assignmentsRecView.setVisibility(View.VISIBLE);
-            binding.emptyMsg.setVisibility(View.GONE);
-        } else {
-            binding.assignmentsRecView.setVisibility(View.GONE);
-            binding.emptyMsg.setVisibility(View.VISIBLE);
+    private void getAssignments() {
+        if (teacher != null){
+            assignments = teacher.getAssignments();
+            if (!assignments.isEmpty()){
+                adapter.setAssignments(assignments);
+                binding.assignmentsRecView.setAdapter(adapter);
+                binding.assignmentsRecView.setVisibility(View.VISIBLE);
+                binding.emptyMsg.setVisibility(View.GONE);
+            } else {
+                binding.assignmentsRecView.setVisibility(View.GONE);
+                binding.emptyMsg.setVisibility(View.VISIBLE);
+            }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getAssignments();
     }
 
     // Get all the sections in the selected department
@@ -522,7 +547,7 @@ public class AddTeacherActivity extends AppCompatActivity {
 
     // Admin call back (swipe feature)
     // Swipe to delete and edit in the recycler view
-    ItemTouchHelper.SimpleCallback adminCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+    ItemTouchHelper.SimpleCallback adminCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
             return false;
@@ -534,10 +559,8 @@ public class AddTeacherActivity extends AppCompatActivity {
             int position = viewHolder.getAdapterPosition();
             Assignment currentAssignment = adapter.getAssignments().get(position);
 
-            switch (direction){
-                case ItemTouchHelper.LEFT: // Swipe left to right <- : Delete item
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(AddTeacherActivity.this);
+            if (direction == ItemTouchHelper.LEFT){
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddTeacherActivity.this);
                     builder.setMessage(R.string.are_you_sure);
                     builder.setPositiveButton(R.string.yes, (dialog, which) -> {
                         assignments.remove(currentAssignment);
@@ -550,17 +573,6 @@ public class AddTeacherActivity extends AppCompatActivity {
                         adapter.notifyItemChanged(position); // To reset the item on the screen
                     });
                     builder.create().show();
-                    break;
-                case ItemTouchHelper.RIGHT: // Swipe right to left -> : Edit item
-                    Intent intent1 = new Intent(AddTeacherActivity.this, AddAssignmentActivity.class);
-                    intent1.putExtra(Utils.ACTION, Utils.ACTION_UPDATE);
-                    // TODO: get the teacher's id
-                    intent1.putExtra(Utils.ID, 1);
-                    intent1.putExtra(Utils.SECTIONS, selectedSections);
-                    intent1.putExtra(Utils.ASSIGNMENT, currentAssignment);
-                    startActivity(intent1);
-                    adapter.notifyItemChanged(position); // To reset the item on the screen
-                    break;
             }
         }
 
@@ -578,4 +590,8 @@ public class AddTeacherActivity extends AppCompatActivity {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     };
+
+    public static Teacher getTeacher() {
+        return teacher;
+    }
 }
