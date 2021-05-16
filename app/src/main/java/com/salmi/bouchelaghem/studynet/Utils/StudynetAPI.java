@@ -67,18 +67,24 @@ public interface StudynetAPI {
     /**Register a student */
     @POST("students/")
     Call<JsonObject> registerStudent(@Body JsonObject student);
-
+    /** Login using email and password */
     @POST("login/")
     Call<JsonObject> login(@Body JsonObject credentials);
 
+    /** Logout current session by invalidating the current token.*/
     @POST("logout/")
     Call<ResponseBody> logout(@Header("Authorization") String token);
 
+    /** Logout all sessions by invalidating all tokens associated with the current token's account.*/
     @POST("logoutall/")
     Call<ResponseBody> logoutAll(@Header("Authorization") String token);
 
-    /* Check if the email is used*/
+    /** Check if the email is used*/
     @POST("check_email/")
     Call<ResponseBody> checkEmail(@Body JsonObject email, @Header("Authorization") String token);
+
+    /** Create a teacher with all of his data including his assignments (requires admin token)*/
+    @POST("teachers/")
+    Call<JsonObject> createTeacher(@Body JsonObject teacherJson, @Header("Authorization") String token);
 
 }

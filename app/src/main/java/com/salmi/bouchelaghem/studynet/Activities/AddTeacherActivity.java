@@ -177,6 +177,8 @@ public class AddTeacherActivity extends AppCompatActivity {
                             break;
                         case 2: // Step 2: Add assignments
                             // Save the teacher's info in the api
+                            //TODO: make the api teacher creation call here
+
 
                             Toast.makeText(AddTeacherActivity.this, "Save", Toast.LENGTH_SHORT).show();
                             break;
