@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.salmi.bouchelaghem.studynet.Activities.AddAssignmentActivity;
 import com.salmi.bouchelaghem.studynet.Activities.AddTeacherActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
 import com.salmi.bouchelaghem.studynet.Adapters.TeachersAdapter;
@@ -32,6 +33,7 @@ import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
+import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.FragmentTeachersBinding;
@@ -40,6 +42,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TeachersFragment extends Fragment {
 
@@ -54,11 +61,16 @@ public class TeachersFragment extends Fragment {
     private boolean sectionSelected = false;
     private String selectedSection;
     private boolean filterApplied = false;
+    private List<Section> sections;
+    private List<String> sectionsNames;
 
     private final CurrentUser currentUser = CurrentUser.getInstance();
     private String userType;
 
     TestAPI testAPI = TestAPI.getInstance();
+
+    // Studynet Api
+    private StudynetAPI api;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -69,10 +81,17 @@ public class TeachersFragment extends Fragment {
         userType = currentUser.getUserType();
         initRecView();
 
-        // Hide filter button
+        // Init retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Utils.API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // Init our api
+        api = retrofit.create(StudynetAPI.class);
+
         NavigationActivity context = (NavigationActivity) getActivity();
         assert context != null;
-        context.btnFilter.setVisibility(View.GONE);
 
         if (userType.equals(Utils.ADMIN_ACCOUNT)){
             // Show the select section msg
@@ -96,15 +115,7 @@ public class TeachersFragment extends Fragment {
                 AutoCompleteTextView filterTimetableSection = view12.findViewById(R.id.filterTimetableSection);
                 MaterialButton btnApplyFilter = view12.findViewById(R.id.btnApplyFilter);
 
-                // Init sections list
-                // Get all the sections
-                List<Section> sections = testAPI.getSections();
-
-                // If its an admin get him all the sections
-                List<String> sectionsNames = new ArrayList<>();
-                for (Section section : sections) {
-                    sectionsNames.add(section.getCode());
-                }
+                // Init sections spinner
                 if (!sectionsNames.isEmpty()) {
                     ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sectionsNames);
                     filterTimetableSection.setAdapter(arrayAdapter);
@@ -145,6 +156,9 @@ public class TeachersFragment extends Fragment {
                 WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
                 dialog.getWindow().setAttributes(params);
             });
+        } else if (userType.equals(Utils.STUDENT_ACCOUNT)){
+            // Hide filter button
+            context.btnFilter.setVisibility(View.GONE);
         }
 
         return view;
@@ -175,6 +189,9 @@ public class TeachersFragment extends Fragment {
             if (Utils.STUDENT_ACCOUNT.equals(userType)) {// Get the current student
                 Student currentStudent = CurrentUser.getInstance().getCurrentStudent();
                 getTeachers(currentStudent.getSection().getCode());
+            } else if (Utils.ADMIN_ACCOUNT.equals(userType)){
+                // If its an admin go ahead and get all sections for the spinner
+                getAllSections();
             }
         } else { // if we already retrieved the data from the database, just keep using it
             adapter.setTeachers(teachers);
@@ -196,6 +213,32 @@ public class TeachersFragment extends Fragment {
             binding.teachersRecView.setVisibility(View.GONE);
             binding.emptyMsg.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void getAllSections(){
+        Call<List<Section>> call = api.getAllSections();
+        call.enqueue(new Callback<List<Section>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Section>> call, @NonNull Response<List<Section>> response) {
+                if (response.isSuccessful()){
+                    sections = response.body();
+                    sectionsNames = new ArrayList<>();
+                    if (sections != null){
+                        // Get the sections names only
+                        for (Section section : sections) {
+                            sectionsNames.add(section.getCode());
+                        }
+                    }
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.error)+response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Section>> call, @NonNull Throwable t) {
+                Toast.makeText(getContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     // Swipe to delete and edit in the recycler view

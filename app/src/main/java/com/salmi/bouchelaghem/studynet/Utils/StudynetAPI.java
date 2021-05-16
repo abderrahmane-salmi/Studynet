@@ -39,6 +39,11 @@ public interface StudynetAPI {
 
     /** Get sections based on specialty*/
     @GET("sections")
+    Call<List<Section>> getAllSections();
+    // sections
+
+    /** Get sections based on specialty*/
+    @GET("sections")
     Call<List<Section>> getSpecialitySections(@Query("specialty") String specialty);
     // sections/?specialty=ISIL
 
