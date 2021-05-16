@@ -1,12 +1,19 @@
 package com.salmi.bouchelaghem.studynet.Fragments;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,9 +23,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.salmi.bouchelaghem.studynet.Activities.AddTeacherActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
 import com.salmi.bouchelaghem.studynet.Adapters.TeachersAdapter;
+import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
@@ -40,8 +49,16 @@ public class TeachersFragment extends Fragment {
     private List<Teacher> teachers;
     private TeachersAdapter adapter;
 
+    // Filter
+    private Dialog dialog;
+    private boolean sectionSelected = false;
+    private String selectedSection;
+    private boolean filterApplied = false;
+
     private final CurrentUser currentUser = CurrentUser.getInstance();
     private String userType;
+
+    TestAPI testAPI = TestAPI.getInstance();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -58,12 +75,75 @@ public class TeachersFragment extends Fragment {
         context.btnFilter.setVisibility(View.GONE);
 
         if (userType.equals(Utils.ADMIN_ACCOUNT)){
-            // Show add button
+            // Show the select section msg
+            binding.selectSectionMsg.setVisibility(View.VISIBLE);
+
+            // Show the add button
             binding.btnAdd.setVisibility(View.VISIBLE);
             binding.btnAdd.setOnClickListener(v -> {
                 Intent intent = new Intent(getContext(), AddTeacherActivity.class);
                 intent.putExtra(Utils.ACTION, Utils.ACTION_ADD);
                 startActivity(intent);
+            });
+
+            // Show and setup the filter
+            context.btnFilter.setVisibility(View.VISIBLE);
+            context.btnFilter.setOnClickListener(v -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                View view12 = View.inflate(context, R.layout.popup_teacher_timetable_filter, null);
+                // Init Views
+                ImageView btnCloseFilter = view12.findViewById(R.id.btnCloseFilter);
+                AutoCompleteTextView filterTimetableSection = view12.findViewById(R.id.filterTimetableSection);
+                MaterialButton btnApplyFilter = view12.findViewById(R.id.btnApplyFilter);
+
+                // Init sections list
+                // Get all the sections
+                List<Section> sections = testAPI.getSections();
+
+                // If its an admin get him all the sections
+                List<String> sectionsNames = new ArrayList<>();
+                for (Section section : sections) {
+                    sectionsNames.add(section.getCode());
+                }
+                if (!sectionsNames.isEmpty()) {
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sectionsNames);
+                    filterTimetableSection.setAdapter(arrayAdapter);
+                }
+
+                if (filterApplied){
+                    restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
+                }
+
+                // Init Buttons
+                btnApplyFilter.setOnClickListener(v13 -> {
+
+                    if (sectionSelected) {
+
+                        getTeachers(selectedSection);
+                        binding.selectSectionMsg.setVisibility(View.GONE);
+                        dialog.dismiss();
+                        filterApplied = true;
+
+                    } else {
+                        Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+
+                btnCloseFilter.setOnClickListener(v14 -> dialog.dismiss());
+
+                filterTimetableSection.setOnItemClickListener((parent, view121, position, id) -> {
+                    sectionSelected = true;
+                    selectedSection = sectionsNames.get(position);
+                });
+
+                builder.setView(view12);
+                dialog = builder.create(); // creating our dialog
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+                // Show rounded corners
+                WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                dialog.getWindow().setAttributes(params);
             });
         }
 
@@ -83,20 +163,18 @@ public class TeachersFragment extends Fragment {
         }
     }
 
+    private void restoreFilterState(AutoCompleteTextView filter) {
+        filter.setText(selectedSection, false);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         if (teachers != null && teachers.isEmpty()) {
             // if its the first time we launch the activity so go ahead and get the data from the database
-            switch (userType){
-                case Utils.STUDENT_ACCOUNT:
-                    // Get the current student
-                    Student currentStudent = CurrentUser.getInstance().getCurrentStudent();
-                    getMyTeachers(currentStudent.getSection().getCode());
-                    break;
-                case Utils.ADMIN_ACCOUNT:
-                    getAllTeachers();
-                    break;
+            if (Utils.STUDENT_ACCOUNT.equals(userType)) {// Get the current student
+                Student currentStudent = CurrentUser.getInstance().getCurrentStudent();
+                getTeachers(currentStudent.getSection().getCode());
             }
         } else { // if we already retrieved the data from the database, just keep using it
             adapter.setTeachers(teachers);
@@ -107,20 +185,7 @@ public class TeachersFragment extends Fragment {
     }
 
     // Get the current section's teachers
-    private void getMyTeachers(String section){
-        teachers = TestAPI.getInstance().getTeachers();
-        if (!teachers.isEmpty()) {
-            adapter.setTeachers(teachers);
-            binding.teachersRecView.setAdapter(adapter);
-            binding.teachersRecView.setVisibility(View.VISIBLE);
-            binding.emptyMsg.setVisibility(View.GONE);
-        } else {
-            binding.teachersRecView.setVisibility(View.GONE);
-            binding.emptyMsg.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void getAllTeachers() {
+    private void getTeachers(String section){
         teachers = TestAPI.getInstance().getTeachers();
         if (!teachers.isEmpty()) {
             adapter.setTeachers(teachers);
