@@ -25,6 +25,7 @@ import com.salmi.bouchelaghem.studynet.Models.Department;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
+import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
@@ -63,6 +64,7 @@ public class AddTeacherActivity extends AppCompatActivity {
 
     // Studynet Api
     private StudynetAPI api;
+    private CurrentUser currentUser = CurrentUser.getInstance();
 
     private int step = 1;
 
@@ -97,35 +99,57 @@ public class AddTeacherActivity extends AppCompatActivity {
                 binding.btnNext.setOnClickListener(v -> {
                     switch (step) {
                         case 1: // Step1: Fill the teacher's basic info
-//                            if (validateFirstName() & validateLastName() & validateEmail() & validatePassword() & grade != null & department != null & sectionsSelected){
-//                                step = 2;
-//                                binding.teacherInfoLayout.setVisibility(View.GONE);
-//                                binding.assignmentsRecView.setVisibility(View.VISIBLE);
-//                                binding.btnAdd.setVisibility(View.VISIBLE);
-//                                // Show back button
-//                                binding.btnStepBack.setVisibility(View.VISIBLE);
-//                                // Show empty msg
-//                                binding.emptyMsg.setVisibility(View.VISIBLE);
-//                            } else {
-//                                if (grade == null){
-//                                    binding.txtGradeLayout.setError(getString(R.string.empty_grade_msg));
-//                                }
-//                                if (department == null){
-//                                    binding.txtDepartmentLayout.setError(getString(R.string.empty_msg1));
-//                                }
-//                                if (grade == null){
-//                                    binding.txtSectionsList.setError("");
-//                                }
-//                            }
-                            // Go to the next step
-                            step = 2;
-                            binding.teacherInfoLayout.setVisibility(View.GONE);
-                            binding.assignmentsRecView.setVisibility(View.VISIBLE);
-                            binding.btnAdd.setVisibility(View.VISIBLE);
-                            // Show back button
-                            binding.btnStepBack.setVisibility(View.VISIBLE);
-                            // Show empty msg
-                            binding.emptyMsg.setVisibility(View.VISIBLE);
+                            if (validateFirstName() & validateLastName() & validateEmail() & validatePassword() & grade != null & department != null & sectionsSelected){
+
+                                String email = binding.txtEmail.getEditText().getText().toString().trim();
+                                // Check if the email is used
+                                Call<ResponseBody> call = api.checkEmail("Token " + currentUser.getToken(), "application/json", email);
+                                call.enqueue(new Callback<ResponseBody>() {
+                                    @Override
+                                    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                                        if (response.code() == Utils.HttpResponses.HTTP_302_FOUND){
+                                            // The email is already used
+                                            binding.txtEmail.setError(getString(R.string.email_msg2));
+                                        } else if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
+                                            step = 2;
+                                            binding.teacherInfoLayout.setVisibility(View.GONE);
+                                            binding.assignmentsRecView.setVisibility(View.VISIBLE);
+                                            binding.btnAdd.setVisibility(View.VISIBLE);
+                                            // Show back button
+                                            binding.btnStepBack.setVisibility(View.VISIBLE);
+                                            // Show empty msg
+                                            binding.emptyMsg.setVisibility(View.VISIBLE);
+                                        } else {
+                                            // There is a problem with this email
+                                            binding.txtEmail.setError(getString(R.string.email_msg3));
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                                        Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } else {
+                                if (grade == null){
+                                    binding.txtGradeLayout.setError(getString(R.string.empty_grade_msg));
+                                }
+                                if (department == null){
+                                    binding.txtDepartmentLayout.setError(getString(R.string.empty_department_msg));
+                                }
+                                if (!sectionsSelected){
+                                    binding.txtSectionsList.setError("");
+                                }
+                            }
+//                            // Go to the next step
+//                            step = 2;
+//                            binding.teacherInfoLayout.setVisibility(View.GONE);
+//                            binding.assignmentsRecView.setVisibility(View.VISIBLE);
+//                            binding.btnAdd.setVisibility(View.VISIBLE);
+//                            // Show back button
+//                            binding.btnStepBack.setVisibility(View.VISIBLE);
+//                            // Show empty msg
+//                            binding.emptyMsg.setVisibility(View.VISIBLE);
                             break;
                         case 2: // Step 2: Add assignments
                             // Save the teacher's info
@@ -473,26 +497,6 @@ public class AddTeacherActivity extends AppCompatActivity {
             binding.txtEmail.setError(getString(R.string.email_msg2));
             return false;
         } else {
-            // TODO: Fix this
-            /*
-            The problem: The problem is we are trying to synchronously return the value of enqueue,
-            but it is an asynchronous method using a callback so we can't do that.
-             */
-            // Check if the email is used
-            Call<ResponseBody> call = api.checkEmail(email);
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                    if (response.code() == Utils.HttpResponses.HTTP_302_FOUND){
-                        binding.txtEmail.setError(getString(R.string.email_msg2));
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
-                    Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
             binding.txtEmail.setError(null);
             return true;
         }

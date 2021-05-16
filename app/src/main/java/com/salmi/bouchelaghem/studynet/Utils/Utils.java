@@ -55,9 +55,10 @@ public class Utils {
     public static final String ACTION_UPDATE = "Update";
     public static final String ACTION_DELETE = "Delete";
 
-    /** Logs in the student given in the student data. (takes care of the token too)*/
-    public static CurrentUser loginStudent(JsonObject student)
-    {
+    /**
+     * Logs in the student given in the student data. (takes care of the token too)
+     */
+    public static CurrentUser loginStudent(JsonObject student) {
         CurrentUser currentUser = CurrentUser.getInstance();
         //Set the current user
         currentUser.setUserType(Utils.STUDENT_ACCOUNT);
@@ -65,8 +66,8 @@ public class Utils {
         currentUser.setToken(student.get("token").getAsString());
         return currentUser;
     }
-    public class HttpResponses
-    {
+
+    public static class HttpResponses {
         public static final int HTTP_200_OK = 200;
         public static final int HTTP_201_CREATED = 201;
         public static final int HTTP_202_ACCEPTED = 202;

@@ -74,6 +74,6 @@ public interface StudynetAPI {
     /* Check if the email is used*/
     @FormUrlEncoded
     @POST("check_email")
-    Call<ResponseBody> checkEmail(@Field("email") String email);
+    Call<ResponseBody> checkEmail(@Header("Authorization") String token, @Header("Content-Type") String contentType, @Field("email") String email);
 
 }
