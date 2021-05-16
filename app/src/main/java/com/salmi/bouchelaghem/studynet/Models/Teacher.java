@@ -8,16 +8,18 @@ import java.util.ArrayList;
 public class Teacher extends User implements Parcelable {
 
     private String grade;
+    private String department;
     private ArrayList<String> sections;
     private ArrayList<Assignment> assignments;
     public Teacher() {
     }
 
-    public Teacher(int id, String email, String firstName, String lastName, String dateJoined, String grade, ArrayList<String> sections, ArrayList<Assignment> assignments) {
+    public Teacher(int id, String email, String firstName, String lastName, String dateJoined, String grade, String department, ArrayList<String> sections, ArrayList<Assignment> assignments) {
         super(id, email, firstName, lastName, dateJoined);
         this.grade = grade;
         this.sections = sections;
         this.assignments = assignments;
+        this.department = department;
     }
 
     public ArrayList<Assignment> getAssignments() {
@@ -60,6 +62,14 @@ public class Teacher extends User implements Parcelable {
 
     public void setSections(ArrayList<String> sections) {
         this.sections = sections;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     @Override
