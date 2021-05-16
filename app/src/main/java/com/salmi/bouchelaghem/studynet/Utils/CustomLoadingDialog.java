@@ -22,7 +22,7 @@ public class CustomLoadingDialog extends Dialog {
         setTitle(null);
         setCancelable(false);
         setOnCancelListener(null);
-        View view = LayoutInflater.from(context).inflate(R.layout.loading_layout, null);
+        View view = View.inflate(context, R.layout.loading_layout, null);
         setContentView(view);
     }
 }
