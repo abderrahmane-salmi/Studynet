@@ -61,9 +61,9 @@ public class TestAPI extends Application {
         teachers.add(new Teacher(users.get(3).getId(), users.get(3).getEmail(), users.get(3).getFirstName(), users.get(3).getLastName(), users.get(3).getDateJoined(), "MCB", "INFO",new ArrayList<>(Arrays.asList("L3 ISIL B","L2 GENIE CIVIL A")),new ArrayList<Assignment>()));
 
         modules = new ArrayList<>();
-        modules.add(new Module("BD2", "Base de données", Arrays.asList("Cours", "TD", "TP")));
-        modules.add(new Module("GL2", "Genie Logiciel", Arrays.asList("Cours", "TD", "TP")));
-        modules.add(new Module("EN", "English", Collections.singletonList("TD")));
+        modules.add(new Module("BD2", "Base de données", Arrays.asList("Cours", "TD", "TP") , Arrays.asList("Teacher1","Teacher2")));
+        modules.add(new Module("GL2", "Genie Logiciel", Arrays.asList("Cours", "TD", "TP"), Arrays.asList("Teacher1","Teacher2")));
+        modules.add(new Module("EN", "English", Collections.singletonList("TD"), Arrays.asList("Teacher1","Teacher2")));
 
         departments = new ArrayList<>();
         departments.add(new Department("INFO", "Informatique"));
