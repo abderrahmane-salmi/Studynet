@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.gson.JsonArray;
 import com.salmi.bouchelaghem.studynet.Activities.AddTeacherActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
 import com.salmi.bouchelaghem.studynet.Adapters.TeachersAdapter;
@@ -32,6 +33,7 @@ import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
+import com.salmi.bouchelaghem.studynet.Utils.Serializers;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.FragmentTeachersBinding;
@@ -199,12 +201,17 @@ public class TeachersFragment extends Fragment {
 
     // Get the current section's teachers
     private void getTeachers(String section) {
-        Call<List<Teacher>> call = api.getSectionTeachers("Token " + currentUser.getToken(), section);
-        call.enqueue(new Callback<List<Teacher>>() {
+        Call<JsonArray> call = api.getSectionTeachers("Token " + currentUser.getToken(), section);
+        call.enqueue(new Callback<JsonArray>() {
             @Override
-            public void onResponse(@NonNull Call<List<Teacher>> call, @NonNull Response<List<Teacher>> response) {
-                if (response.isSuccessful()){
-                    teachers = response.body();
+            public void onResponse(@NonNull Call<JsonArray> call, @NonNull Response<JsonArray> response) {
+                if (response.code() == Utils.HttpResponses.HTTP_200_OK){
+                    teachers.clear();
+                    JsonArray teachersJsonArray = response.body();
+                    for(int i = 0; i < teachersJsonArray.size(); ++i){
+                        teachers.add(Serializers.TeacherDeserializer(teachersJsonArray.get(i).getAsJsonObject()));
+                    }
+
                     if (teachers != null) {
                         if (!teachers.isEmpty()) {
                             adapter.setTeachers(teachers);
@@ -225,7 +232,7 @@ public class TeachersFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<Teacher>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<JsonArray> call, @NonNull Throwable t) {
                 Toast.makeText(getContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
             }
         });
