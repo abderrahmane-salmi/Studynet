@@ -6,6 +6,7 @@ import com.salmi.bouchelaghem.studynet.Models.Department;
 import com.salmi.bouchelaghem.studynet.Models.Module;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Specialty;
+import com.salmi.bouchelaghem.studynet.Models.Teacher;
 
 import java.util.List;
 
@@ -63,6 +64,13 @@ public interface StudynetAPI {
     @GET("modules")
     Call<List<Module>> getSectionModules(@Query("section") String section);
     // modules/?section=L3 ISIL B
+
+    // *** Teachers ***
+    /** Get teachers based on section*/
+    @GET("teachers")
+    Call<List<Teacher>> getSectionTeachers(@Header("Authorization") String token, @Query("section") String section);
+    // teachers/?section=ISIL B L3
+
 
 
     /** Get the user data using the token */

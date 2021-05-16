@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
-import com.salmi.bouchelaghem.studynet.Activities.AddAssignmentActivity;
 import com.salmi.bouchelaghem.studynet.Activities.AddTeacherActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
 import com.salmi.bouchelaghem.studynet.Adapters.TeachersAdapter;
@@ -34,7 +33,6 @@ import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
-import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.FragmentTeachersBinding;
 
@@ -67,8 +65,6 @@ public class TeachersFragment extends Fragment {
     private final CurrentUser currentUser = CurrentUser.getInstance();
     private String userType;
 
-    TestAPI testAPI = TestAPI.getInstance();
-
     // Studynet Api
     private StudynetAPI api;
 
@@ -93,7 +89,7 @@ public class TeachersFragment extends Fragment {
         NavigationActivity context = (NavigationActivity) getActivity();
         assert context != null;
 
-        if (userType.equals(Utils.ADMIN_ACCOUNT)){
+        if (userType.equals(Utils.ADMIN_ACCOUNT)) {
             // Show the select section msg
             binding.selectSectionMsg.setVisibility(View.VISIBLE);
 
@@ -121,7 +117,7 @@ public class TeachersFragment extends Fragment {
                     filterTimetableSection.setAdapter(arrayAdapter);
                 }
 
-                if (filterApplied){
+                if (filterApplied) {
                     restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
                 }
 
@@ -156,7 +152,7 @@ public class TeachersFragment extends Fragment {
                 WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
                 dialog.getWindow().setAttributes(params);
             });
-        } else if (userType.equals(Utils.STUDENT_ACCOUNT)){
+        } else if (userType.equals(Utils.STUDENT_ACCOUNT)) {
             // Hide filter button
             context.btnFilter.setVisibility(View.GONE);
         }
@@ -170,7 +166,7 @@ public class TeachersFragment extends Fragment {
         adapter = new TeachersAdapter(getContext(), userType);
 
         // Swipe to action in rec view
-        if (userType.equals(Utils.ADMIN_ACCOUNT)){
+        if (userType.equals(Utils.ADMIN_ACCOUNT)) {
             // If its a teacher then show delete + edit buttons
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(adminCallBack);
             itemTouchHelper.attachToRecyclerView(binding.teachersRecView);
@@ -189,7 +185,7 @@ public class TeachersFragment extends Fragment {
             if (Utils.STUDENT_ACCOUNT.equals(userType)) {// Get the current student
                 Student currentStudent = CurrentUser.getInstance().getCurrentStudent();
                 getTeachers(currentStudent.getSection().getCode());
-            } else if (Utils.ADMIN_ACCOUNT.equals(userType)){
+            } else if (Utils.ADMIN_ACCOUNT.equals(userType)) {
                 // If its an admin go ahead and get all sections for the spinner
                 getAllSections();
             }
@@ -202,35 +198,55 @@ public class TeachersFragment extends Fragment {
     }
 
     // Get the current section's teachers
-    private void getTeachers(String section){
-        teachers = TestAPI.getInstance().getTeachers();
-        if (!teachers.isEmpty()) {
-            adapter.setTeachers(teachers);
-            binding.teachersRecView.setAdapter(adapter);
-            binding.teachersRecView.setVisibility(View.VISIBLE);
-            binding.emptyMsg.setVisibility(View.GONE);
-        } else {
-            binding.teachersRecView.setVisibility(View.GONE);
-            binding.emptyMsg.setVisibility(View.VISIBLE);
-        }
+    private void getTeachers(String section) {
+        Call<List<Teacher>> call = api.getSectionTeachers("Token " + currentUser.getToken(), section);
+        call.enqueue(new Callback<List<Teacher>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Teacher>> call, @NonNull Response<List<Teacher>> response) {
+                if (response.isSuccessful()){
+                    teachers = response.body();
+                    if (teachers != null) {
+                        if (!teachers.isEmpty()) {
+                            adapter.setTeachers(teachers);
+                            binding.teachersRecView.setAdapter(adapter);
+                            binding.teachersRecView.setVisibility(View.VISIBLE);
+                            binding.emptyMsg.setVisibility(View.GONE);
+                        } else {
+                            binding.teachersRecView.setVisibility(View.GONE);
+                            binding.emptyMsg.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        binding.teachersRecView.setVisibility(View.GONE);
+                        binding.emptyMsg.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.error)+response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Teacher>> call, @NonNull Throwable t) {
+                Toast.makeText(getContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void getAllSections(){
+    private void getAllSections() {
         Call<List<Section>> call = api.getAllSections();
         call.enqueue(new Callback<List<Section>>() {
             @Override
             public void onResponse(@NonNull Call<List<Section>> call, @NonNull Response<List<Section>> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     sections = response.body();
                     sectionsNames = new ArrayList<>();
-                    if (sections != null){
+                    if (sections != null) {
                         // Get the sections names only
                         for (Section section : sections) {
                             sectionsNames.add(section.getCode());
                         }
                     }
                 } else {
-                    Toast.makeText(getContext(), getString(R.string.error)+response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.error) + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -254,7 +270,7 @@ public class TeachersFragment extends Fragment {
             int position = viewHolder.getAdapterPosition();
             Teacher currentTeacher = adapter.getTeachers().get(position);
 
-            switch (direction){
+            switch (direction) {
                 case ItemTouchHelper.LEFT: // Swipe left to right <- : Delete item
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
