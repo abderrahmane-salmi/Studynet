@@ -34,6 +34,8 @@ public class Teacher extends User implements Parcelable {
         super(in);
         grade = in.readString();
         sections = in.createStringArrayList();
+        assignments = in.readArrayList(Assignment.class.getClassLoader());
+        department = in.readString();
     }
 
     public static final Creator<Teacher> CREATOR = new Creator<Teacher>() {
@@ -82,5 +84,7 @@ public class Teacher extends User implements Parcelable {
         super.writeToParcel(dest, flags);
         dest.writeString(grade);
         dest.writeStringList(sections);
+        dest.writeList(assignments);
+        dest.writeString(department);
     }
 }

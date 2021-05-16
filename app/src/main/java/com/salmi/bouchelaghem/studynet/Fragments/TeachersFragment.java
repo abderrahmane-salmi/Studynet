@@ -106,53 +106,57 @@ public class TeachersFragment extends Fragment {
             // Show and setup the filter
             context.btnFilter.setVisibility(View.VISIBLE);
             context.btnFilter.setOnClickListener(v -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                View view12 = View.inflate(context, R.layout.popup_teacher_timetable_filter, null);
-                // Init Views
-                ImageView btnCloseFilter = view12.findViewById(R.id.btnCloseFilter);
-                AutoCompleteTextView filterTimetableSection = view12.findViewById(R.id.filterTimetableSection);
-                MaterialButton btnApplyFilter = view12.findViewById(R.id.btnApplyFilter);
+                if (sections != null) {
 
-                // Init sections spinner
-                if (!sectionsNames.isEmpty()) {
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sectionsNames);
-                    filterTimetableSection.setAdapter(arrayAdapter);
-                }
 
-                if (filterApplied) {
-                    restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
-                }
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    View view12 = View.inflate(context, R.layout.popup_teacher_timetable_filter, null);
+                    // Init Views
+                    ImageView btnCloseFilter = view12.findViewById(R.id.btnCloseFilter);
+                    AutoCompleteTextView filterTimetableSection = view12.findViewById(R.id.filterTimetableSection);
+                    MaterialButton btnApplyFilter = view12.findViewById(R.id.btnApplyFilter);
 
-                // Init Buttons
-                btnApplyFilter.setOnClickListener(v13 -> {
-
-                    if (sectionSelected) {
-
-                        getTeachers(selectedSection);
-                        binding.selectSectionMsg.setVisibility(View.GONE);
-                        dialog.dismiss();
-                        filterApplied = true;
-
-                    } else {
-                        Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
+                    // Init sections spinner
+                    if (!sectionsNames.isEmpty()) {
+                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sectionsNames);
+                        filterTimetableSection.setAdapter(arrayAdapter);
                     }
 
-                });
+                    if (filterApplied) {
+                        restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
+                    }
 
-                btnCloseFilter.setOnClickListener(v14 -> dialog.dismiss());
+                    // Init Buttons
+                    btnApplyFilter.setOnClickListener(v13 -> {
 
-                filterTimetableSection.setOnItemClickListener((parent, view121, position, id) -> {
-                    sectionSelected = true;
-                    selectedSection = sectionsNames.get(position);
-                });
+                        if (sectionSelected) {
 
-                builder.setView(view12);
-                dialog = builder.create(); // creating our dialog
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
-                // Show rounded corners
-                WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-                dialog.getWindow().setAttributes(params);
+                            getTeachers(selectedSection);
+                            binding.selectSectionMsg.setVisibility(View.GONE);
+                            dialog.dismiss();
+                            filterApplied = true;
+
+                        } else {
+                            Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
+                        }
+
+                    });
+
+                    btnCloseFilter.setOnClickListener(v14 -> dialog.dismiss());
+
+                    filterTimetableSection.setOnItemClickListener((parent, view121, position, id) -> {
+                        sectionSelected = true;
+                        selectedSection = sectionsNames.get(position);
+                    });
+
+                    builder.setView(view12);
+                    dialog = builder.create(); // creating our dialog
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    dialog.show();
+                    // Show rounded corners
+                    WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                    dialog.getWindow().setAttributes(params);
+                }
             });
         } else if (userType.equals(Utils.STUDENT_ACCOUNT)) {
             // Hide filter button
@@ -205,10 +209,10 @@ public class TeachersFragment extends Fragment {
         call.enqueue(new Callback<JsonArray>() {
             @Override
             public void onResponse(@NonNull Call<JsonArray> call, @NonNull Response<JsonArray> response) {
-                if (response.code() == Utils.HttpResponses.HTTP_200_OK){
+                if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
                     teachers.clear();
                     JsonArray teachersJsonArray = response.body();
-                    for(int i = 0; i < teachersJsonArray.size(); ++i){
+                    for (int i = 0; i < teachersJsonArray.size(); ++i) {
                         teachers.add(Serializers.TeacherDeserializer(teachersJsonArray.get(i).getAsJsonObject()));
                     }
 
@@ -227,7 +231,7 @@ public class TeachersFragment extends Fragment {
                         binding.emptyMsg.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    Toast.makeText(getContext(), getString(R.string.error)+response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.error) + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
