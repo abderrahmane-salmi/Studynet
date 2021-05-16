@@ -89,7 +89,7 @@ public class Assignment implements Parcelable {
         this.moduleType = moduleType;
     }
 
-    public List<Integer> getConcernedGroups() {
+    public ArrayList<Integer> getConcernedGroups() {
         return concernedGroups;
     }
 

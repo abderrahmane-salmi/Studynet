@@ -68,7 +68,7 @@ public class Serializers {
         return admin;
     }
 
-    /** Creates a teacher object from JsonObject*/
+    /** Creates a teacher java object from JsonObject*/
     public static Teacher TeacherDeserializer(JsonObject teacherData)
     {
         JsonObject userData = teacherData.get("user").getAsJsonObject();
@@ -115,5 +115,57 @@ public class Serializers {
                 sectionsArray,
                 assignmentArray);
         return teacher;
+    }
+
+    /** Creates JsonObject from a teacher object and a password string*/
+    public static JsonObject CreateTeacherSerializer(Teacher teacher, String password)
+    {
+        JsonObject userJson = new JsonObject();
+        JsonArray sectionsJsonArray = new JsonArray();
+        JsonArray assignmentsJsonArray = new JsonArray();
+        JsonObject teacherJson = new JsonObject();
+        //Create the user json object
+        userJson.addProperty("email",teacher.getEmail());
+        userJson.addProperty("password",password);
+        userJson.addProperty("first_name",teacher.getFirstName());
+        userJson.addProperty("last_name",teacher.getLastName());
+
+        //Create the sections json array
+        ArrayList<String> sections = teacher.getSections();
+        for(int i = 0; i < sections.size(); ++i)
+        {
+            sectionsJsonArray.add(sections.get(i));
+        }
+
+        //Build the assignments json array
+        ArrayList<Assignment> assignments = teacher.getAssignments();
+        for(int i = 0; i < assignments.size(); ++i)
+        {
+            Assignment assignment = assignments.get(i);
+            JsonObject assignmentJson = new JsonObject();
+            JsonArray concernedGroupsJsonArray = new JsonArray();
+            //Build the concerned groups array
+            ArrayList<Integer> concernedGroups = assignment.getConcernedGroups();
+            for(int j=0 ; j < concernedGroups.size(); ++j)
+            {
+                concernedGroupsJsonArray.add(concernedGroups.get(j));
+            }
+            //Build the assignment json object
+            assignmentJson.addProperty("section",assignment.getSectionCode());
+            assignmentJson.addProperty("module_type",assignment.getModuleType());
+            assignmentJson.addProperty("module",assignment.getModuleCode());
+            assignmentJson.add("concerned_groups",concernedGroupsJsonArray);
+            assignmentsJsonArray.add(assignmentJson);
+        }
+
+        //Create the teacher object
+        teacherJson.add("user",userJson);
+        teacherJson.addProperty("grade",teacher.getGrade());
+        teacherJson.addProperty("department",teacher.getDepartment());
+        teacherJson.add("sections",sectionsJsonArray);
+        teacherJson.add("assignments",assignmentsJsonArray);
+
+        return teacherJson;
+
     }
 }
