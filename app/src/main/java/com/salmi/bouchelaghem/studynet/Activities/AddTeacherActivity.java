@@ -376,8 +376,8 @@ public class AddTeacherActivity extends AppCompatActivity {
     private void getAssignments() {
         if (teacher != null){
             assignments = teacher.getAssignments();
-            if (assignments != null){
-                if (!assignments.isEmpty()){
+            if (assignments != null) {
+                if (!assignments.isEmpty()) {
                     adapter.setAssignments(assignments);
                     binding.assignmentsRecView.setAdapter(adapter);
                     binding.assignmentsRecView.setVisibility(View.VISIBLE);
@@ -387,13 +387,35 @@ public class AddTeacherActivity extends AppCompatActivity {
                     binding.emptyMsg.setVisibility(View.VISIBLE);
                 }
             }
+
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        teacher = null;
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        getAssignments();
+        if (teacher != null){
+            assignments = teacher.getAssignments();
+            if(step==2) {
+                if (assignments != null) {
+                    if (!assignments.isEmpty()) {
+                        adapter.setAssignments(assignments);
+                        binding.assignmentsRecView.setAdapter(adapter);
+                        binding.assignmentsRecView.setVisibility(View.VISIBLE);
+                        binding.emptyMsg.setVisibility(View.GONE);
+                    } else {
+                        binding.assignmentsRecView.setVisibility(View.GONE);
+                        binding.emptyMsg.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        }
     }
 
     // Get all the sections in the selected department
