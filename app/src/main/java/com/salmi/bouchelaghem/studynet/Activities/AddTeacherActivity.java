@@ -140,6 +140,15 @@ public class AddTeacherActivity extends AppCompatActivity {
                                             String lastName = binding.txtLastName.getEditText().getText().toString().trim();
                                             String email = binding.txtEmail.getEditText().getText().toString().trim();
 
+                                            if (teacher != null){
+                                                // This means that the user already clicked next at least once
+                                                // Check if the user changed the teacher's sections
+                                                if (!teacher.getSections().equals(selectedSections)){
+                                                    // This means that the user changed the sections
+                                                    deleteUnusedAssignments(selectedSections);
+                                                }
+                                            }
+
                                             teacher = new Teacher();
                                             teacher.setId(-1);
                                             teacher.setFirstName(firstName);
@@ -361,6 +370,14 @@ public class AddTeacherActivity extends AppCompatActivity {
                 binding.teacherInfoLayout.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    private void deleteUnusedAssignments(ArrayList<String> selectedSections) {
+        for (Assignment assignment:assignments){
+            if (!selectedSections.contains(assignment.getSectionCode())){
+                assignments.remove(assignment);
+            }
+        }
     }
 
     private void initRecView() {
