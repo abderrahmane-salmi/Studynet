@@ -27,6 +27,8 @@ import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
+import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
+import com.salmi.bouchelaghem.studynet.Utils.Serializers;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
@@ -38,6 +40,7 @@ import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 import okhttp3.ResponseBody;
+import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,12 +74,17 @@ public class AddTeacherActivity extends AppCompatActivity {
 
     private int step = 1;
 
+    private CustomLoadingDialog loadingDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityAddTeacherBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        //Init loading dialog
+        loadingDialog = new CustomLoadingDialog(this);
 
         // Init retrofit
         Retrofit retrofit = new Retrofit.Builder()
@@ -122,6 +130,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                                             binding.assignmentsRecView.setVisibility(View.VISIBLE);
                                             binding.btnAdd.setVisibility(View.VISIBLE);
                                             // Show back button
+                                            binding.btnNext.setText(R.string.save);
                                             binding.btnStepBack.setVisibility(View.VISIBLE);
                                             // Show empty msg
                                             binding.emptyMsg.setVisibility(View.VISIBLE);
@@ -130,7 +139,6 @@ public class AddTeacherActivity extends AppCompatActivity {
                                             String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
                                             String lastName = binding.txtLastName.getEditText().getText().toString().trim();
                                             String email = binding.txtEmail.getEditText().getText().toString().trim();
-                                            String password = binding.txtPassword.getEditText().getText().toString().trim();
                                             assignments = new ArrayList<>();
 
                                             teacher = new Teacher();
@@ -140,6 +148,8 @@ public class AddTeacherActivity extends AppCompatActivity {
                                             teacher.setEmail(email);
                                             teacher.setAssignments(assignments);
                                             teacher.setSections(selectedSections);
+                                            teacher.setGrade(grade);
+                                            teacher.setDepartment(department);
 
                                             getAssignments();
 
@@ -178,9 +188,13 @@ public class AddTeacherActivity extends AppCompatActivity {
                         case 2: // Step 2: Add assignments
                             // Save the teacher's info in the api
                             //TODO: make the api teacher creation call here
-
-
-                            Toast.makeText(AddTeacherActivity.this, "Save", Toast.LENGTH_SHORT).show();
+                            String password = binding.txtPassword.getEditText().getText().toString().trim();
+                            //Build the teacher json.
+                            JsonObject teacherJson = Serializers.CreateTeacherSerializer(teacher,password);
+                            //Make the call to the api.
+                            Call<JsonObject> createTeacherCall = api.createTeacher(teacherJson,"Token " + currentUser.getToken());
+                            loadingDialog.show();
+                            createTeacherCall.enqueue(new TeacherCreationCallback());
                             break;
                     }
                 });
@@ -242,8 +256,8 @@ public class AddTeacherActivity extends AppCompatActivity {
                             binding.teacherInfoLayout.setVisibility(View.GONE);
                             binding.assignmentsRecView.setVisibility(View.VISIBLE);
                             binding.btnAdd.setVisibility(View.VISIBLE);
-                            binding.btnNext.setText(R.string.save);
                             // Show back button
+                            binding.btnNext.setText(R.string.save);
                             binding.btnStepBack.setVisibility(View.VISIBLE);
                             // Show current teacher's assignments
                             getAssignments();
@@ -635,5 +649,29 @@ public class AddTeacherActivity extends AppCompatActivity {
 
     public static Teacher getTeacher() {
         return teacher;
+    }
+
+    private class TeacherCreationCallback implements Callback<JsonObject> {
+
+        @Override
+        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+            switch(response.code())
+            {
+                case Utils.HttpResponses.HTTP_201_CREATED:
+                    Toast.makeText(AddTeacherActivity.this, "Teacher successfully created.", Toast.LENGTH_SHORT).show();
+                    finish();
+                    break;
+                default:
+                    Toast.makeText(AddTeacherActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                    loadingDialog.dismiss();
+                    break;
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JsonObject> call, Throwable t) {
+            Toast.makeText(AddTeacherActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            loadingDialog.dismiss();
+        }
     }
 }
