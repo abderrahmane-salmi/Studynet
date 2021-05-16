@@ -27,6 +27,8 @@ import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
+import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
+import com.salmi.bouchelaghem.studynet.Utils.Serializers;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
@@ -38,6 +40,7 @@ import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 import okhttp3.ResponseBody;
+import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,12 +74,17 @@ public class AddTeacherActivity extends AppCompatActivity {
 
     private int step = 1;
 
+    private CustomLoadingDialog loadingDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityAddTeacherBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        //Init loading dialog
+        loadingDialog = new CustomLoadingDialog(this);
 
         // Init retrofit
         Retrofit retrofit = new Retrofit.Builder()
@@ -122,6 +130,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                                             binding.assignmentsRecView.setVisibility(View.VISIBLE);
                                             binding.btnAdd.setVisibility(View.VISIBLE);
                                             // Show back button
+                                            binding.btnNext.setText(R.string.save);
                                             binding.btnStepBack.setVisibility(View.VISIBLE);
                                             // Show empty msg
                                             binding.emptyMsg.setVisibility(View.VISIBLE);
@@ -130,8 +139,15 @@ public class AddTeacherActivity extends AppCompatActivity {
                                             String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
                                             String lastName = binding.txtLastName.getEditText().getText().toString().trim();
                                             String email = binding.txtEmail.getEditText().getText().toString().trim();
-                                            String password = binding.txtPassword.getEditText().getText().toString().trim();
-                                            assignments = new ArrayList<>();
+
+                                            if (teacher != null){
+                                                // This means that the user already clicked next at least once
+                                                // Check if the user changed the teacher's sections
+                                                if (!teacher.getSections().equals(selectedSections)){
+                                                    // This means that the user changed the sections
+                                                    deleteUnusedAssignments(selectedSections);
+                                                }
+                                            }
 
                                             teacher = new Teacher();
                                             teacher.setId(-1);
@@ -139,7 +155,9 @@ public class AddTeacherActivity extends AppCompatActivity {
                                             teacher.setLastName(lastName);
                                             teacher.setEmail(email);
                                             teacher.setAssignments(assignments);
-                                            teacher.setSections(selectedSections);
+                                            teacher.setSections(new ArrayList<>(selectedSections));
+                                            teacher.setGrade(grade);
+                                            teacher.setDepartment(department);
 
                                             getAssignments();
 
@@ -177,8 +195,13 @@ public class AddTeacherActivity extends AppCompatActivity {
                             break;
                         case 2: // Step 2: Add assignments
                             // Save the teacher's info in the api
-
-                            Toast.makeText(AddTeacherActivity.this, "Save", Toast.LENGTH_SHORT).show();
+                            String password = binding.txtPassword.getEditText().getText().toString().trim();
+                            //Build the teacher json.
+                            JsonObject teacherJson = Serializers.CreateTeacherSerializer(teacher,password);
+                            //Make the call to the api.
+                            Call<JsonObject> createTeacherCall = api.createTeacher(teacherJson,"Token " + currentUser.getToken());
+                            loadingDialog.show();
+                            createTeacherCall.enqueue(new TeacherCreationCallback());
                             break;
                     }
                 });
@@ -240,8 +263,8 @@ public class AddTeacherActivity extends AppCompatActivity {
                             binding.teacherInfoLayout.setVisibility(View.GONE);
                             binding.assignmentsRecView.setVisibility(View.VISIBLE);
                             binding.btnAdd.setVisibility(View.VISIBLE);
-                            binding.btnNext.setText(R.string.save);
                             // Show back button
+                            binding.btnNext.setText(R.string.save);
                             binding.btnStepBack.setVisibility(View.VISIBLE);
                             // Show current teacher's assignments
                             getAssignments();
@@ -294,6 +317,10 @@ public class AddTeacherActivity extends AppCompatActivity {
                 // No cancel
                 builder.setCancelable(false);
 
+                // Save the items list + their states in case the user cancels
+                ArrayList<String> tmpSections = new ArrayList<>(selectedSections);
+                boolean[] tmpStates = sectionsStates.clone();
+
                 builder.setMultiChoiceItems(sectionsArray, sectionsStates, (dialog, which, isChecked) -> {
 
                     // Get the current item
@@ -322,7 +349,12 @@ public class AddTeacherActivity extends AppCompatActivity {
                     }
                 });
 
-                builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+                builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+                    // If the user cancels then restore the items and their states
+                    selectedSections.clear();
+                    selectedSections.addAll(tmpSections);
+                    sectionsStates = tmpStates;
+                    dialog.dismiss();});
 
                 builder.show();
             } else {
@@ -348,6 +380,14 @@ public class AddTeacherActivity extends AppCompatActivity {
         });
     }
 
+    private void deleteUnusedAssignments(ArrayList<String> selectedSections) {
+        for (Assignment assignment:assignments){
+            if (!selectedSections.contains(assignment.getSectionCode())){
+                assignments.remove(assignment);
+            }
+        }
+    }
+
     private void initRecView() {
         assignments = new ArrayList<>();
         binding.assignmentsRecView.setLayoutManager(new LinearLayoutManager(AddTeacherActivity.this));
@@ -360,8 +400,8 @@ public class AddTeacherActivity extends AppCompatActivity {
     private void getAssignments() {
         if (teacher != null){
             assignments = teacher.getAssignments();
-            if (assignments != null){
-                if (!assignments.isEmpty()){
+            if (assignments != null) {
+                if (!assignments.isEmpty()) {
                     adapter.setAssignments(assignments);
                     binding.assignmentsRecView.setAdapter(adapter);
                     binding.assignmentsRecView.setVisibility(View.VISIBLE);
@@ -371,13 +411,35 @@ public class AddTeacherActivity extends AppCompatActivity {
                     binding.emptyMsg.setVisibility(View.VISIBLE);
                 }
             }
+
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        teacher = null;
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        getAssignments();
+        if (teacher != null){
+            assignments = teacher.getAssignments();
+            if(step==2) {
+                if (assignments != null) {
+                    if (!assignments.isEmpty()) {
+                        adapter.setAssignments(assignments);
+                        binding.assignmentsRecView.setAdapter(adapter);
+                        binding.assignmentsRecView.setVisibility(View.VISIBLE);
+                        binding.emptyMsg.setVisibility(View.GONE);
+                    } else {
+                        binding.assignmentsRecView.setVisibility(View.GONE);
+                        binding.emptyMsg.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        }
     }
 
     // Get all the sections in the selected department
@@ -565,7 +627,7 @@ public class AddTeacherActivity extends AppCompatActivity {
         if (password.isEmpty()) {
             binding.txtPassword.setError(getString(R.string.empty_password_msg));
             return false;
-        } else if (password.length() < 6) {
+        } else if (password.length() < 8) {
             binding.txtPassword.setError(getString(R.string.password_msg2));
             return false;
         } else {
@@ -633,5 +695,29 @@ public class AddTeacherActivity extends AppCompatActivity {
 
     public static Teacher getTeacher() {
         return teacher;
+    }
+
+    private class TeacherCreationCallback implements Callback<JsonObject> {
+
+        @Override
+        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+            switch(response.code())
+            {
+                case Utils.HttpResponses.HTTP_201_CREATED:
+                    Toast.makeText(AddTeacherActivity.this, "Teacher successfully created.", Toast.LENGTH_SHORT).show();
+                    finish();
+                    break;
+                default:
+                    Toast.makeText(AddTeacherActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                    loadingDialog.dismiss();
+                    break;
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JsonObject> call, Throwable t) {
+            Toast.makeText(AddTeacherActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            loadingDialog.dismiss();
+        }
     }
 }

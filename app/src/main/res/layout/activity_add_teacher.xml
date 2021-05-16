@@ -81,6 +81,7 @@
                         android:backgroundTint="@color/white"
                         android:fontFamily="@font/tabularasa_regular"
                         android:hint="@string/first_name"
+                        android:maxLength="30"
                         android:inputType="textPersonName|textCapSentences"
                         android:textSize="15sp" />
 
@@ -99,7 +100,8 @@
                         android:backgroundTint="@color/white"
                         android:fontFamily="@font/tabularasa_regular"
                         android:hint="@string/last_name"
-                        android:inputType="textPersonName|textCapSentences"
+                        android:maxLength="30"
+                        android:inputType="textPersonName|textCapCharacters"
                         android:textSize="15sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -117,6 +119,7 @@
                         android:backgroundTint="@color/white"
                         android:fontFamily="@font/tabularasa_regular"
                         android:hint="@string/email"
+                        android:maxLength="254"
                         android:inputType="textEmailAddress"
                         android:textSize="15sp" />
 
@@ -136,6 +139,7 @@
                         android:backgroundTint="@color/white"
                         android:fontFamily="@font/tabularasa_regular"
                         android:hint="@string/password"
+                        android:maxLength="30"
                         android:inputType="textPassword"
                         android:textSize="15sp" />
 
