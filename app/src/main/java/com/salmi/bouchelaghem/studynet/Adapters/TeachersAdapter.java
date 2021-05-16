@@ -1,7 +1,6 @@
 package com.salmi.bouchelaghem.studynet.Adapters;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.salmi.bouchelaghem.studynet.Fragments.TeachersFragmentDirections;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
-import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.LayoutTeacherBinding;
 
 import java.util.List;
@@ -20,18 +18,12 @@ import java.util.List;
 public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.ViewHolder> {
 
     private List<Teacher> teachers;
-    private String userType;
-    private Context context;
 
-    public TeachersAdapter(Context context, String userType) {
-        this.context = context;
-        this.userType = userType;
+    public TeachersAdapter() {
     }
 
-    public TeachersAdapter(List<Teacher> teachers, Context context, String userType) {
+    public TeachersAdapter(List<Teacher> teachers) {
         this.teachers = teachers;
-        this.context = context;
-        this.userType = userType;
         notifyDataSetChanged();
     }
 
@@ -41,14 +33,11 @@ public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.ViewHo
         LayoutTeacherBinding binding = LayoutTeacherBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         ViewHolder holder = new ViewHolder(binding);
 
-        if (userType.equals(Utils.STUDENT_ACCOUNT)){
-            holder.binding.teacherMainLayout.setOnClickListener(v -> {
-                Teacher teacher = teachers.get(holder.getAdapterPosition());
-                // TODO: Send the teacher object with safe args
-                NavDirections action = TeachersFragmentDirections.actionNavTeachersToTeacherDetailsFragment(teacher);
-                Navigation.createNavigateOnClickListener(action).onClick(holder.binding.getRoot());
-            });
-        }
+        holder.binding.teacherMainLayout.setOnClickListener(v -> {
+            Teacher teacher = teachers.get(holder.getAdapterPosition());
+            NavDirections action = TeachersFragmentDirections.actionNavTeachersToTeacherDetailsFragment(teacher);
+            Navigation.createNavigateOnClickListener(action).onClick(holder.binding.getRoot());
+        });
 
         return holder;
     }
@@ -59,13 +48,7 @@ public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.ViewHo
         Teacher teacher = teachers.get(position);
 
         holder.binding.txtTeacherName.setText(teacher.getFirstName()+" "+teacher.getLastName());
-        if (userType.equals(Utils.STUDENT_ACCOUNT)){
-            // If its a student then show the teacher's module
-            // TODO: Show module name (The module that this teacher teaches in this section)
-        } else if (userType.equals(Utils.ADMIN_ACCOUNT)){
-            // If its an admin then show the teacher's email
-            holder.binding.txtTeacherInfo.setText(teacher.getEmail());
-        }
+        holder.binding.txtTeacherInfo.setText(teacher.getEmail());
     }
 
     @Override

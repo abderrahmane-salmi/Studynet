@@ -32,7 +32,7 @@
 <!--        Name-->
         <TextView
             android:id="@+id/txtTeacherName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="16dp"
@@ -50,11 +50,13 @@
         <!--        Subject-->
         <TextView
             android:id="@+id/txtTeacherInfo"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/tabularasa_regular"
-            android:text="Base de données"
+            android:text="email@gmail.com"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="@color/secondary_text_color"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
