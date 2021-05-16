@@ -457,7 +457,7 @@ public class AddTeacherActivity extends AppCompatActivity {
         grade = teacher.getGrade();
         binding.txtGradeSpinner.setText(grade, false);
 
-        department = "INFO"; // TODO: replace this with the teacher's department
+        department = teacher.getDepartment();
         binding.txtDepartmentSpinner.setText(department, false);
 
         // Get all sections (of the teacher's department) and setup the spinner
