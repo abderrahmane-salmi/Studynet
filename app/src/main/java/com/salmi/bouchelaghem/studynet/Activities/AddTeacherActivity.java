@@ -317,6 +317,10 @@ public class AddTeacherActivity extends AppCompatActivity {
                 // No cancel
                 builder.setCancelable(false);
 
+                // Save the items list + their states in case the user cancels
+                ArrayList<String> tmpSections = new ArrayList<>(selectedSections);
+                boolean[] tmpStates = sectionsStates.clone();
+
                 builder.setMultiChoiceItems(sectionsArray, sectionsStates, (dialog, which, isChecked) -> {
 
                     // Get the current item
@@ -345,7 +349,12 @@ public class AddTeacherActivity extends AppCompatActivity {
                     }
                 });
 
-                builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+                builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+                    // If the user cancels then restore the items and their states
+                    selectedSections.clear();
+                    selectedSections.addAll(tmpSections);
+                    sectionsStates = tmpStates;
+                    dialog.dismiss();});
 
                 builder.show();
             } else {
