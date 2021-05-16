@@ -110,6 +110,9 @@ public class AddAssignmentActivity extends AppCompatActivity {
             }
         });
 
+        //Setup close button.
+        binding.btnClose.setOnClickListener(v -> finish());
+
         // Spinners
         binding.txtSectionSpinner.setOnItemClickListener((parent, view1, position, id) -> {
             // Get selected item
