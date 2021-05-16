@@ -155,7 +155,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                                             teacher.setLastName(lastName);
                                             teacher.setEmail(email);
                                             teacher.setAssignments(assignments);
-                                            teacher.setSections(selectedSections);
+                                            teacher.setSections(new ArrayList<>(selectedSections));
                                             teacher.setGrade(grade);
                                             teacher.setDepartment(department);
 
