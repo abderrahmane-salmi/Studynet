@@ -3,6 +3,8 @@ package com.salmi.bouchelaghem.studynet.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.threeten.bp.ZonedDateTime;
 
 import java.util.Date;
@@ -10,7 +12,12 @@ import java.util.Date;
 public class User implements Parcelable {
 
     private int id;
-    private String email, firstName, lastName;
+    private String email;
+    @SerializedName("first_name")
+    private String firstName;
+    @SerializedName("last_name")
+    private String lastName;
+    @SerializedName("date_joined")
     private String dateJoined;
 
     public User() {

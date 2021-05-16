@@ -19,12 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Adapters.AssignmentsAdapter;
 import com.salmi.bouchelaghem.studynet.Models.Assignment;
 import com.salmi.bouchelaghem.studynet.Models.Department;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
+import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
+import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityAddTeacherBinding;
@@ -34,6 +37,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AddTeacherActivity extends AppCompatActivity {
 
@@ -51,8 +60,14 @@ public class AddTeacherActivity extends AppCompatActivity {
     private boolean sectionsSelected = false;
 
     // Recycler view
-    private List<Assignment> assignments;
+    private ArrayList<Assignment> assignments;
     private AssignmentsAdapter adapter;
+
+    // Studynet Api
+    private StudynetAPI api;
+    private final CurrentUser currentUser = CurrentUser.getInstance();
+
+    private static Teacher teacher;
 
     private int step = 1;
 
@@ -62,6 +77,15 @@ public class AddTeacherActivity extends AppCompatActivity {
         binding = ActivityAddTeacherBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        // Init retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Utils.API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // Init our api
+        api = retrofit.create(StudynetAPI.class);
 
         initRecView();
 
@@ -78,42 +102,81 @@ public class AddTeacherActivity extends AppCompatActivity {
                 binding.btnNext.setOnClickListener(v -> {
                     switch (step) {
                         case 1: // Step1: Fill the teacher's basic info
-//                            if (validateFirstName() & validateLastName() & validateEmail() & validatePassword() & grade != null & department != null & sectionsSelected){
-//                                step = 2;
-//                                binding.teacherInfoLayout.setVisibility(View.GONE);
-//                                binding.assignmentsRecView.setVisibility(View.VISIBLE);
-//                                binding.btnAdd.setVisibility(View.VISIBLE);
-//                                // Show back button
-//                                binding.btnStepBack.setVisibility(View.VISIBLE);
-//                                // Show empty msg
-//                                binding.emptyMsg.setVisibility(View.VISIBLE);
-//                            } else {
-//                                if (grade == null){
-//                                    binding.txtGradeLayout.setError(getString(R.string.empty_grade_msg));
-//                                }
-//                                if (department == null){
-//                                    binding.txtDepartmentLayout.setError(getString(R.string.empty_msg1));
-//                                }
-//                                if (grade == null){
-//                                    binding.txtSectionsList.setError("");
-//                                }
-//                            }
+                            if (validateFirstName() & validateLastName() & validateEmail() & validatePassword() & grade != null & department != null & sectionsSelected){
+
+                                String email = binding.txtEmail.getEditText().getText().toString().trim();
+                                // Check if the email is used
+                                JsonObject emailJson = new JsonObject();
+                                emailJson.addProperty("email",email);
+                                Call<ResponseBody> call = api.checkEmail(emailJson,"Token " + currentUser.getToken());
+                                call.enqueue(new Callback<ResponseBody>() {
+                                    @Override
+                                    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                                        if (response.code() == Utils.HttpResponses.HTTP_302_FOUND){
+                                            // The email is already used
+                                            binding.txtEmail.setError(getString(R.string.email_taken));
+                                        } else if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
+                                            // Go to the next step
+                                            step = 2;
+                                            binding.teacherInfoLayout.setVisibility(View.GONE);
+                                            binding.assignmentsRecView.setVisibility(View.VISIBLE);
+                                            binding.btnAdd.setVisibility(View.VISIBLE);
+                                            // Show back button
+                                            binding.btnStepBack.setVisibility(View.VISIBLE);
+                                            // Show empty msg
+                                            binding.emptyMsg.setVisibility(View.VISIBLE);
+
+                                            // Save the teacher's info
+                                            String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
+                                            String lastName = binding.txtLastName.getEditText().getText().toString().trim();
+                                            String email = binding.txtEmail.getEditText().getText().toString().trim();
+                                            String password = binding.txtPassword.getEditText().getText().toString().trim();
+                                            assignments = new ArrayList<>();
+
+                                            teacher = new Teacher();
+                                            teacher.setId(-1);
+                                            teacher.setFirstName(firstName);
+                                            teacher.setLastName(lastName);
+                                            teacher.setEmail(email);
+                                            teacher.setAssignments(assignments);
+                                            teacher.setSections(selectedSections);
+
+                                            getAssignments();
+
+                                        } else {
+                                            // There is a problem with this email
+                                            binding.txtEmail.setError(getString(R.string.email_msg3));
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                                        Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } else {
+                                if (grade == null){
+                                    binding.txtGradeLayout.setError(getString(R.string.empty_grade_msg));
+                                }
+                                if (department == null){
+                                    binding.txtDepartmentLayout.setError(getString(R.string.empty_department_msg));
+                                }
+                                if (!sectionsSelected){
+                                    binding.txtSectionsList.setError("");
+                                }
+                            }
                             // Go to the next step
-                            step = 2;
-                            binding.teacherInfoLayout.setVisibility(View.GONE);
-                            binding.assignmentsRecView.setVisibility(View.VISIBLE);
-                            binding.btnAdd.setVisibility(View.VISIBLE);
-                            // Show back button
-                            binding.btnStepBack.setVisibility(View.VISIBLE);
-                            // Show empty msg
-                            binding.emptyMsg.setVisibility(View.VISIBLE);
+//                            step = 2;
+//                            binding.teacherInfoLayout.setVisibility(View.GONE);
+//                            binding.assignmentsRecView.setVisibility(View.VISIBLE);
+//                            binding.btnAdd.setVisibility(View.VISIBLE);
+//                            // Show back button
+//                            binding.btnStepBack.setVisibility(View.VISIBLE);
+//                            // Show empty msg
+//                            binding.emptyMsg.setVisibility(View.VISIBLE);
                             break;
                         case 2: // Step 2: Add assignments
-                            // Save the teacher's info
-                            String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
-                            String lastName = binding.txtLastName.getEditText().getText().toString().trim();
-                            String email = binding.txtEmail.getEditText().getText().toString().trim();
-                            String password = binding.txtPassword.getEditText().getText().toString().trim();
+                            // Save the teacher's info in the api
 
                             Toast.makeText(AddTeacherActivity.this, "Save", Toast.LENGTH_SHORT).show();
                             break;
@@ -136,7 +199,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                 // Hide password field
                 binding.txtPassword.setVisibility(View.GONE);
                 // Get teacher info
-                Teacher teacher = intent.getParcelableExtra(Utils.TEACHER);
+                teacher = intent.getParcelableExtra(Utils.TEACHER);
                 fillFields(teacher);
                 // Save button
                 binding.btnNext.setOnClickListener(v -> {
@@ -181,7 +244,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                             // Show back button
                             binding.btnStepBack.setVisibility(View.VISIBLE);
                             // Show current teacher's assignments
-                            getAssignments(teacher.getId());
+                            getAssignments();
                             break;
                         case 2: // Step 2: Add assignments
                             // Save the teacher's info
@@ -222,45 +285,49 @@ public class AddTeacherActivity extends AppCompatActivity {
         });
 
         binding.txtSectionsList.setOnClickListener(v -> {
-            binding.txtSectionsList.setError(null);
-            // Init builder
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(AddTeacherActivity.this, R.style.MyAlertDialogTheme);
-            // Set title
-            builder.setTitle(R.string.select_section);
-            // No cancel
-            builder.setCancelable(false);
+            if (sectionsArray != null && sectionsArray.length != 0){
+                binding.txtSectionsList.setError(null);
+                // Init builder
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(AddTeacherActivity.this, R.style.MyAlertDialogTheme);
+                // Set title
+                builder.setTitle(R.string.select_section);
+                // No cancel
+                builder.setCancelable(false);
 
-            builder.setMultiChoiceItems(sectionsArray, sectionsStates, (dialog, which, isChecked) -> {
+                builder.setMultiChoiceItems(sectionsArray, sectionsStates, (dialog, which, isChecked) -> {
 
-                // Get the current item
-                String currentSection = sectionsArray[which];
-                if (isChecked) { // If its selected then add it to the selected items list
-                    selectedSections.add(currentSection);
-                } else { // if not then remove it from the list
-                    selectedSections.remove(currentSection);
-                }
-            });
-
-            builder.setPositiveButton(R.string.save, (dialog, which) -> {
-
-                binding.txtSectionsList.setText("");
-
-                if (!selectedSections.isEmpty()) {
-                    sectionsSelected = true;
-                    for (int i = 0; i < selectedSections.size() - 1; i++) {
-                        // Show the selected groups in the text view
-                        binding.txtSectionsList.append(selectedSections.get(i) + ", ");
+                    // Get the current item
+                    String currentSection = sectionsArray[which];
+                    if (isChecked) { // If its selected then add it to the selected items list
+                        selectedSections.add(currentSection);
+                    } else { // if not then remove it from the list
+                        selectedSections.remove(currentSection);
                     }
-                    binding.txtSectionsList.append(selectedSections.get(selectedSections.size() - 1));
-                } else {
-                    sectionsSelected = false;
-                    binding.txtSectionsList.setHint(R.string.group);
-                }
-            });
+                });
 
-            builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+                builder.setPositiveButton(R.string.save, (dialog, which) -> {
 
-            builder.show();
+                    binding.txtSectionsList.setText("");
+
+                    if (!selectedSections.isEmpty()) {
+                        sectionsSelected = true;
+                        for (int i = 0; i < selectedSections.size() - 1; i++) {
+                            // Show the selected groups in the text view
+                            binding.txtSectionsList.append(selectedSections.get(i) + ", ");
+                        }
+                        binding.txtSectionsList.append(selectedSections.get(selectedSections.size() - 1));
+                    } else {
+                        sectionsSelected = false;
+                        binding.txtSectionsList.setHint(R.string.sections);
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+
+                builder.show();
+            } else {
+                Toast.makeText(this, getString(R.string.no_sections_in_department), Toast.LENGTH_SHORT).show();
+            }
 
         });
 
@@ -290,42 +357,90 @@ public class AddTeacherActivity extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(binding.assignmentsRecView);
     }
 
-    private void getAssignments(int teacherId) {
-        assignments = new ArrayList<>(TestAPI.getInstance().getAssignments());
-        if (!assignments.isEmpty()){
-            adapter.setAssignments(assignments);
-            binding.assignmentsRecView.setAdapter(adapter);
-            binding.assignmentsRecView.setVisibility(View.VISIBLE);
-            binding.emptyMsg.setVisibility(View.GONE);
-        } else {
-            binding.assignmentsRecView.setVisibility(View.GONE);
-            binding.emptyMsg.setVisibility(View.VISIBLE);
+    private void getAssignments() {
+        if (teacher != null){
+            assignments = teacher.getAssignments();
+            if (assignments != null){
+                if (!assignments.isEmpty()){
+                    adapter.setAssignments(assignments);
+                    binding.assignmentsRecView.setAdapter(adapter);
+                    binding.assignmentsRecView.setVisibility(View.VISIBLE);
+                    binding.emptyMsg.setVisibility(View.GONE);
+                } else {
+                    binding.assignmentsRecView.setVisibility(View.GONE);
+                    binding.emptyMsg.setVisibility(View.VISIBLE);
+                }
+            }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getAssignments();
     }
 
     // Get all the sections in the selected department
     private void setupSectionsSpinner(String department) {
-        // Get sections
-        List<Section> sectionList = TestAPI.getInstance().getSections();
+        Call<List<Section>> call = api.getDepartmentSections(department);
+        call.enqueue(new Callback<List<Section>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Section>> call, @NonNull Response<List<Section>> response) {
+                if (response.isSuccessful()){
+                    // Get sections
+                    List<Section> sectionList = response.body();
 
-        // Init lists
-        sectionsArray = new String[sectionList.size()];
-        sectionsStates = new boolean[sectionList.size()];
-        selectedSections = new ArrayList<>();
+                    // Init lists
+                    assert sectionList != null;
+                    sectionsArray = new String[sectionList.size()];
+                    sectionsStates = new boolean[sectionList.size()];
+                    selectedSections = new ArrayList<>();
 
-        // Fill the sections array
-        for (int i = 0; i < sectionList.size(); i++) {
-            sectionsArray[i] = sectionList.get(i).getCode();
-        }
+                    // Fill the sections array
+                    for (int i = 0; i < sectionList.size(); i++) {
+                        sectionsArray[i] = sectionList.get(i).getCode();
+                    }
+                } else {
+                    Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Section>> call, @NonNull Throwable t) {
+                Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setupDepartmentsSpinner() {
-        departments = new ArrayList<>();
-        for (Department department : TestAPI.getInstance().getDepartments()) {
-            departments.add(department.getCode());
-        }
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddTeacherActivity.this, R.layout.dropdown_item, departments);
-        binding.txtDepartmentSpinner.setAdapter(arrayAdapter);
+        // Get the departments from the api
+        Call<List<Department>> call = api.getDepartments();
+        call.enqueue(new Callback<List<Department>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Department>> call, @NonNull Response<List<Department>> response) {
+                if (response.isSuccessful()){
+                    List<Department> departmentsList = response.body();
+
+                    // Get the names of the departments
+                    departments = new ArrayList<>();
+                    assert departmentsList != null;
+                    for (Department department:departmentsList){
+                        departments.add(department.getCode());
+                    }
+
+                    // Set up spinner
+                    ArrayAdapter<String> departmentsAdapter = new ArrayAdapter<>(AddTeacherActivity.this, R.layout.dropdown_item, departments);
+                    binding.txtDepartmentSpinner.setAdapter(departmentsAdapter);
+                } else {
+                    Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Department>> call, @NonNull Throwable t) {
+                Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setupGradesSpinner() {
@@ -342,32 +457,59 @@ public class AddTeacherActivity extends AppCompatActivity {
         grade = teacher.getGrade();
         binding.txtGradeSpinner.setText(grade, false);
 
-        department = "INFO"; // TODO: replace this with the teacher's department
+        department = teacher.getDepartment();
         binding.txtDepartmentSpinner.setText(department, false);
 
         // Get all sections (of the teacher's department) and setup the spinner
         binding.txtSectionsList.setEnabled(true);
-        setupSectionsSpinner(department);
+        Call<List<Section>> call = api.getDepartmentSections(department);
+        call.enqueue(new Callback<List<Section>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Section>> call, @NonNull Response<List<Section>> response) {
+                if (response.isSuccessful()){
+                    // Get sections
+                    List<Section> sectionList = response.body();
 
-        // Set the selected sections
-        selectedSections = teacher.getSections();
-        sectionsSelected = true;
-        setSelectedSections(selectedSections);
+                    // Init lists
+                    assert sectionList != null;
+                    sectionsArray = new String[sectionList.size()];
+                    sectionsStates = new boolean[sectionList.size()];
+                    selectedSections = new ArrayList<>();
 
-        // Set the selected sections to the text view
-        int nbSections = selectedSections.size();
-        if (nbSections == 0) {
-            binding.txtSectionsList.setText(R.string.no_sections_selected_msg);
-        } else if (nbSections == 1) {
-            binding.txtSectionsList.setText(selectedSections.get(0));
-        } else {
-            binding.txtSectionsList.setText("");
-            for (int i = 0; i < selectedSections.size() - 1; i++) {
-                // Show the selected sections in the text view
-                binding.txtSectionsList.append(selectedSections.get(i) + ", ");
+                    // Fill the sections array
+                    for (int i = 0; i < sectionList.size(); i++) {
+                        sectionsArray[i] = sectionList.get(i).getCode();
+                    }
+
+                    // Set the selected sections
+                    selectedSections = teacher.getSections();
+                    sectionsSelected = true;
+                    setSelectedSections(selectedSections);
+
+                    // Set the selected sections to the text view
+                    int nbSections = selectedSections.size();
+                    if (nbSections == 0) {
+                        binding.txtSectionsList.setText(R.string.no_sections_selected_msg);
+                    } else if (nbSections == 1) {
+                        binding.txtSectionsList.setText(selectedSections.get(0));
+                    } else {
+                        binding.txtSectionsList.setText("");
+                        for (int i = 0; i < selectedSections.size() - 1; i++) {
+                            // Show the selected sections in the text view
+                            binding.txtSectionsList.append(selectedSections.get(i) + ", ");
+                        }
+                        binding.txtSectionsList.append(selectedSections.get(nbSections - 1));
+                    }
+                } else {
+                    Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+response.code(), Toast.LENGTH_SHORT).show();
+                }
             }
-            binding.txtSectionsList.append(selectedSections.get(nbSections - 1));
-        }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Section>> call, @NonNull Throwable t) {
+                Toast.makeText(AddTeacherActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -434,7 +576,7 @@ public class AddTeacherActivity extends AppCompatActivity {
 
     // Admin call back (swipe feature)
     // Swipe to delete and edit in the recycler view
-    ItemTouchHelper.SimpleCallback adminCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+    ItemTouchHelper.SimpleCallback adminCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
             return false;
@@ -446,33 +588,31 @@ public class AddTeacherActivity extends AppCompatActivity {
             int position = viewHolder.getAdapterPosition();
             Assignment currentAssignment = adapter.getAssignments().get(position);
 
-            switch (direction){
-                case ItemTouchHelper.LEFT: // Swipe left to right <- : Delete item
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(AddTeacherActivity.this);
+            if (direction == ItemTouchHelper.LEFT){
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddTeacherActivity.this);
                     builder.setMessage(R.string.are_you_sure);
                     builder.setPositiveButton(R.string.yes, (dialog, which) -> {
                         assignments.remove(currentAssignment);
                         adapter.getAssignments().remove(currentAssignment);
                         adapter.notifyItemRemoved(position);
                         Toast.makeText(AddTeacherActivity.this, getString(R.string.assignment_deleted_msg), Toast.LENGTH_SHORT).show();
+
+                        teacher.setAssignments(assignments);
+                        if (!assignments.isEmpty()){
+                            adapter.setAssignments(assignments);
+                            binding.assignmentsRecView.setAdapter(adapter);
+                            binding.assignmentsRecView.setVisibility(View.VISIBLE);
+                            binding.emptyMsg.setVisibility(View.GONE);
+                        } else {
+                            binding.assignmentsRecView.setVisibility(View.GONE);
+                            binding.emptyMsg.setVisibility(View.VISIBLE);
+                        }
                     });
                     builder.setNegativeButton(R.string.no, (dialog, which) -> {
                         // Do Nothing
                         adapter.notifyItemChanged(position); // To reset the item on the screen
                     });
                     builder.create().show();
-                    break;
-                case ItemTouchHelper.RIGHT: // Swipe right to left -> : Edit item
-                    Intent intent1 = new Intent(AddTeacherActivity.this, AddAssignmentActivity.class);
-                    intent1.putExtra(Utils.ACTION, Utils.ACTION_UPDATE);
-                    // TODO: get the teacher's id
-                    intent1.putExtra(Utils.ID, 1);
-                    intent1.putExtra(Utils.SECTIONS, selectedSections);
-                    intent1.putExtra(Utils.ASSIGNMENT, currentAssignment);
-                    startActivity(intent1);
-                    adapter.notifyItemChanged(position); // To reset the item on the screen
-                    break;
             }
         }
 
@@ -490,4 +630,8 @@ public class AddTeacherActivity extends AppCompatActivity {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     };
+
+    public static Teacher getTeacher() {
+        return teacher;
+    }
 }

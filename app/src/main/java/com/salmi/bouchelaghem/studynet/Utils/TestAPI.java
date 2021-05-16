@@ -56,14 +56,14 @@ public class TestAPI extends Application {
         users.add(new User(5, "email5@me.com", "User5", "User5", "2021-05-04T15:37:55.686454+01:00"));
 
         teachers = new ArrayList<>();
-        teachers.add(new Teacher(users.get(1).getId(), users.get(1).getEmail(), users.get(1).getFirstName(), users.get(1).getLastName(), users.get(1).getDateJoined(), "MCB",new ArrayList<>(Arrays.asList("L3 ACAD A","L3 ISIL B")),new ArrayList<Assignment>()));
-        teachers.add(new Teacher(users.get(2).getId(), users.get(2).getEmail(), users.get(2).getFirstName(), users.get(2).getLastName(), users.get(2).getDateJoined(), "MCB",new ArrayList<>(Collections.singletonList("L3 ACAD A")),new ArrayList<Assignment>()));
-        teachers.add(new Teacher(users.get(3).getId(), users.get(3).getEmail(), users.get(3).getFirstName(), users.get(3).getLastName(), users.get(3).getDateJoined(), "MCB",new ArrayList<>(Arrays.asList("L3 ISIL B","L2 GENIE CIVIL A")),new ArrayList<Assignment>()));
+        teachers.add(new Teacher(users.get(1).getId(), users.get(1).getEmail(), users.get(1).getFirstName(), users.get(1).getLastName(), users.get(1).getDateJoined(), "MCB","INFO" ,new ArrayList<>(Arrays.asList("L3 ACAD A","L3 ISIL B")),new ArrayList<Assignment>()));
+        teachers.add(new Teacher(users.get(2).getId(), users.get(2).getEmail(), users.get(2).getFirstName(), users.get(2).getLastName(), users.get(2).getDateJoined(), "MCB", "INFO",new ArrayList<>(Collections.singletonList("L3 ACAD A")),new ArrayList<Assignment>()));
+        teachers.add(new Teacher(users.get(3).getId(), users.get(3).getEmail(), users.get(3).getFirstName(), users.get(3).getLastName(), users.get(3).getDateJoined(), "MCB", "INFO",new ArrayList<>(Arrays.asList("L3 ISIL B","L2 GENIE CIVIL A")),new ArrayList<Assignment>()));
 
         modules = new ArrayList<>();
-        modules.add(new Module("BD2", "Base de données", Arrays.asList("Cours", "TD", "TP")));
-        modules.add(new Module("GL2", "Genie Logiciel", Arrays.asList("Cours", "TD", "TP")));
-        modules.add(new Module("EN", "English", Collections.singletonList("TD")));
+        modules.add(new Module("BD2", "Base de données", Arrays.asList("Cours", "TD", "TP") , Arrays.asList("Teacher1","Teacher2")));
+        modules.add(new Module("GL2", "Genie Logiciel", Arrays.asList("Cours", "TD", "TP"), Arrays.asList("Teacher1","Teacher2")));
+        modules.add(new Module("EN", "English", Collections.singletonList("TD"), Arrays.asList("Teacher1","Teacher2")));
 
         departments = new ArrayList<>();
         departments.add(new Department("INFO", "Informatique"));

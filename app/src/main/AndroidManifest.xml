@@ -15,24 +15,36 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Studynet"
         tools:ignore="AllowBackup">
-        <activity android:name=".Activities.AddAssignmentActivity"></activity>
-        <activity android:name=".Activities.AddTeacherActivity" />
-        <activity android:name=".Activities.SplashActivity">
+        <activity android:name=".Activities.AddAssignmentActivity"
+            android:launchMode = "singleTop"/>
+        <activity android:name=".Activities.AddTeacherActivity"
+            android:launchMode = "singleTop"/>
+        <activity android:name=".Activities.SplashActivity"
+            android:launchMode = "singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.OnboardingActivity" />
-        <activity android:name=".Activities.AddHomeworkActivity" />
-        <activity android:name=".Activities.HomeworkDetailsActivity" />
-        <activity android:name=".Activities.AddClassActivity" />
-        <activity android:name=".Activities.ClassDetailsActivity" />
-        <activity android:name=".Activities.NavigationActivity" />
-        <activity android:name=".Activities.ResetPasswordActivity" />
-        <activity android:name=".Activities.SignUpActivity" />
-        <activity android:name=".Activities.LoginActivity"></activity>
+        <activity android:name=".Activities.OnboardingActivity"
+            android:launchMode = "singleTop"/>
+        <activity android:name=".Activities.AddHomeworkActivity"
+            android:launchMode = "singleTop"/>
+        <activity android:name=".Activities.HomeworkDetailsActivity"
+            android:launchMode = "singleTop"/>
+        <activity android:name=".Activities.AddClassActivity"
+            android:launchMode = "singleTop"/>
+        <activity android:name=".Activities.ClassDetailsActivity"
+            android:launchMode = "singleTop"/>
+        <activity android:name=".Activities.NavigationActivity"
+            android:launchMode = "singleTop"/>
+        <activity android:name=".Activities.ResetPasswordActivity"
+            android:launchMode = "singleTop"/>
+        <activity android:name=".Activities.SignUpActivity"
+            android:launchMode = "singleTop"/>
+        <activity android:name=".Activities.LoginActivity"
+            android:launchMode = "singleTop"/>
     </application>
 
 </manifest>

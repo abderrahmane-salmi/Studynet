@@ -111,6 +111,7 @@ public class Serializers {
                 userData.get("last_name").getAsString(),
                 userData.get("date_joined").getAsString(),
                 teacherData.get("grade").getAsString(),
+                teacherData.get("department").getAsString(),
                 sectionsArray,
                 assignmentArray);
         return teacher;

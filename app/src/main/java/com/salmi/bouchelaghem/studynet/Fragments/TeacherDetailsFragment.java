@@ -53,7 +53,7 @@ public class TeacherDetailsFragment extends BottomSheetDialogFragment {
     @SuppressLint("SetTextI18n")
     private void fillFields(Teacher teacher) {
         binding.txtTeacherName.setText(teacher.getFirstName() + " " + teacher.getLastName());
-        // TODO: get teacher's module
+        binding.txtTeacherGrade.setText(teacher.getGrade());
         binding.txtTeacherEmail.setText(teacher.getEmail());
     }
 }

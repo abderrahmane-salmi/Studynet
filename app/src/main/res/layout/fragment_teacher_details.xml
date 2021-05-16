@@ -89,16 +89,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/module"
+                    android:text="@string/grade"
                     android:textColor="@color/primary_text_color"
                     android:textSize="16sp"
                     android:fontFamily="@font/tabularasa_regular" />
 
                 <TextView
-                    android:id="@+id/txtTeacherSubject"
+                    android:id="@+id/txtTeacherGrade"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Base de données"
+                    android:text="MCB"
                     android:textColor="@color/secondary_text_color"
                     android:textSize="14sp"
                     android:fontFamily="@font/tabularasa_regular" />

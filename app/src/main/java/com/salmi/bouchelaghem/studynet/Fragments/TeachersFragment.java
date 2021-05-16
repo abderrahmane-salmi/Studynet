@@ -1,12 +1,19 @@
 package com.salmi.bouchelaghem.studynet.Fragments;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,14 +23,18 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.gson.JsonArray;
 import com.salmi.bouchelaghem.studynet.Activities.AddTeacherActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
 import com.salmi.bouchelaghem.studynet.Adapters.TeachersAdapter;
+import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
-import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
+import com.salmi.bouchelaghem.studynet.Utils.Serializers;
+import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.FragmentTeachersBinding;
 
@@ -31,6 +42,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TeachersFragment extends Fragment {
 
@@ -40,8 +56,19 @@ public class TeachersFragment extends Fragment {
     private List<Teacher> teachers;
     private TeachersAdapter adapter;
 
+    // Filter
+    private Dialog dialog;
+    private boolean sectionSelected = false;
+    private String selectedSection;
+    private boolean filterApplied = false;
+    private List<Section> sections;
+    private List<String> sectionsNames;
+
     private final CurrentUser currentUser = CurrentUser.getInstance();
     private String userType;
+
+    // Studynet Api
+    private StudynetAPI api;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -52,19 +79,84 @@ public class TeachersFragment extends Fragment {
         userType = currentUser.getUserType();
         initRecView();
 
-        // Hide filter button
+        // Init retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Utils.API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // Init our api
+        api = retrofit.create(StudynetAPI.class);
+
         NavigationActivity context = (NavigationActivity) getActivity();
         assert context != null;
-        context.btnFilter.setVisibility(View.GONE);
 
-        if (userType.equals(Utils.ADMIN_ACCOUNT)){
-            // Show add button
+        if (userType.equals(Utils.ADMIN_ACCOUNT)) {
+            // Show the select section msg
+            binding.selectSectionMsg.setVisibility(View.VISIBLE);
+
+            // Show the add button
             binding.btnAdd.setVisibility(View.VISIBLE);
             binding.btnAdd.setOnClickListener(v -> {
                 Intent intent = new Intent(getContext(), AddTeacherActivity.class);
                 intent.putExtra(Utils.ACTION, Utils.ACTION_ADD);
                 startActivity(intent);
             });
+
+            // Show and setup the filter
+            context.btnFilter.setVisibility(View.VISIBLE);
+            context.btnFilter.setOnClickListener(v -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                View view12 = View.inflate(context, R.layout.popup_teacher_timetable_filter, null);
+                // Init Views
+                ImageView btnCloseFilter = view12.findViewById(R.id.btnCloseFilter);
+                AutoCompleteTextView filterTimetableSection = view12.findViewById(R.id.filterTimetableSection);
+                MaterialButton btnApplyFilter = view12.findViewById(R.id.btnApplyFilter);
+
+                // Init sections spinner
+                if (!sectionsNames.isEmpty()) {
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sectionsNames);
+                    filterTimetableSection.setAdapter(arrayAdapter);
+                }
+
+                if (filterApplied) {
+                    restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
+                }
+
+                // Init Buttons
+                btnApplyFilter.setOnClickListener(v13 -> {
+
+                    if (sectionSelected) {
+
+                        getTeachers(selectedSection);
+                        binding.selectSectionMsg.setVisibility(View.GONE);
+                        dialog.dismiss();
+                        filterApplied = true;
+
+                    } else {
+                        Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+
+                btnCloseFilter.setOnClickListener(v14 -> dialog.dismiss());
+
+                filterTimetableSection.setOnItemClickListener((parent, view121, position, id) -> {
+                    sectionSelected = true;
+                    selectedSection = sectionsNames.get(position);
+                });
+
+                builder.setView(view12);
+                dialog = builder.create(); // creating our dialog
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+                // Show rounded corners
+                WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                dialog.getWindow().setAttributes(params);
+            });
+        } else if (userType.equals(Utils.STUDENT_ACCOUNT)) {
+            // Hide filter button
+            context.btnFilter.setVisibility(View.GONE);
         }
 
         return view;
@@ -73,14 +165,18 @@ public class TeachersFragment extends Fragment {
     private void initRecView() {
         teachers = new ArrayList<>();
         binding.teachersRecView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new TeachersAdapter(getContext(), userType);
+        adapter = new TeachersAdapter();
 
         // Swipe to action in rec view
-        if (userType.equals(Utils.ADMIN_ACCOUNT)){
+        if (userType.equals(Utils.ADMIN_ACCOUNT)) {
             // If its a teacher then show delete + edit buttons
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(adminCallBack);
             itemTouchHelper.attachToRecyclerView(binding.teachersRecView);
         }
+    }
+
+    private void restoreFilterState(AutoCompleteTextView filter) {
+        filter.setText(selectedSection, false);
     }
 
     @Override
@@ -88,15 +184,12 @@ public class TeachersFragment extends Fragment {
         super.onStart();
         if (teachers != null && teachers.isEmpty()) {
             // if its the first time we launch the activity so go ahead and get the data from the database
-            switch (userType){
-                case Utils.STUDENT_ACCOUNT:
-                    // Get the current student
-                    Student currentStudent = CurrentUser.getInstance().getCurrentStudent();
-                    getMyTeachers(currentStudent.getSection().getCode());
-                    break;
-                case Utils.ADMIN_ACCOUNT:
-                    getAllTeachers();
-                    break;
+            if (Utils.STUDENT_ACCOUNT.equals(userType)) {// Get the current student
+                Student currentStudent = CurrentUser.getInstance().getCurrentStudent();
+                getTeachers(currentStudent.getSection().getCode());
+            } else if (Utils.ADMIN_ACCOUNT.equals(userType)) {
+                // If its an admin go ahead and get all sections for the spinner
+                getAllSections();
             }
         } else { // if we already retrieved the data from the database, just keep using it
             adapter.setTeachers(teachers);
@@ -107,30 +200,68 @@ public class TeachersFragment extends Fragment {
     }
 
     // Get the current section's teachers
-    private void getMyTeachers(String section){
-        teachers = TestAPI.getInstance().getTeachers();
-        if (!teachers.isEmpty()) {
-            adapter.setTeachers(teachers);
-            binding.teachersRecView.setAdapter(adapter);
-            binding.teachersRecView.setVisibility(View.VISIBLE);
-            binding.emptyMsg.setVisibility(View.GONE);
-        } else {
-            binding.teachersRecView.setVisibility(View.GONE);
-            binding.emptyMsg.setVisibility(View.VISIBLE);
-        }
+    private void getTeachers(String section) {
+        Call<JsonArray> call = api.getSectionTeachers("Token " + currentUser.getToken(), section);
+        call.enqueue(new Callback<JsonArray>() {
+            @Override
+            public void onResponse(@NonNull Call<JsonArray> call, @NonNull Response<JsonArray> response) {
+                if (response.code() == Utils.HttpResponses.HTTP_200_OK){
+                    teachers.clear();
+                    JsonArray teachersJsonArray = response.body();
+                    for(int i = 0; i < teachersJsonArray.size(); ++i){
+                        teachers.add(Serializers.TeacherDeserializer(teachersJsonArray.get(i).getAsJsonObject()));
+                    }
+
+                    if (teachers != null) {
+                        if (!teachers.isEmpty()) {
+                            adapter.setTeachers(teachers);
+                            binding.teachersRecView.setAdapter(adapter);
+                            binding.teachersRecView.setVisibility(View.VISIBLE);
+                            binding.emptyMsg.setVisibility(View.GONE);
+                        } else {
+                            binding.teachersRecView.setVisibility(View.GONE);
+                            binding.emptyMsg.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        binding.teachersRecView.setVisibility(View.GONE);
+                        binding.emptyMsg.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.error)+response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<JsonArray> call, @NonNull Throwable t) {
+                Toast.makeText(getContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void getAllTeachers() {
-        teachers = TestAPI.getInstance().getTeachers();
-        if (!teachers.isEmpty()) {
-            adapter.setTeachers(teachers);
-            binding.teachersRecView.setAdapter(adapter);
-            binding.teachersRecView.setVisibility(View.VISIBLE);
-            binding.emptyMsg.setVisibility(View.GONE);
-        } else {
-            binding.teachersRecView.setVisibility(View.GONE);
-            binding.emptyMsg.setVisibility(View.VISIBLE);
-        }
+    private void getAllSections() {
+        Call<List<Section>> call = api.getAllSections();
+        call.enqueue(new Callback<List<Section>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Section>> call, @NonNull Response<List<Section>> response) {
+                if (response.isSuccessful()) {
+                    sections = response.body();
+                    sectionsNames = new ArrayList<>();
+                    if (sections != null) {
+                        // Get the sections names only
+                        for (Section section : sections) {
+                            sectionsNames.add(section.getCode());
+                        }
+                    }
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.error) + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Section>> call, @NonNull Throwable t) {
+                Toast.makeText(getContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     // Swipe to delete and edit in the recycler view
@@ -146,7 +277,7 @@ public class TeachersFragment extends Fragment {
             int position = viewHolder.getAdapterPosition();
             Teacher currentTeacher = adapter.getTeachers().get(position);
 
-            switch (direction){
+            switch (direction) {
                 case ItemTouchHelper.LEFT: // Swipe left to right <- : Delete item
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
