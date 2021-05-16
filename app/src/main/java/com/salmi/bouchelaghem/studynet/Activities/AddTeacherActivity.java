@@ -567,6 +567,17 @@ public class AddTeacherActivity extends AppCompatActivity {
                         adapter.getAssignments().remove(currentAssignment);
                         adapter.notifyItemRemoved(position);
                         Toast.makeText(AddTeacherActivity.this, getString(R.string.assignment_deleted_msg), Toast.LENGTH_SHORT).show();
+
+                        teacher.setAssignments(assignments);
+                        if (!assignments.isEmpty()){
+                            adapter.setAssignments(assignments);
+                            binding.assignmentsRecView.setAdapter(adapter);
+                            binding.assignmentsRecView.setVisibility(View.VISIBLE);
+                            binding.emptyMsg.setVisibility(View.GONE);
+                        } else {
+                            binding.assignmentsRecView.setVisibility(View.GONE);
+                            binding.emptyMsg.setVisibility(View.VISIBLE);
+                        }
                     });
                     builder.setNegativeButton(R.string.no, (dialog, which) -> {
                         // Do Nothing
