@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
+import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
 import com.salmi.bouchelaghem.studynet.Utils.Serializers;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
@@ -29,9 +30,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
-    private CurrentUser currentUser = CurrentUser.getInstance();
+    private final CurrentUser currentUser = CurrentUser.getInstance();
     private StudynetAPI api;
     private SharedPreferences sharedPreferences;
+    private CustomLoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,8 @@ public class LoginActivity extends AppCompatActivity {
                 .baseUrl(Utils.API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+
+        loadingDialog = new CustomLoadingDialog(LoginActivity.this);
 
         // Init our api, this will implement the code of all the methods in the interface.
         api = retrofit.create(StudynetAPI.class);
@@ -72,6 +76,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(validateEmail() & validatePassword())
                 {
+                    loadingDialog.show();
                     JsonObject credentials = new JsonObject();
                     credentials.addProperty("email",binding.txtLoginEmail.getEditText().getText().toString().trim());
                     credentials.addProperty("password",binding.txtLoginPassword.getEditText().getText().toString());
@@ -147,7 +152,6 @@ public class LoginActivity extends AppCompatActivity {
                     {
                         //It's a student
                         Utils.loginStudent(responseData.getAsJsonObject(Utils.STUDENT_ACCOUNT));
-                        Toast.makeText(LoginActivity.this, "Successfully logged in as a student.", Toast.LENGTH_SHORT).show();
                     }
                     else
                     {
@@ -155,7 +159,6 @@ public class LoginActivity extends AppCompatActivity {
                         {
                             //It's a teacher
                             loginTeacher(responseData.getAsJsonObject(Utils.TEACHER_ACCOUNT));
-                            Toast.makeText(LoginActivity.this, "Successfully logged in as a teacher.", Toast.LENGTH_SHORT).show();
                         }
                         else
                         {
@@ -163,7 +166,6 @@ public class LoginActivity extends AppCompatActivity {
                             {
                                 //It's an administrator
                                 loginAdmin(responseData.getAsJsonObject(Utils.ADMIN_ACCOUNT));
-                                Toast.makeText(LoginActivity.this, "Successfully logged in as an administrator.", Toast.LENGTH_SHORT).show();
                             }
                             else
                             {
@@ -177,6 +179,8 @@ public class LoginActivity extends AppCompatActivity {
                     //Save the user data locally.
                     saveCurrentUser();
                     startActivity(new Intent(LoginActivity.this, NavigationActivity.class));
+                    loadingDialog.dismiss();
+                    Toast.makeText(LoginActivity.this, getString(R.string.logged_in_msg), Toast.LENGTH_SHORT).show();
                     finish();
                     break;
                 case Utils.HttpResponses.HTTP_400_BAD_REQUEST:

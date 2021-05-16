@@ -170,4 +170,6 @@
     <string name="session_expired">Session expired, please login again.</string>
     <string name="no_sections_in_department">No sections were found in this department</string>
     <string name="email_msg3">Please try to use another email</string>
+    <string name="loading">Loading …</string>
+    <string name="logged_in_msg">You have logged in successfully</string>
 </resources>
