@@ -1,19 +1,18 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.salmi.bouchelaghem.studynet.Models.Assignment;
 import com.salmi.bouchelaghem.studynet.Models.Module;
 import com.salmi.bouchelaghem.studynet.Models.Section;
-import com.salmi.bouchelaghem.studynet.Models.Specialty;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
@@ -211,7 +210,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
 
             // Setup the next spinner
             binding.txtGroup.setEnabled(true);
-            getGroups(teacherId, section);
+            getGroups(section);
         });
 
         binding.txtGroup.setOnClickListener(v -> {
@@ -291,7 +290,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
         // Groups
         binding.txtGroup.setEnabled(true);
         groupSelected = true;
-        getGroups(teacherId, section);
+        getGroups(section);
         // Fill the selected groups
         setSelectedGroups(assignment.getConcernedGroups());
 
@@ -330,20 +329,37 @@ public class AddAssignmentActivity extends AppCompatActivity {
         return null;
     }
 
-    private void getGroups(int teacherId, String sectionCode) {
-        // Get section object using its code
-        Section section = getSection(sectionCode);
+    private void getGroups(String sectionCode) {
+        // Get the section object using its code
+        Call<Section> call = api.getSection(sectionCode);
+        call.enqueue(new Callback<Section>() {
+            @Override
+            public void onResponse(@NonNull Call<Section> call, @NonNull Response<Section> response) {
+                if (response.isSuccessful()){
+                    Section section = response.body();
+                    if (section != null){
+                        groupsArray = new String[section.getNbGroups()];
+                        for (int grp = 0; grp < section.getNbGroups(); grp++) {
+                            groupsArray[grp] = String.valueOf(grp + 1);
+                        }
+                        groupsStates = new boolean[groupsArray.length];
+                        selectedGroupsString = new ArrayList<>();
+                    } else {
+                        binding.txtGroup.setEnabled(false);
+                        Toast.makeText(AddAssignmentActivity.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    binding.txtGroup.setEnabled(false);
+                    Toast.makeText(AddAssignmentActivity.this, getString(R.string.error)+response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
 
-        groupsArray = new String[section.getNbGroups()];
-        for (int grp = 0; grp < section.getNbGroups(); grp++) {
-            groupsArray[grp] = String.valueOf(grp + 1);
-        }
-        groupsStates = new boolean[groupsArray.length];
-        selectedGroupsString = new ArrayList<>();
-    }
-
-    private Section getSection(String code) {
-        return testAPI.getSections().get(0);
+            @Override
+            public void onFailure(@NonNull Call<Section> call, @NonNull Throwable t) {
+                binding.txtGroup.setEnabled(false);
+                Toast.makeText(AddAssignmentActivity.this, getString(R.string.error)+t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setupModuleTypesSpinner(Module module) {

@@ -17,6 +17,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface StudynetAPI {
@@ -45,6 +46,11 @@ public interface StudynetAPI {
     @GET("sections")
     Call<List<Section>> getDepartmentSections(@Query("department") String department);
     // sections/?department=INFO
+
+    /** Get section object based on section code*/
+    @GET("sections/{code}")
+    Call<Section> getSection(@Path("code") String code);
+    // sections/L3 ACAD A
 
     // *** Modules ***
 
