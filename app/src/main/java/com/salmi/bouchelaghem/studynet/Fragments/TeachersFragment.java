@@ -40,6 +40,8 @@ import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.FragmentTeachersBinding;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -54,13 +56,13 @@ public class TeachersFragment extends Fragment {
     private FragmentTeachersBinding binding;
 
     // Recycler view
-    private List<Teacher> teachers;
+    private static List<Teacher> teachers;
     private TeachersAdapter adapter;
 
     // Filter
     private Dialog dialog;
     private boolean departmentSelected = false;
-    private String selectedDepartment;
+    private static String selectedDepartment;
     private boolean filterApplied = false;
     private List<Department> departments;
     private List<String> departmentsCodes;
@@ -168,7 +170,7 @@ public class TeachersFragment extends Fragment {
     private void initRecView() {
         teachers = new ArrayList<>();
         binding.teachersRecView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new TeachersAdapter();
+        adapter = new TeachersAdapter(getActivity());
 
         // Swipe to action in rec view
         if (userType.equals(Utils.ADMIN_ACCOUNT)) {
@@ -212,13 +214,22 @@ public class TeachersFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<JsonArray> call, @NonNull Response<JsonArray> response) {
                 if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
-                    teachers.clear();
+
+                    teachers = new ArrayList<>();
                     JsonArray teachersJsonArray = response.body();
                     if (teachersJsonArray != null) {
                         for (int i = 0; i < teachersJsonArray.size(); ++i) {
                             teachers.add(Serializers.TeacherDeserializer(teachersJsonArray.get(i).getAsJsonObject()));
                         }
                         if (!teachers.isEmpty()) {
+                            //Sort the teacher list by their names.
+                            Collections.sort(teachers, new Comparator<Teacher>() {
+                                @Override
+                                public int compare(Teacher o1, Teacher o2) {
+                                    return o1.getLastName().compareToIgnoreCase(o2.getLastName());
+                                }
+                            });
+                            //Display the teachers list.
                             adapter.setTeachers(teachers);
                             binding.teachersRecView.setAdapter(adapter);
                             binding.teachersRecView.setVisibility(View.VISIBLE);
@@ -259,13 +270,21 @@ public class TeachersFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<JsonArray> call, @NonNull Response<JsonArray> response) {
                 if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
-                    teachers.clear();
+                    teachers = new ArrayList<>();
                     JsonArray teachersJsonArray = response.body();
                     if (teachersJsonArray != null) {
                         for (int i = 0; i < teachersJsonArray.size(); ++i) {
                             teachers.add(Serializers.TeacherDeserializer(teachersJsonArray.get(i).getAsJsonObject()));
                         }
                         if (!teachers.isEmpty()) {
+                            //Sort the teacher list by their names.
+                            Collections.sort(teachers, new Comparator<Teacher>() {
+                                @Override
+                                public int compare(Teacher o1, Teacher o2) {
+                                    return o1.getLastName().compareToIgnoreCase(o2.getLastName());
+                                }
+                            });
+                            //Display the teachers list.
                             adapter.setTeachers(teachers);
                             binding.teachersRecView.setAdapter(adapter);
                             binding.teachersRecView.setVisibility(View.VISIBLE);
@@ -360,4 +379,18 @@ public class TeachersFragment extends Fragment {
         }
     };
 
+    public static List<Teacher> getTeachers() {
+        return teachers;
+    }
+
+    public static String getSelectedDepartment() {
+        return selectedDepartment;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        teachers = null;
+        selectedDepartment = null;
+    }
 }

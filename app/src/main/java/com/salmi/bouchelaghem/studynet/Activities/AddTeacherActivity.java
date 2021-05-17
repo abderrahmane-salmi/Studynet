@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Adapters.AssignmentsAdapter;
+import com.salmi.bouchelaghem.studynet.Fragments.TeachersFragment;
 import com.salmi.bouchelaghem.studynet.Models.Assignment;
 import com.salmi.bouchelaghem.studynet.Models.Department;
 import com.salmi.bouchelaghem.studynet.Models.Section;
@@ -69,6 +70,7 @@ public class AddTeacherActivity extends AppCompatActivity {
     private final CurrentUser currentUser = CurrentUser.getInstance();
 
     private static Teacher teacher;
+    private Teacher ogTeacher;
 
     private int step = 1;
 
@@ -201,7 +203,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                 // Get teacher info
                 teacher = intent.getParcelableExtra(Utils.TEACHER);
                 // Make a copy of the teacher object
-                Teacher ogTeacher = new Teacher(teacher);
+                ogTeacher = new Teacher(teacher);
                 fillFields(teacher);
                 // Save button
                 binding.btnNext.setOnClickListener(v -> {
@@ -243,6 +245,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                                                 teacher.setAssignments(assignments);
                                                 teacher.setGrade(grade);
                                                 teacher.setDepartment(department);
+                                                teacher.setSections(selectedSections);
 
                                                 // Fill the recycler view with assignments
                                                 getAssignments();
@@ -277,6 +280,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                                     teacher.setAssignments(assignments);
                                     teacher.setGrade(grade);
                                     teacher.setDepartment(department);
+                                    teacher.setSections(selectedSections);
 
                                     // Fill the recycler view with assignments
                                     getAssignments();
@@ -754,6 +758,10 @@ public class AddTeacherActivity extends AppCompatActivity {
         @Override
         public void onResponse(@NonNull Call<JsonObject> call, Response<JsonObject> response) {
             if (response.code() == Utils.HttpResponses.HTTP_201_CREATED) {
+                if (TeachersFragment.getSelectedDepartment().equals(department)){
+                    Teacher newTeacher = Serializers.TeacherDeserializer(response.body());
+                    TeachersFragment.getTeachers().add(newTeacher);
+                }
                 Toast.makeText(AddTeacherActivity.this, "Teacher successfully created.", Toast.LENGTH_SHORT).show();
                 finish();
             } else {
@@ -773,8 +781,13 @@ public class AddTeacherActivity extends AppCompatActivity {
     private class TeacherUpdateCallback implements Callback<JsonObject> {
 
         @Override
-        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+        public void onResponse(@NonNull Call<JsonObject> call, Response<JsonObject> response) {
             if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
+                // Update the teacher in the teachers fragment
+                int index = TeachersFragment.getTeachers().indexOf(ogTeacher);
+                Teacher updatedTeacher = Serializers.TeacherDeserializer(response.body());
+                TeachersFragment.getTeachers().set(index, updatedTeacher);
+
                 Toast.makeText(AddTeacherActivity.this, "Teacher successfully updated.", Toast.LENGTH_SHORT).show();
                 finish();
             } else {
@@ -784,7 +797,7 @@ public class AddTeacherActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onFailure(Call<JsonObject> call, Throwable t) {
+        public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
             Toast.makeText(AddTeacherActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
             loadingDialog.dismiss();
         }

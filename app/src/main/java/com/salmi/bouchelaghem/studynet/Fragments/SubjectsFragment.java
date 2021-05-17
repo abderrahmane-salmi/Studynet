@@ -74,7 +74,7 @@ public class SubjectsFragment extends Fragment {
     private void initRecView() {
         modules = new ArrayList<>();
         binding.subjectRecView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ModulesAdapter(getContext());
+        adapter = new ModulesAdapter(getActivity());
     }
 
     @Override

@@ -86,7 +86,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
                 ArrayList<Assignment> tempAssignments = AddTeacherActivity.getTeacher().getAssignments();
                 if(!tempAssignments.contains(assignment)){
                     AddTeacherActivity.getTeacher().getAssignments().add(assignment);
-                    Toast.makeText(AddAssignmentActivity.this, "Save", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddAssignmentActivity.this, getString(R.string.assignment_added), Toast.LENGTH_SHORT).show();
                     finish();
                 }
                 else

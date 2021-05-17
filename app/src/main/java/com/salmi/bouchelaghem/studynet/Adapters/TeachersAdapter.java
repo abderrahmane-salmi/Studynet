@@ -1,30 +1,31 @@
 package com.salmi.bouchelaghem.studynet.Adapters;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salmi.bouchelaghem.studynet.Fragments.TeachersFragmentDirections;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
+import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.databinding.LayoutTeacherBinding;
 
 import java.util.List;
+import java.util.Objects;
 
 public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.ViewHolder> {
 
     private List<Teacher> teachers;
+    private final Activity activity;
 
-    public TeachersAdapter() {
-    }
-
-    public TeachersAdapter(List<Teacher> teachers) {
-        this.teachers = teachers;
-        notifyDataSetChanged();
+    public TeachersAdapter(Activity activity) {
+        this.activity = activity;
     }
 
     @NonNull
@@ -34,9 +35,13 @@ public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.ViewHo
         ViewHolder holder = new ViewHolder(binding);
 
         holder.binding.teacherMainLayout.setOnClickListener(v -> {
-            Teacher teacher = teachers.get(holder.getAdapterPosition());
-            NavDirections action = TeachersFragmentDirections.actionNavTeachersToTeacherDetailsFragment(teacher);
-            Navigation.createNavigateOnClickListener(action).onClick(holder.binding.getRoot());
+            NavController navController = Navigation.findNavController(activity, R.id.fragment);
+            // I added this condition to prevent the user from opening the same fragment twice (when clicking super
+            if (Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.teacherDetailsFragment){
+                Teacher teacher = teachers.get(holder.getAdapterPosition());
+                NavDirections action = TeachersFragmentDirections.actionNavTeachersToTeacherDetailsFragment(teacher);
+                Navigation.createNavigateOnClickListener(action).onClick(holder.binding.getRoot());
+            }
         });
 
         return holder;
@@ -47,7 +52,7 @@ public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Teacher teacher = teachers.get(position);
 
-        holder.binding.txtTeacherName.setText(teacher.getFirstName()+" "+teacher.getLastName());
+        holder.binding.txtTeacherName.setText(teacher.getLastName()+" "+teacher.getFirstName());
         holder.binding.txtTeacherInfo.setText(teacher.getEmail());
     }
 
