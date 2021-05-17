@@ -71,7 +71,10 @@ public interface StudynetAPI {
     Call<JsonArray> getSectionTeachers(@Header("Authorization") String token, @Query("section") String section);
     // teachers/?section=ISIL B L3
 
-
+    /** Get teachers based on section*/
+    @GET("teachers")
+    Call<JsonArray> getDepartmentTeachers(@Header("Authorization") String token, @Query("department") String department);
+    // teachers/?department=INFO
 
     /** Get the user data using the token */
     @GET("user_data")

@@ -175,4 +175,5 @@
     <string name="assignment_already_exists">This assignment already exists.</string>
     <string name="select_section_teacher_msg">Please Select a Section to See its Teachers</string>
     <string name="email_password_incorrect">The email or password you entered is incorrect</string>
+    <string name="select_department_teacher_msg">Please Select a Department to See its Teachers</string>
 </resources>
