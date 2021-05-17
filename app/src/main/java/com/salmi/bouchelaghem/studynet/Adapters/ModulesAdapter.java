@@ -1,10 +1,11 @@
 package com.salmi.bouchelaghem.studynet.Adapters;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,19 +15,20 @@ import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.databinding.LayoutSubjectBinding;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ModulesAdapter extends RecyclerView.Adapter<ModulesAdapter.ViewHolder> {
 
     private List<Module> modules;
-    private final Context context;
+    private final Activity activity;
 
-    public ModulesAdapter(Context context) {
-        this.context = context;
+    public ModulesAdapter(Activity context) {
+        this.activity = context;
     }
 
-    public ModulesAdapter(List<Module> modules, Context context) {
+    public ModulesAdapter(List<Module> modules, Activity context) {
         this.modules = modules;
-        this.context = context;
+        this.activity = context;
         notifyDataSetChanged();
     }
 
@@ -37,9 +39,13 @@ public class ModulesAdapter extends RecyclerView.Adapter<ModulesAdapter.ViewHold
         ViewHolder holder = new ViewHolder(binding);
 
         holder.binding.subjectMainLayout.setOnClickListener(v -> {
-            Module module = modules.get(holder.getAdapterPosition());
-            SubjectsFragmentDirections.ActionNavSubjectsToSubjectDetailsFragment action = SubjectsFragmentDirections.actionNavSubjectsToSubjectDetailsFragment(module);
-            Navigation.createNavigateOnClickListener(action).onClick(holder.binding.getRoot());
+            NavController navController = Navigation.findNavController(activity, R.id.fragment);
+            // I added this condition to prevent the user from opening the same fragment twice (when clicking super 
+            if (Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.subjectDetailsFragment){
+                Module module = modules.get(holder.getAdapterPosition());
+                SubjectsFragmentDirections.ActionNavSubjectsToSubjectDetailsFragment action = SubjectsFragmentDirections.actionNavSubjectsToSubjectDetailsFragment(module);
+                Navigation.createNavigateOnClickListener(action).onClick(holder.binding.getRoot());
+            }
         });
 
         return holder;
