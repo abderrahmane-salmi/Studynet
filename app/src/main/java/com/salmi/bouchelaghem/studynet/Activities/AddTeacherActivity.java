@@ -30,7 +30,6 @@ import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
 import com.salmi.bouchelaghem.studynet.Utils.Serializers;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
-import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityAddTeacherBinding;
 
@@ -40,7 +39,6 @@ import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 import okhttp3.ResponseBody;
-import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -746,17 +744,13 @@ public class AddTeacherActivity extends AppCompatActivity {
     private class TeacherCreationCallback implements Callback<JsonObject> {
 
         @Override
-        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-            switch(response.code())
-            {
-                case Utils.HttpResponses.HTTP_201_CREATED:
-                    Toast.makeText(AddTeacherActivity.this, "Teacher successfully created.", Toast.LENGTH_SHORT).show();
-                    finish();
-                    break;
-                default:
-                    Toast.makeText(AddTeacherActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
-                    loadingDialog.dismiss();
-                    break;
+        public void onResponse(@NonNull Call<JsonObject> call, Response<JsonObject> response) {
+            if (response.code() == Utils.HttpResponses.HTTP_201_CREATED) {
+                Toast.makeText(AddTeacherActivity.this, "Teacher successfully created.", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(AddTeacherActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                loadingDialog.dismiss();
             }
         }
 
