@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Teacher extends User implements Parcelable {
 
@@ -11,6 +12,15 @@ public class Teacher extends User implements Parcelable {
     private String department;
     private ArrayList<String> sections;
     private ArrayList<Assignment> assignments;
+
+    public Teacher(Teacher teacher) {
+        super(teacher.getId(), teacher.getEmail(), teacher.getFirstName(), teacher.getLastName(), teacher.getDateJoined());
+        this.grade = teacher.getGrade();
+        this.department = teacher.getDepartment();
+        this.sections = new ArrayList<>(teacher.getSections());
+        this.assignments = new ArrayList<>(teacher.getAssignments());
+    }
+
     public Teacher() {
     }
 
@@ -86,5 +96,24 @@ public class Teacher extends User implements Parcelable {
         dest.writeStringList(sections);
         dest.writeList(assignments);
         dest.writeString(department);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Teacher teacher = (Teacher) o;
+        return Objects.equals(getFirstName(), teacher.getFirstName()) &&
+                Objects.equals(getLastName(), teacher.getLastName()) &&
+                Objects.equals(getEmail(), teacher.getEmail()) &&
+                Objects.equals(grade, teacher.grade) &&
+                Objects.equals(department, teacher.department) &&
+                Objects.equals(sections, teacher.sections) &&
+                Objects.equals(assignments, teacher.assignments);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(grade, department, sections, assignments);
     }
 }
