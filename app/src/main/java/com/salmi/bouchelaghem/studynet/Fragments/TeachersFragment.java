@@ -205,6 +205,9 @@ public class TeachersFragment extends Fragment {
 
     // Get the current section's teachers
     private void getTeachers(String section) {
+        // Start loading animation
+        binding.loadingAnimation.setVisibility(View.VISIBLE);
+        binding.loadingAnimation.playAnimation();
         Call<JsonArray> call = api.getSectionTeachers("Token " + currentUser.getToken(), section);
         call.enqueue(new Callback<JsonArray>() {
             @Override
@@ -212,11 +215,10 @@ public class TeachersFragment extends Fragment {
                 if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
                     teachers.clear();
                     JsonArray teachersJsonArray = response.body();
-                    for (int i = 0; i < teachersJsonArray.size(); ++i) {
-                        teachers.add(Serializers.TeacherDeserializer(teachersJsonArray.get(i).getAsJsonObject()));
-                    }
-
-                    if (teachers != null) {
+                    if (teachersJsonArray != null) {
+                        for (int i = 0; i < teachersJsonArray.size(); ++i) {
+                            teachers.add(Serializers.TeacherDeserializer(teachersJsonArray.get(i).getAsJsonObject()));
+                        }
                         if (!teachers.isEmpty()) {
                             adapter.setTeachers(teachers);
                             binding.teachersRecView.setAdapter(adapter);
@@ -227,16 +229,22 @@ public class TeachersFragment extends Fragment {
                             binding.emptyMsg.setVisibility(View.VISIBLE);
                         }
                     } else {
-                        binding.teachersRecView.setVisibility(View.GONE);
-                        binding.emptyMsg.setVisibility(View.VISIBLE);
+                        Toast.makeText(getContext(), getString(R.string.error) + response.message(), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(getContext(), getString(R.string.error) + response.message(), Toast.LENGTH_SHORT).show();
+                    binding.teachersRecView.setVisibility(View.GONE);
+                    binding.emptyMsg.setVisibility(View.VISIBLE);
                 }
+                // Stop loading animation
+                binding.loadingAnimation.setVisibility(View.GONE);
+                binding.loadingAnimation.cancelAnimation();
             }
 
             @Override
             public void onFailure(@NonNull Call<JsonArray> call, @NonNull Throwable t) {
+                // Stop loading animation
+                binding.loadingAnimation.setVisibility(View.GONE);
+                binding.loadingAnimation.cancelAnimation();
                 Toast.makeText(getContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
             }
         });
