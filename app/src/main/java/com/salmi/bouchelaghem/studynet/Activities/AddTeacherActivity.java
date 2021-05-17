@@ -757,7 +757,8 @@ public class AddTeacherActivity extends AppCompatActivity {
         public void onResponse(@NonNull Call<JsonObject> call, Response<JsonObject> response) {
             if (response.code() == Utils.HttpResponses.HTTP_201_CREATED) {
                 if (TeachersFragment.getSelectedDepartment().equals(department)){
-                    TeachersFragment.getTeachers().add(teacher);
+                    Teacher newTeacher = Serializers.TeacherDeserializer(response.body());
+                    TeachersFragment.getTeachers().add(newTeacher);
                 }
                 Toast.makeText(AddTeacherActivity.this, "Teacher successfully created.", Toast.LENGTH_SHORT).show();
                 finish();
@@ -782,7 +783,8 @@ public class AddTeacherActivity extends AppCompatActivity {
             if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
                 // Update the teacher in the teachers fragment
                 int index = TeachersFragment.getTeachers().indexOf(ogTeacher);
-                TeachersFragment.getTeachers().set(index, teacher);
+                Teacher updatedTeacher = Serializers.TeacherDeserializer(response.body());
+                TeachersFragment.getTeachers().set(index, updatedTeacher);
 
                 Toast.makeText(AddTeacherActivity.this, "Teacher successfully updated.", Toast.LENGTH_SHORT).show();
                 finish();
