@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
-import com.salmi.bouchelaghem.studynet.Models.Assignment;
 import com.salmi.bouchelaghem.studynet.Models.Module;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Session;
@@ -23,6 +22,7 @@ import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityAddClassBinding;
 
 import org.threeten.bp.LocalTime;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,9 +44,9 @@ public class AddClassActivity extends AppCompatActivity {
     private List<Module> modules;
     private boolean moduleSelected = false;
 
-    private String classType;
-    private List<String> classTypes;
-    private boolean classTypeSelected = false;
+    private String moduleType;
+    private List<String> moduleTypes;
+    private boolean moduleTypeSelected = false;
 
     private String[] groupsArray; // All groups as an array
     private List<String> selectedGroupsString; // The groups selected by the user (as a string)
@@ -107,37 +107,30 @@ public class AddClassActivity extends AppCompatActivity {
                 // When the user clicks on save we create a new session
                 binding.btnSave.setOnClickListener(v -> {
 
-                    if (sectionSelected & moduleSelected & classTypeSelected
+                    if (sectionSelected & moduleSelected & moduleTypeSelected
                     & groupSelected & daySelected & validateMeetingLink()
                     & startTime != null & endTime != null){
 
-                        // TODO: set id
+
                         session = new Session();
+                        session.setId(-1);
+                        session.setSection(section.getCode());
+                        session.setModule(module.getCode());
+                        session.setModuleType(moduleType);
                         session.setConcernedGroups(selectedGroupsInt);
                         session.setStartTime(startTime);
                         session.setEndTime(endTime);
                         session.setDay(day);
                         session.setMeetingLink(meetingLink);
 
-                        if (!binding.txtMeetingNumber.getEditText().getText().toString().isEmpty() &&
-                        !binding.txtMeetingPassword.getEditText().getText().toString().isEmpty()){
-                            meetingNumber = binding.txtMeetingNumber.getEditText().getText().toString().trim();
+                        String meetingNumber = binding.txtMeetingNumber.getEditText().getText().toString().trim();
+                        String meetingPassword = binding.txtMeetingPassword.getEditText().getText().toString().trim();
+                        if (!meetingNumber.isEmpty() && !meetingPassword.isEmpty()){
                             session.setMeetingNumber(meetingNumber);
-                            meetingPassword = binding.txtMeetingPassword.getEditText().getText().toString().trim();
                             session.setMeetingNumber(meetingPassword);
                         }
 
-                        Assignment assignment = new Assignment();
-                        // TODO: set id
-                        assignment.setSectionCode(section.getCode());
-                        assignment.setModuleName(module.getName());
-                        assignment.setModuleCode(module.getCode());
-                        assignment.setModuleType(classType);
-                        assignment.setConcernedGroups(selectedGroupsInt);
-
-                        session.setAssignment(assignment);
-
-                        // Save it to the database
+                        // Save the session to the database
 
 
                     } else {
@@ -147,7 +140,7 @@ public class AddClassActivity extends AppCompatActivity {
                         if (!moduleSelected){
                             binding.classModuleLayout.setError(getString(R.string.empty_module_msg));
                         }
-                        if (!classTypeSelected){
+                        if (!moduleTypeSelected){
                             binding.classTypeTextLayout.setError(getString(R.string.empty_type_msg));
                         }
                         if (!groupSelected){
@@ -181,7 +174,7 @@ public class AddClassActivity extends AppCompatActivity {
                 // When the user clicks on save we update an existing session
                 binding.btnSave.setOnClickListener(v -> {
 
-                    if (sectionSelected & moduleSelected & classTypeSelected
+                    if (sectionSelected & moduleSelected & moduleTypeSelected
                             & groupSelected & daySelected & validateMeetingLink()
                             & startTime != null & endTime != null){
                         Toast.makeText(this, "Save", Toast.LENGTH_SHORT).show();
@@ -192,7 +185,7 @@ public class AddClassActivity extends AppCompatActivity {
                         if (!moduleSelected){
                             binding.classModuleLayout.setError(getString(R.string.empty_module_msg));
                         }
-                        if (!classTypeSelected){
+                        if (!moduleTypeSelected){
                             binding.classTypeTextLayout.setError(getString(R.string.empty_type_msg));
                         }
                         if (!groupSelected){
@@ -226,7 +219,7 @@ public class AddClassActivity extends AppCompatActivity {
 
             binding.classTypeTextLayout.setEnabled(false);
             binding.classType.setText("");
-            classTypeSelected = false;
+            moduleTypeSelected = false;
 
             binding.classGroup.setEnabled(false);
             binding.classGroup.setText("");
@@ -246,7 +239,7 @@ public class AddClassActivity extends AppCompatActivity {
 
             // Disable other spinners
             binding.classType.setText("");
-            classTypeSelected = false;
+            moduleTypeSelected = false;
 
             binding.classGroup.setEnabled(false);
             binding.classGroup.setText("");
@@ -260,8 +253,8 @@ public class AddClassActivity extends AppCompatActivity {
 
         binding.classType.setOnItemClickListener((parent, view13, position, id) -> {
             // Get selected item
-            classTypeSelected = true;
-            classType = classTypes.get(position);
+            moduleTypeSelected = true;
+            moduleType = moduleTypes.get(position);
             binding.classTypeTextLayout.setError(null);
 
             // Disable other spinners
@@ -394,14 +387,14 @@ public class AddClassActivity extends AppCompatActivity {
 
             // Sections
             sectionSelected = true;
-            String sectionCode = session.getAssignment().getSectionCode();
+            String sectionCode = session.getSection();
             getSection(sectionCode);
             // Set selected item
             binding.classSection.setText(sectionCode, false);
 
             // Module
             moduleSelected = true;
-            String moduleCode = session.getAssignment().getModuleCode();
+            String moduleCode = session.getModule();
             getModule(moduleCode);
             // Fill the spinner
             getModules(currentTeacher.getId(), sectionCode);
@@ -410,8 +403,8 @@ public class AddClassActivity extends AppCompatActivity {
             binding.classModule.setText(moduleCode, false);
 
             // Class type
-            classTypeSelected = true;
-            String classType = session.getAssignment().getModuleType();
+            moduleTypeSelected = true;
+            String classType = session.getModuleType();
             // Fill the spinner
             getModuleTypes(currentTeacher.getId(), sectionCode, moduleCode);
             binding.classTypeTextLayout.setEnabled(true);
@@ -511,10 +504,10 @@ public class AddClassActivity extends AppCompatActivity {
     // Get the module's types depending on the teacher and the section
     // Example: Teacher 1 teaches Section ISIL B the module GL2 -> Types = TD, TP
     private void getModuleTypes(int teacherId, String sectionCode, String moduleCode) {
-        classTypes = module.getTypes();
+        moduleTypes = module.getTypes();
 
-        if (!classTypes.isEmpty()) {
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddClassActivity.this, R.layout.dropdown_item, classTypes);
+        if (!moduleTypes.isEmpty()) {
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddClassActivity.this, R.layout.dropdown_item, moduleTypes);
             binding.classType.setAdapter(arrayAdapter);
         }
     }
