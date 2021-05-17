@@ -245,6 +245,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                                                 teacher.setAssignments(assignments);
                                                 teacher.setGrade(grade);
                                                 teacher.setDepartment(department);
+                                                teacher.setSections(selectedSections);
 
                                                 // Fill the recycler view with assignments
                                                 getAssignments();
@@ -279,6 +280,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                                     teacher.setAssignments(assignments);
                                     teacher.setGrade(grade);
                                     teacher.setDepartment(department);
+                                    teacher.setSections(selectedSections);
 
                                     // Fill the recycler view with assignments
                                     getAssignments();
