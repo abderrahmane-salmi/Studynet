@@ -18,6 +18,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -99,5 +100,8 @@ public interface StudynetAPI {
     /** Create a teacher with all of his data including his assignments (requires admin token)*/
     @POST("teachers/")
     Call<JsonObject> createTeacher(@Body JsonObject teacherJson, @Header("Authorization") String token);
+
+    @PUT("teachers/{id}/")
+    Call<JsonObject> updateTeacher(@Body JsonObject teacherJson,@Path("id") int id,@Header("Authorization") String token);
 
 }

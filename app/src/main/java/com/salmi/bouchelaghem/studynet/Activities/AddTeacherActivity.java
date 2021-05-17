@@ -300,6 +300,13 @@ public class AddTeacherActivity extends AppCompatActivity {
                             /* Check if the user changed anything */
                             if (!ogTeacher.equals(teacher)){
                                 // Update the user in the database
+
+                                //Build the teacher json.
+                                JsonObject teacherJson = Serializers.TeacherSerializer(teacher,null);
+                                //Make the call to the api.
+                                Call<JsonObject> updateTeacherCall = api.updateTeacher(teacherJson, teacher.getId(), "Token " + currentUser.getToken());
+                                loadingDialog.show();
+                                updateTeacherCall.enqueue(new TeacherUpdateCallback());
                             } else {
                                 // The user didn't change anything
                                 Toast.makeText(this, getString(R.string.no_changes_msg), Toast.LENGTH_SHORT).show();
@@ -741,6 +748,7 @@ public class AddTeacherActivity extends AppCompatActivity {
         return teacher;
     }
 
+    /** Callback logic for teacher creation api call.*/
     private class TeacherCreationCallback implements Callback<JsonObject> {
 
         @Override
@@ -757,6 +765,27 @@ public class AddTeacherActivity extends AppCompatActivity {
         @Override
         public void onFailure(Call<JsonObject> call, Throwable t) {
             Toast.makeText(AddTeacherActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            loadingDialog.dismiss();
+        }
+    }
+
+    /** Callback logic for teacher update api call.*/
+    private class TeacherUpdateCallback implements Callback<JsonObject> {
+
+        @Override
+        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+            if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
+                Toast.makeText(AddTeacherActivity.this, "Teacher successfully updated.", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(AddTeacherActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                loadingDialog.dismiss();
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JsonObject> call, Throwable t) {
+            Toast.makeText(AddTeacherActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
             loadingDialog.dismiss();
         }
     }
