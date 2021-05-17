@@ -1,5 +1,8 @@
 package com.salmi.bouchelaghem.studynet.Utils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Models.Admin;
@@ -118,7 +121,7 @@ public class Serializers {
     }
 
     /** Creates JsonObject from a teacher object and a password string*/
-    public static JsonObject CreateTeacherSerializer(Teacher teacher, String password)
+    public static JsonObject TeacherSerializer(@NonNull Teacher teacher, @Nullable String password)
     {
         JsonObject userJson = new JsonObject();
         JsonArray sectionsJsonArray = new JsonArray();
@@ -126,9 +129,13 @@ public class Serializers {
         JsonObject teacherJson = new JsonObject();
         //Create the user json object
         userJson.addProperty("email",teacher.getEmail());
-        userJson.addProperty("password",password);
         userJson.addProperty("first_name",teacher.getFirstName());
         userJson.addProperty("last_name",teacher.getLastName());
+        if (password != null)
+        {
+            //This is a creation, we add the password.
+            userJson.addProperty("password",password);
+        }
 
         //Create the sections json array
         ArrayList<String> sections = teacher.getSections();
@@ -151,6 +158,10 @@ public class Serializers {
                 concernedGroupsJsonArray.add(concernedGroups.get(j));
             }
             //Build the assignment json object
+            if(assignment.getId() != -1)
+            {
+                assignmentJson.addProperty("id",assignment.getId());
+            }
             assignmentJson.addProperty("section",assignment.getSectionCode());
             assignmentJson.addProperty("module_type",assignment.getModuleType());
             assignmentJson.addProperty("module",assignment.getModuleCode());
