@@ -214,7 +214,8 @@ public class TeachersFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<JsonArray> call, @NonNull Response<JsonArray> response) {
                 if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
-                    teachers.clear();
+
+                    teachers = new ArrayList<>();
                     JsonArray teachersJsonArray = response.body();
                     if (teachersJsonArray != null) {
                         for (int i = 0; i < teachersJsonArray.size(); ++i) {
@@ -269,7 +270,7 @@ public class TeachersFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<JsonArray> call, @NonNull Response<JsonArray> response) {
                 if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
-                    teachers.clear();
+                    teachers = new ArrayList<>();
                     JsonArray teachersJsonArray = response.body();
                     if (teachersJsonArray != null) {
                         for (int i = 0; i < teachersJsonArray.size(); ++i) {
