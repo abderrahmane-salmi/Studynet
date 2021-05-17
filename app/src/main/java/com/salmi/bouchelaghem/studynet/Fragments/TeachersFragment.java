@@ -170,7 +170,7 @@ public class TeachersFragment extends Fragment {
     private void initRecView() {
         teachers = new ArrayList<>();
         binding.teachersRecView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new TeachersAdapter();
+        adapter = new TeachersAdapter(getActivity());
 
         // Swipe to action in rec view
         if (userType.equals(Utils.ADMIN_ACCOUNT)) {

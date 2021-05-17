@@ -40,7 +40,7 @@ public class ModulesAdapter extends RecyclerView.Adapter<ModulesAdapter.ViewHold
 
         holder.binding.subjectMainLayout.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(activity, R.id.fragment);
-            // I added this condition to prevent the user from opening the same fragment twice (when clicking super 
+            // I added this condition to prevent the user from opening the same fragment twice (when clicking super
             if (Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.subjectDetailsFragment){
                 Module module = modules.get(holder.getAdapterPosition());
                 SubjectsFragmentDirections.ActionNavSubjectsToSubjectDetailsFragment action = SubjectsFragmentDirections.actionNavSubjectsToSubjectDetailsFragment(module);
