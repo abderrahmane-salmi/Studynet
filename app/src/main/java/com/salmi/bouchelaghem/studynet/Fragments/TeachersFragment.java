@@ -54,13 +54,13 @@ public class TeachersFragment extends Fragment {
     private FragmentTeachersBinding binding;
 
     // Recycler view
-    private List<Teacher> teachers;
+    private static List<Teacher> teachers;
     private TeachersAdapter adapter;
 
     // Filter
     private Dialog dialog;
     private boolean departmentSelected = false;
-    private String selectedDepartment;
+    private static String selectedDepartment;
     private boolean filterApplied = false;
     private List<Department> departments;
     private List<String> departmentsCodes;
@@ -360,4 +360,18 @@ public class TeachersFragment extends Fragment {
         }
     };
 
+    public static List<Teacher> getTeachers() {
+        return teachers;
+    }
+
+    public static String getSelectedDepartment() {
+        return selectedDepartment;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        teachers = null;
+        selectedDepartment = null;
+    }
 }
