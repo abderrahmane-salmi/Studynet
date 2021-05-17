@@ -47,7 +47,7 @@ public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Teacher teacher = teachers.get(position);
 
-        holder.binding.txtTeacherName.setText(teacher.getFirstName()+" "+teacher.getLastName());
+        holder.binding.txtTeacherName.setText(teacher.getLastName()+" "+teacher.getFirstName());
         holder.binding.txtTeacherInfo.setText(teacher.getEmail());
     }
 

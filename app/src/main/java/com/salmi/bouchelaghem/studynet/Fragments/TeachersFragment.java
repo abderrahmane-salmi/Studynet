@@ -40,6 +40,8 @@ import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.FragmentTeachersBinding;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -219,6 +221,14 @@ public class TeachersFragment extends Fragment {
                             teachers.add(Serializers.TeacherDeserializer(teachersJsonArray.get(i).getAsJsonObject()));
                         }
                         if (!teachers.isEmpty()) {
+                            //Sort the teacher list by their names.
+                            Collections.sort(teachers, new Comparator<Teacher>() {
+                                @Override
+                                public int compare(Teacher o1, Teacher o2) {
+                                    return o1.getLastName().compareToIgnoreCase(o2.getLastName());
+                                }
+                            });
+                            //Display the teachers list.
                             adapter.setTeachers(teachers);
                             binding.teachersRecView.setAdapter(adapter);
                             binding.teachersRecView.setVisibility(View.VISIBLE);
@@ -266,6 +276,14 @@ public class TeachersFragment extends Fragment {
                             teachers.add(Serializers.TeacherDeserializer(teachersJsonArray.get(i).getAsJsonObject()));
                         }
                         if (!teachers.isEmpty()) {
+                            //Sort the teacher list by their names.
+                            Collections.sort(teachers, new Comparator<Teacher>() {
+                                @Override
+                                public int compare(Teacher o1, Teacher o2) {
+                                    return o1.getLastName().compareToIgnoreCase(o2.getLastName());
+                                }
+                            });
+                            //Display the teachers list.
                             adapter.setTeachers(teachers);
                             binding.teachersRecView.setAdapter(adapter);
                             binding.teachersRecView.setVisibility(View.VISIBLE);
