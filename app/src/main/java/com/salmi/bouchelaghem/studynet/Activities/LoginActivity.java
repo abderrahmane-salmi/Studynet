@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         // Set the light theme is the default theme.
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         //Get the shared preferences.
-        sharedPreferences = getApplicationContext().getSharedPreferences(Utils.SHARED_PREFERENCES_USER_DATA,MODE_PRIVATE);
+        sharedPreferences = getApplicationContext().getSharedPreferences(Utils.SHARED_PREFERENCES_USER_DATA, MODE_PRIVATE);
         // Init retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Utils.API_BASE_URL)
@@ -74,12 +74,11 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(validateEmail() & validatePassword())
-                {
+                if (validateEmail() & validatePassword()) {
                     loadingDialog.show();
                     JsonObject credentials = new JsonObject();
-                    credentials.addProperty("email",binding.txtLoginEmail.getEditText().getText().toString().trim());
-                    credentials.addProperty("password",binding.txtLoginPassword.getEditText().getText().toString());
+                    credentials.addProperty("email", binding.txtLoginEmail.getEditText().getText().toString().trim());
+                    credentials.addProperty("password", binding.txtLoginPassword.getEditText().getText().toString());
                     Call<JsonObject> login = api.login(credentials);
                     login.enqueue(new LoginCallback());
                 }
@@ -87,10 +86,10 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public boolean validateEmail(){
+    public boolean validateEmail() {
         String email = binding.txtLoginEmail.getEditText().getText().toString().trim();
 
-        if (email.isEmpty()){
+        if (email.isEmpty()) {
             binding.txtLoginEmail.setError(getString(R.string.email_msg1));
             return false;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -101,10 +100,11 @@ public class LoginActivity extends AppCompatActivity {
             return true;
         }
     }
-    public boolean validatePassword(){
+
+    public boolean validatePassword() {
         String password = binding.txtLoginPassword.getEditText().getText().toString().trim();
 
-        if (password.isEmpty()){
+        if (password.isEmpty()) {
             binding.txtLoginPassword.setError(getString(R.string.empty_password_msg));
             return false;
         } else if (password.length() < 6) {
@@ -116,9 +116,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /** Logs in the teacher given in the teacher data. (takes care of the token too)*/
-    public static CurrentUser loginTeacher(JsonObject teacher)
-    {
+    /**
+     * Logs in the teacher given in the teacher data. (takes care of the token too)
+     */
+    public static CurrentUser loginTeacher(JsonObject teacher) {
         CurrentUser currentUser = CurrentUser.getInstance();
         //Set the current user
         currentUser.setUserType(Utils.TEACHER_ACCOUNT);
@@ -127,9 +128,10 @@ public class LoginActivity extends AppCompatActivity {
         return currentUser;
     }
 
-    /** Logs in the admin given in the admin data. (takes care of the token too)*/
-    public static void loginAdmin(JsonObject admin)
-    {
+    /**
+     * Logs in the admin given in the admin data. (takes care of the token too)
+     */
+    public static void loginAdmin(JsonObject admin) {
         CurrentUser currentUser = CurrentUser.getInstance();
         //Set the current user
         currentUser.setUserType(Utils.ADMIN_ACCOUNT);
@@ -137,38 +139,30 @@ public class LoginActivity extends AppCompatActivity {
         currentUser.setToken(admin.get("token").getAsString());
     }
 
-    /** Callback logic for the login process.*/
+    /**
+     * Callback logic for the login process.
+     */
     private class LoginCallback implements Callback<JsonObject> {
 
         @Override
         public void onResponse(@NonNull Call<JsonObject> call, Response<JsonObject> response) {
-            switch (response.code())
-            {
+            switch (response.code()) {
                 case Utils.HttpResponses.HTTP_201_CREATED:
                     JsonObject responseData = response.body();
                     //Determine the type of the user
                     assert responseData != null; //The response is not supposed to be null.
-                    if (responseData.has(Utils.STUDENT_ACCOUNT))
-                    {
+                    if (responseData.has(Utils.STUDENT_ACCOUNT)) {
                         //It's a student
                         Utils.loginStudent(responseData.getAsJsonObject(Utils.STUDENT_ACCOUNT));
-                    }
-                    else
-                    {
-                        if (responseData.has(Utils.TEACHER_ACCOUNT))
-                        {
+                    } else {
+                        if (responseData.has(Utils.TEACHER_ACCOUNT)) {
                             //It's a teacher
                             loginTeacher(responseData.getAsJsonObject(Utils.TEACHER_ACCOUNT));
-                        }
-                        else
-                        {
-                            if (responseData.has(Utils.ADMIN_ACCOUNT))
-                            {
+                        } else {
+                            if (responseData.has(Utils.ADMIN_ACCOUNT)) {
                                 //It's an administrator
                                 loginAdmin(responseData.getAsJsonObject(Utils.ADMIN_ACCOUNT));
-                            }
-                            else
-                            {
+                            } else {
                                 //Unexpected response from the server.
                                 Toast.makeText(LoginActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
                                 break;
@@ -179,13 +173,13 @@ public class LoginActivity extends AppCompatActivity {
                     //Save the user data locally.
                     saveCurrentUser();
                     startActivity(new Intent(LoginActivity.this, NavigationActivity.class));
-                    loadingDialog.dismiss();
                     Toast.makeText(LoginActivity.this, getString(R.string.logged_in_msg), Toast.LENGTH_SHORT).show();
                     finish();
                     break;
                 case Utils.HttpResponses.HTTP_400_BAD_REQUEST:
                     //The credentials are invalid.
-                    binding.txtLoginEmail.setError("Invalid credentials");
+                    Toast.makeText(LoginActivity.this, getString(R.string.email_password_incorrect), Toast.LENGTH_SHORT).show();
+                    loadingDialog.dismiss();
                     break;
             }
         }
@@ -195,13 +189,15 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(LoginActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
         }
     }
-    /** Saves the user token using shared preferences.*/
-    private void saveCurrentUser()
-    {
+
+    /**
+     * Saves the user token using shared preferences.
+     */
+    private void saveCurrentUser() {
         SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
         //Save the token.
         prefsEditor.putString(Utils.SHARED_PREFERENCES_TOKEN, currentUser.getToken());
-        prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,true);
+        prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN, true);
         prefsEditor.apply();
     }
 }
