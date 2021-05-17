@@ -30,7 +30,6 @@ import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
 import com.salmi.bouchelaghem.studynet.Utils.Serializers;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
-import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityAddTeacherBinding;
 
@@ -40,7 +39,6 @@ import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 import okhttp3.ResponseBody;
-import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -124,17 +122,6 @@ public class AddTeacherActivity extends AppCompatActivity {
                                             // The email is already used
                                             binding.txtEmail.setError(getString(R.string.email_taken));
                                         } else if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
-                                            // Go to the next step
-                                            step = 2;
-                                            binding.teacherInfoLayout.setVisibility(View.GONE);
-                                            binding.assignmentsRecView.setVisibility(View.VISIBLE);
-                                            binding.btnAdd.setVisibility(View.VISIBLE);
-                                            // Show back button
-                                            binding.btnNext.setText(R.string.save);
-                                            binding.btnStepBack.setVisibility(View.VISIBLE);
-                                            // Show empty msg
-                                            binding.emptyMsg.setVisibility(View.VISIBLE);
-
                                             // Save the teacher's info
                                             String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
                                             String lastName = binding.txtLastName.getEditText().getText().toString().trim();
@@ -161,6 +148,8 @@ public class AddTeacherActivity extends AppCompatActivity {
 
                                             getAssignments();
 
+                                            // Go to the next step
+                                            goToStep2();
                                         } else {
                                             // There is a problem with this email
                                             binding.txtEmail.setError(getString(R.string.email_msg3));
@@ -183,15 +172,6 @@ public class AddTeacherActivity extends AppCompatActivity {
                                     binding.txtSectionsList.setError("");
                                 }
                             }
-                            // Go to the next step
-//                            step = 2;
-//                            binding.teacherInfoLayout.setVisibility(View.GONE);
-//                            binding.assignmentsRecView.setVisibility(View.VISIBLE);
-//                            binding.btnAdd.setVisibility(View.VISIBLE);
-//                            // Show back button
-//                            binding.btnStepBack.setVisibility(View.VISIBLE);
-//                            // Show empty msg
-//                            binding.emptyMsg.setVisibility(View.VISIBLE);
                             break;
                         case 2: // Step 2: Add assignments
                             // Save the teacher's info in the api
@@ -209,9 +189,6 @@ public class AddTeacherActivity extends AppCompatActivity {
                 // Add new assignment
                 binding.btnAdd.setOnClickListener(v -> {
                     Intent intent1 = new Intent(AddTeacherActivity.this, AddAssignmentActivity.class);
-                    intent1.putExtra(Utils.ACTION, Utils.ACTION_ADD);
-                    // TODO: get the teacher id
-                    intent1.putExtra(Utils.ID, 1);
                     intent1.putExtra(Utils.SECTIONS, selectedSections);
                     startActivity(intent1);
                 });
@@ -223,60 +200,110 @@ public class AddTeacherActivity extends AppCompatActivity {
                 binding.txtPassword.setVisibility(View.GONE);
                 // Get teacher info
                 teacher = intent.getParcelableExtra(Utils.TEACHER);
+                // Make a copy of the teacher object
+                Teacher ogTeacher = new Teacher(teacher);
                 fillFields(teacher);
                 // Save button
                 binding.btnNext.setOnClickListener(v -> {
                     switch (step) {
                         case 1: // Step1: Fill the teacher's basic info
-//                            if (validateFirstName() & validateLastName() & validateEmail() & validatePassword() & grade != null & department != null & sectionsSelected){
-//                                step = 2;
-//                                binding.teacherInfoLayout.setVisibility(View.GONE);
-//                                binding.assignmentsRecView.setVisibility(View.VISIBLE);
-//                                binding.btnAdd.setVisibility(View.VISIBLE);
-//                                // Show back button
-//                                binding.btnStepBack.setVisibility(View.VISIBLE);
-//                                // Show empty msg
-//                                binding.emptyMsg.setVisibility(View.VISIBLE);
+                            if (validateFirstName() & validateLastName() & validateEmail() & grade != null & department != null & sectionsSelected){
 
-                            // (for later)
-//                if (!teacher.getFirstName().equals(firstName) ||
-//                        !teacher.getLastName().equals(lastName) ||
-//                        !teacher.getEmail().equals(email) ||
-//                        !teacher.getGrade().equals(grade)){
-//                    Toast.makeText(AddTeacherActivity.this, "Save", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Toast.makeText(this, getString(R.string.no_changes_msg), Toast.LENGTH_SHORT).show();
-//                }
-//                            } else {
-//                                if (grade == null){
-//                                    binding.txtGradeLayout.setError(getString(R.string.empty_grade_msg));
-//                                }
-//                                if (department == null){
-//                                    binding.txtDepartmentLayout.setError(getString(R.string.empty_msg1));
-//                                }
-//                                if (grade == null){
-//                                    binding.txtSectionsList.setError("");
-//                                }
-//                            }
-                            // Go to the next step
-                            step = 2;
-                            binding.teacherInfoLayout.setVisibility(View.GONE);
-                            binding.assignmentsRecView.setVisibility(View.VISIBLE);
-                            binding.btnAdd.setVisibility(View.VISIBLE);
-                            // Show back button
-                            binding.btnNext.setText(R.string.save);
-                            binding.btnStepBack.setVisibility(View.VISIBLE);
-                            // Show current teacher's assignments
-                            getAssignments();
+                                String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
+                                String lastName = binding.txtLastName.getEditText().getText().toString().trim();
+                                String email = binding.txtEmail.getEditText().getText().toString().trim();
+
+                                /* Check if the user changed the teacher's email */
+                                if (!ogTeacher.getEmail().equals(email)){
+                                    // The user did change the email
+
+                                    // Check if the new email is used
+                                    JsonObject emailJson = new JsonObject();
+                                    emailJson.addProperty("email",email);
+                                    Call<ResponseBody> call = api.checkEmail(emailJson,"Token " + currentUser.getToken());
+                                    call.enqueue(new Callback<ResponseBody>() {
+                                        @Override
+                                        public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                                            if (response.code() == Utils.HttpResponses.HTTP_302_FOUND){
+                                                // The email is already used
+                                                binding.txtEmail.setError(getString(R.string.email_taken));
+                                            } else if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
+                                                // The email is available
+
+                                                /* Check if the user changed the teacher's sections */
+                                                if (!ogTeacher.getSections().equals(selectedSections)){
+                                                    // This means that the user changed the sections
+                                                    deleteUnusedAssignments(selectedSections);
+                                                }
+
+                                                // Update the teacher's info
+                                                teacher.setFirstName(firstName);
+                                                teacher.setLastName(lastName);
+                                                teacher.setEmail(email);
+                                                teacher.setAssignments(assignments);
+                                                teacher.setGrade(grade);
+                                                teacher.setDepartment(department);
+
+                                                // Fill the recycler view with assignments
+                                                getAssignments();
+
+                                                // Go to the next step
+                                                goToStep2();
+                                            } else {
+                                                // There is a problem with this email
+                                                binding.txtEmail.setError(getString(R.string.email_msg3));
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                                            Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                                else {
+                                    // The user didn't change the teacher's email
+                                    // In this case we will update everything but the email
+
+                                    /* Check if the user changed the teacher's sections */
+                                    if (!ogTeacher.getSections().equals(selectedSections)){
+                                        // This means that the user changed the sections
+                                        deleteUnusedAssignments(selectedSections);
+                                    }
+
+                                    // Update the teacher's info
+                                    teacher.setFirstName(firstName);
+                                    teacher.setLastName(lastName);
+                                    teacher.setAssignments(assignments);
+                                    teacher.setGrade(grade);
+                                    teacher.setDepartment(department);
+
+                                    // Fill the recycler view with assignments
+                                    getAssignments();
+
+                                    // Go to the next step
+                                    goToStep2();
+                                }
+                            } else {
+                                if (grade == null){
+                                    binding.txtGradeLayout.setError(getString(R.string.empty_grade_msg));
+                                }
+                                if (department == null){
+                                    binding.txtDepartmentLayout.setError(getString(R.string.empty_department_msg));
+                                }
+                                if (!sectionsSelected){
+                                    binding.txtSectionsList.setError("");
+                                }
+                            }
                             break;
                         case 2: // Step 2: Add assignments
-                            // Save the teacher's info
-                            String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
-                            String lastName = binding.txtLastName.getEditText().getText().toString().trim();
-                            String email = binding.txtEmail.getEditText().getText().toString().trim();
-                            String password = binding.txtPassword.getEditText().getText().toString().trim();
-
-                            Toast.makeText(AddTeacherActivity.this, "Save", Toast.LENGTH_SHORT).show();
+                            /* Check if the user changed anything */
+                            if (!ogTeacher.equals(teacher)){
+                                // Update the user in the database
+                            } else {
+                                // The user didn't change anything
+                                Toast.makeText(this, getString(R.string.no_changes_msg), Toast.LENGTH_SHORT).show();
+                            }
                             break;
                     }
                 });
@@ -381,11 +408,14 @@ public class AddTeacherActivity extends AppCompatActivity {
     }
 
     private void deleteUnusedAssignments(ArrayList<String> selectedSections) {
+        // Used this list to prevent having ConcurrentModificationException
+        List<Assignment> unusedAssignments = new ArrayList<>();
         for (Assignment assignment:assignments){
             if (!selectedSections.contains(assignment.getSectionCode())){
-                assignments.remove(assignment);
+                unusedAssignments.add(assignment);
             }
         }
+        assignments.removeAll(unusedAssignments);
     }
 
     private void initRecView() {
@@ -395,6 +425,17 @@ public class AddTeacherActivity extends AppCompatActivity {
         adapter = new AssignmentsAdapter(AddTeacherActivity.this);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(adminCallBack);
         itemTouchHelper.attachToRecyclerView(binding.assignmentsRecView);
+    }
+
+    private void goToStep2(){
+        // Go to the next step
+        step = 2;
+        binding.teacherInfoLayout.setVisibility(View.GONE);
+        binding.assignmentsRecView.setVisibility(View.VISIBLE);
+        binding.btnAdd.setVisibility(View.VISIBLE);
+        // Show back button
+        binding.btnNext.setText(R.string.save);
+        binding.btnStepBack.setVisibility(View.VISIBLE);
     }
 
     private void getAssignments() {
@@ -512,6 +553,9 @@ public class AddTeacherActivity extends AppCompatActivity {
     }
 
     private void fillFields(Teacher teacher) {
+        // Get the assignments
+        assignments = teacher.getAssignments();
+
         binding.txtFirstName.getEditText().setText(teacher.getFirstName());
         binding.txtLastName.getEditText().setText(teacher.getLastName());
         binding.txtEmail.getEditText().setText(teacher.getEmail());
@@ -700,17 +744,13 @@ public class AddTeacherActivity extends AppCompatActivity {
     private class TeacherCreationCallback implements Callback<JsonObject> {
 
         @Override
-        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-            switch(response.code())
-            {
-                case Utils.HttpResponses.HTTP_201_CREATED:
-                    Toast.makeText(AddTeacherActivity.this, "Teacher successfully created.", Toast.LENGTH_SHORT).show();
-                    finish();
-                    break;
-                default:
-                    Toast.makeText(AddTeacherActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
-                    loadingDialog.dismiss();
-                    break;
+        public void onResponse(@NonNull Call<JsonObject> call, Response<JsonObject> response) {
+            if (response.code() == Utils.HttpResponses.HTTP_201_CREATED) {
+                Toast.makeText(AddTeacherActivity.this, "Teacher successfully created.", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(AddTeacherActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                loadingDialog.dismiss();
             }
         }
 
@@ -718,6 +758,23 @@ public class AddTeacherActivity extends AppCompatActivity {
         public void onFailure(Call<JsonObject> call, Throwable t) {
             Toast.makeText(AddTeacherActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
             loadingDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (step == 2) {
+            step = 1;
+            // Hide step2
+            binding.assignmentsRecView.setVisibility(View.GONE);
+            binding.emptyMsg.setVisibility(View.GONE);
+            binding.btnAdd.setVisibility(View.GONE);
+            binding.btnStepBack.setVisibility(View.INVISIBLE);
+            // Show step1
+            binding.btnNext.setText(R.string.next);
+            binding.teacherInfoLayout.setVisibility(View.VISIBLE);
+        } else {
+            super.onBackPressed();
         }
     }
 }

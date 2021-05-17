@@ -243,6 +243,9 @@ public class TimetableFragment extends Fragment {
                 // Get the current student
                 Student student = currentUser.getCurrentStudent();
 
+                // Hide the filter button
+                context.btnFilter.setVisibility(View.GONE);
+
                 // Get the student's sessions
                 getSessions(student.getSection().getCode());
 
