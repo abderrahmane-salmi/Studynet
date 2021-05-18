@@ -6,26 +6,41 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Models.Assignment;
 import com.salmi.bouchelaghem.studynet.Models.Session;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
+import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
+import com.salmi.bouchelaghem.studynet.Utils.Serializers;
+import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityAddClassBinding;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.threeten.bp.LocalTime;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AddClassActivity extends AppCompatActivity {
 
@@ -65,6 +80,8 @@ public class AddClassActivity extends AppCompatActivity {
 
     private Assignment selectedAssignment;
 
+    private CustomLoadingDialog loadingDialog;
+
     // Current teacher
     private final CurrentUser currentUser = CurrentUser.getInstance();
     private final Teacher currentTeacher = currentUser.getCurrentTeacher();
@@ -72,12 +89,27 @@ public class AddClassActivity extends AppCompatActivity {
 
     TestAPI testAPI = TestAPI.getInstance();
 
+    // Studynet Api
+    private StudynetAPI api;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityAddClassBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        // Init retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Utils.API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // Init our api, this will implement the code of all the methods in the interface.
+        api = retrofit.create(StudynetAPI.class);
+
+        //Init loading dialog
+        loadingDialog = new CustomLoadingDialog(this);
 
         // Get the action type (Add/Update)
         Intent intent = getIntent();
@@ -96,28 +128,49 @@ public class AddClassActivity extends AppCompatActivity {
                     if (sectionSelected & moduleSelected & moduleTypeSelected
                             & groupSelected & daySelected & validateMeetingLink()
                             & startTime != null & endTime != null) {
+                        //Check if end time is after start time.
+                        if(endTime.isBefore(startTime))
+                        {
+                            Toast.makeText(this, getString(R.string.endtime_after_starttime), Toast.LENGTH_LONG).show();
+                        }
+                        else
+                        {
+                            //Check that the given time is allowed.
+                            if(startTime.isBefore(LocalTime.parse("08:00:00")) || endTime.isAfter(LocalTime.parse("18:10:00")))
+                            {
+                                Toast.makeText(this, getString(R.string.time_not_allowed), Toast.LENGTH_LONG).show();
+                            }
+                            else
+                            {
+                                //All of the data is valid, send it to the api.
+                                String meetingLink = binding.txtMeetingLink.getEditText().getText().toString().trim();
+                                String meetingNumber = binding.txtMeetingNumber.getEditText().getText().toString().trim();
+                                String meetingPassword = binding.txtMeetingPassword.getEditText().getText().toString().trim();
+                                String notes = binding.txtClassNotes.getEditText().getText().toString().trim();
 
-                        String meetingLink = binding.txtMeetingNumber.getEditText().getText().toString().trim();
-                        String meetingNumber = binding.txtMeetingNumber.getEditText().getText().toString().trim();
-                        String meetingPassword = binding.txtMeetingPassword.getEditText().getText().toString().trim();
-                        String notes = binding.txtClassNotes.getEditText().getText().toString().trim();
+                                session = new Session();
+                                session.setId(-1);
+                                session.setSection(section);
+                                session.setModule(module);
+                                session.setModuleType(moduleType);
+                                session.setConcernedGroups(selectedGroupsInt);
+                                session.setLocalTimeStartTime(startTime);
+                                session.setLocalTimeEndTime(endTime);
+                                session.setDay(day);
+                                session.setMeetingLink(meetingLink);
+                                session.setMeetingNumber(meetingNumber);
+                                session.setMeetingNumber(meetingPassword);
+                                session.setComment(notes);
+                                session.setAssignment(selectedAssignment.getId());
 
-                        session = new Session();
-                        session.setId(-1);
-                        session.setSection(section);
-                        session.setModule(module);
-                        session.setModuleType(moduleType);
-                        session.setConcernedGroups(selectedGroupsInt);
-                        session.setLocalTimeStartTime(startTime);
-                        session.setLocalTimeEndTime(endTime);
-                        session.setDay(day);
-                        session.setMeetingLink(meetingLink);
-                        session.setMeetingNumber(meetingNumber);
-                        session.setMeetingNumber(meetingPassword);
-                        session.setComment(notes);
-
-                        // Save the session to the database
-
+                                //Get the session json object.
+                                JsonObject sessionJson = Serializers.CreateSessionSerializer(session);
+                                //Send the data to the api.
+                                Call<JsonObject> createSessionCall = api.createSession(sessionJson, "Token " + currentUser.getToken());
+                                loadingDialog.show();
+                                createSessionCall.enqueue(new CreateSessionCallback());
+                            }
+                        }
 
                     } else {
                         if (!sectionSelected) {
@@ -577,6 +630,39 @@ public class AddClassActivity extends AppCompatActivity {
         } else {
             binding.txtMeetingLink.setError(null);
             return true;
+        }
+    }
+
+    private class CreateSessionCallback implements Callback<JsonObject>
+    {
+        @Override
+        public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+            if(response.code() == Utils.HttpResponses.HTTP_201_CREATED)
+            {
+                Toast.makeText(getApplicationContext(), getString(R.string.session_created), Toast.LENGTH_LONG).show();
+                loadingDialog.dismiss();
+                finish();
+            }
+            else
+            {
+                //Parse the error response and check if it is because of a session overlap.
+                try {
+                    JSONObject errorBody = new JSONObject(response.errorBody().string());
+                    if(errorBody.has("overlapping"))
+                    {
+                        Toast.makeText(getApplicationContext(), getString(R.string.overlapping_sessions), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                }
+
+                loadingDialog.dismiss();
+            }
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
+
         }
     }
 

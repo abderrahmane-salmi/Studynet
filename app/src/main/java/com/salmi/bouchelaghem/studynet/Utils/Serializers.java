@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Models.Admin;
 import com.salmi.bouchelaghem.studynet.Models.Assignment;
 import com.salmi.bouchelaghem.studynet.Models.Section;
+import com.salmi.bouchelaghem.studynet.Models.Session;
 import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 
@@ -177,6 +178,30 @@ public class Serializers {
         teacherJson.add("assignments",assignmentsJsonArray);
 
         return teacherJson;
+    }
 
+    /** Creates JsonObject from a session object*/
+    public static JsonObject CreateSessionSerializer(@NonNull Session session)
+    {
+        JsonObject sessionJson = new JsonObject();
+        JsonArray concernedGroupsJson = new JsonArray();
+
+        //Build the concerned groups json array
+        for(int i : session.getConcernedGroups())
+        {
+            concernedGroupsJson.add(i);
+        }
+        //Build the session json object
+        sessionJson.add("concerned_groups",concernedGroupsJson);
+        sessionJson.addProperty("day",session.getDay());
+        sessionJson.addProperty("start_time",session.getStartTime());
+        sessionJson.addProperty("end_time",session.getEndTime());
+        sessionJson.addProperty("meeting_link",session.getMeetingLink());
+        sessionJson.addProperty("meeting_number",session.getMeetingNumber());
+        sessionJson.addProperty("meeting_password",session.getMeetingPassword());
+        sessionJson.addProperty("comment",session.getComment());
+        sessionJson.addProperty("assignment",session.getAssignment());
+
+        return sessionJson;
     }
 }
