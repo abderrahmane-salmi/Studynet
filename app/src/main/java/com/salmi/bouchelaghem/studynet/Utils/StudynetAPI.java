@@ -70,7 +70,10 @@ public interface StudynetAPI {
     // *** Sessions ***
     /** Get sessions for a specific section.*/
     @GET("sessions/")
-    Call<List<Session>> getSectionSessions( @Query("section") String section, @Header("Authorization") String token);
+    Call<List<Session>> getSectionSessions(@Query("section") String section, @Header("Authorization") String token);
+
+    @POST("sessions/")
+    Call<JsonObject> createSession(@Body JsonObject session, @Header("Authorization") String token);
 
     // *** Teachers ***
     /** Get teachers based on section*/
