@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Models.Department;
 import com.salmi.bouchelaghem.studynet.Models.Module;
 import com.salmi.bouchelaghem.studynet.Models.Section;
+import com.salmi.bouchelaghem.studynet.Models.Session;
 import com.salmi.bouchelaghem.studynet.Models.Specialty;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 
@@ -66,6 +67,11 @@ public interface StudynetAPI {
     Call<List<Module>> getSectionModules(@Query("section") String section);
     // modules/?section=L3 ISIL B
 
+    // *** Sessions ***
+    /** Get sessions for a specific section.*/
+    @GET("sessions/")
+    Call<List<Session>> getSectionSessions( @Query("section") String section, @Header("Authorization") String token);
+
     // *** Teachers ***
     /** Get teachers based on section*/
     @GET("teachers")
@@ -88,11 +94,11 @@ public interface StudynetAPI {
     @POST("login/")
     Call<JsonObject> login(@Body JsonObject credentials);
 
-    /** Logout current session by invalidating the current token.*/
+    /** Logout current user from this device by invalidating the current token.*/
     @POST("logout/")
     Call<ResponseBody> logout(@Header("Authorization") String token);
 
-    /** Logout all sessions by invalidating all tokens associated with the current token's account.*/
+    /** Logout current user from all devices by invalidating all the tokens.*/
     @POST("logoutall/")
     Call<ResponseBody> logoutAll(@Header("Authorization") String token);
 
