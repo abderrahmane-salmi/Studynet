@@ -535,11 +535,18 @@ public class TimetableFragment extends Fragment {
                     builder.create().show();
                     break;
                 case ItemTouchHelper.RIGHT: // Swipe right to left -> : Edit item
-                    Intent intent = new Intent(getContext(), AddClassActivity.class);
-                    intent.putExtra(Utils.ACTION, Utils.ACTION_UPDATE);
-                    intent.putExtra(Utils.SESSION, currentSession);
-                    startActivity(intent);
-                    adapter.notifyItemChanged(position); // To reset the item on the screen
+                    if(currentSession.getTeacherEmail().equals(currentUser.getCurrentTeacher().getEmail()))
+                    {
+                        Intent intent = new Intent(getContext(), AddClassActivity.class);
+                        intent.putExtra(Utils.ACTION, Utils.ACTION_UPDATE);
+                        intent.putExtra(Utils.SESSION, currentSession);
+                        startActivity(intent);
+                        adapter.notifyItemChanged(position); // To reset the item on the screen
+                    }
+                    else
+                    {
+                        Toast.makeText(getContext(), "You can only edit your own sessions.", Toast.LENGTH_SHORT).show();
+                    }
                     break;
             }
         }

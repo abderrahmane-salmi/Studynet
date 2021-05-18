@@ -512,6 +512,7 @@ public class AddClassActivity extends AppCompatActivity {
         }
 
 
+        //TODO: for some reason init days is not properly filling the list of days, it's only showing the chosen day.
         // Day
         initDays();
         daySelected = true;
@@ -554,6 +555,7 @@ public class AddClassActivity extends AppCompatActivity {
                 groups = new ArrayList<>(assignment.getConcernedGroups());
                 // At this point we have a specific assignment so we will save it
                 selectedAssignment = new Assignment(assignment);
+                break;
             }
         }
 
