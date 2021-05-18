@@ -31,14 +31,10 @@ public class SessionsAdapter extends RecyclerView.Adapter<SessionsAdapter.ViewHo
         ViewHolder holder = new ViewHolder(binding);
 
         holder.binding.classMainLayout.setOnClickListener(v -> {
-            // Get the session's id
-            int id = sessions.get(holder.getAdapterPosition()).getId();
-
+            //Prepare the intent and pass in the session.
             Intent intent = new Intent(context, ClassDetailsActivity.class);
-            intent.putExtra(Utils.ID, id);
+            intent.putExtra(Utils.SESSION, sessions.get(holder.getAdapterPosition()));
             context.startActivity(intent);
-
-            /* TODO: We can send the whole session object to optimize the nb of reads from the db*/
         });
 
         return holder;

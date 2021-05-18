@@ -31,11 +31,11 @@ public class ClassDetailsActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        // Get the session's id
+        // Get the session
         Intent intent = getIntent();
-        int id = intent.getIntExtra(Utils.ID, 0);
+        Session session = intent.getParcelableExtra(Utils.SESSION);
 
-        fillFields(id);
+        fillFields(session);
 
         binding.btnClose.setOnClickListener(v -> finish());
 
@@ -60,15 +60,7 @@ public class ClassDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void fillFields(int id) {
-
-        // Get the session's info from api
-        Session session = new Session();
-        for (Session s: TestAPI.getInstance().getSessions()){
-            if (s.getId() == id){
-                session = s;
-            }
-        }
+    private void fillFields(Session session) {
 
         // Module
         binding.classSubject.setText(session.getModule());
@@ -106,9 +98,22 @@ public class ClassDetailsActivity extends AppCompatActivity {
         if (session.getMeetingNumber() != null && session.getMeetingPassword() != null){
             // Show other meeting info
             binding.otherMeetingInfoGroup.setVisibility(View.VISIBLE);
+            if(session.getMeetingNumber().isEmpty())
+            {
+                binding.classMeetingNumber.setText(R.string.none);
+            }
+            else {
+                binding.classMeetingNumber.setText(session.getMeetingNumber());
+            }
+            if(session.getMeetingPassword().isEmpty())
+            {
+                binding.classMeetingPassword.setText(R.string.none);
+            }
+            else
+            {
+                binding.classMeetingPassword.setText(session.getMeetingPassword());
+            }
 
-            binding.classMeetingNumber.setText(session.getMeetingNumber());
-            binding.classMeetingPassword.setText(session.getMeetingPassword());
         }
 
         // Notes
