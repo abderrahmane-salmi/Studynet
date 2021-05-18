@@ -144,6 +144,7 @@ public class SplashActivity extends AppCompatActivity {
                         prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,false);
                         prefsEditor.apply();
                         Toast.makeText(SplashActivity.this, getString(R.string.session_expired), Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                         break;
                     default:
                         Toast.makeText(SplashActivity.this, getString(R.string.unknown_error), Toast.LENGTH_LONG).show();

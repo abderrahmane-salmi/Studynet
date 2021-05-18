@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.salmi.bouchelaghem.studynet.Activities.AddClassActivity;
+import com.salmi.bouchelaghem.studynet.Activities.AddTeacherActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
 import com.salmi.bouchelaghem.studynet.Adapters.SessionsAdapter;
 import com.salmi.bouchelaghem.studynet.Models.Admin;
@@ -37,6 +38,7 @@ import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
+import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.FragmentTimetableBinding;
@@ -47,6 +49,11 @@ import java.util.Calendar;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TimetableFragment extends Fragment {
 
@@ -73,6 +80,9 @@ public class TimetableFragment extends Fragment {
     TestAPI testAPI;
     private String currentUserType;
 
+    // Studynet Api
+    private StudynetAPI api;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -83,6 +93,15 @@ public class TimetableFragment extends Fragment {
         // Get current user type
         currentUserType = currentUser.getUserType();
         initRecView();
+
+        // Init retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Utils.API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // Init our api
+        api = retrofit.create(StudynetAPI.class);
 
         // Test api
         testAPI = TestAPI.getInstance();
@@ -313,15 +332,18 @@ public class TimetableFragment extends Fragment {
 
     private void getSessions(String sectionCode) {
         // Get all the sessions
-        List<Session> allSessions = testAPI.getSessions();
-
-        // Get only the section's sessions
-        sessions.clear();
-        for (Session session : allSessions) {
-            if (session.getAssignment().getSectionCode().equals(sectionCode)) {
-                sessions.add(session);
-            }
-        }
+        //TODO: Get sessions from the real API.
+        Call<List<Session>> getSectionSessionsCall = api.getSectionSessions(sectionCode, "Token " + currentUser.getToken());
+        getSectionSessionsCall.enqueue(new getSectionSessionsCallback());
+//        List<Session> allSessions = testAPI.getSessions();
+//
+//        // Get only the section's sessions
+//        sessions.clear();
+//        for (Session session : allSessions) {
+//            if (session.getSection().equals(sectionCode)) {
+//                sessions.add(session);
+//            }
+//        }
     }
 
     private void initRecView() {
@@ -592,4 +614,25 @@ public class TimetableFragment extends Fragment {
         }
     };
 
+    private class getSectionSessionsCallback implements Callback<List<Session>>
+    {
+
+        @Override
+        public void onResponse(Call<List<Session>> call, Response<List<Session>> response) {
+            if(response.code() == Utils.HttpResponses.HTTP_200_OK)
+            {
+                sessions = response.body();
+                Toast.makeText(getActivity(), "Retrieved sessions successfully.", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Toast.makeText(getActivity(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onFailure(Call<List<Session>> call, Throwable t) {
+
+        }
+    }
 }

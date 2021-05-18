@@ -177,4 +177,5 @@
     <string name="email_password_incorrect">The email or password you entered is incorrect</string>
     <string name="select_department_teacher_msg">Please Select a Department to See its Teachers</string>
     <string name="assignment_added">Assignment added successfully.</string>
+    <string name="no_sections">No sections were found</string>
 </resources>
