@@ -547,7 +547,7 @@ public class TimetableFragment extends Fragment {
                 case ItemTouchHelper.RIGHT: // Swipe right to left -> : Edit item
                     Intent intent = new Intent(getContext(), AddClassActivity.class);
                     intent.putExtra(Utils.ACTION, Utils.ACTION_UPDATE);
-                    intent.putExtra(Utils.ID, currentSession.getId());
+                    intent.putExtra(Utils.SESSION, currentSession);
                     startActivity(intent);
                     adapter.notifyItemChanged(position); // To reset the item on the screen
                     break;

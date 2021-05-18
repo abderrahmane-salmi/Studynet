@@ -15,7 +15,6 @@ import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityClassDetailsBinding;
-import com.salmi.bouchelaghem.studynet.databinding.ActivityHomeworkDetailsBinding;
 
 import java.util.Arrays;
 import java.util.List;
@@ -94,8 +93,8 @@ public class ClassDetailsActivity extends AppCompatActivity {
         binding.classDay.setText(days.get(session.getDay()-1));
 
         // Time
-        binding.classStartHour.setText(session.getStartTime().toString());
-        binding.classEndHour.setText(session.getEndTime().toString());
+        binding.classStartHour.setText(session.getLocalTimeStartTime().toString());
+        binding.classEndHour.setText(session.getLocalTimeEndTime().toString());
 
         // Section
         binding.classSection.setText(session.getSection());

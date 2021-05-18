@@ -1,11 +1,16 @@
 package com.salmi.bouchelaghem.studynet.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import org.threeten.bp.LocalTime;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class Session {
+public class Session implements Parcelable {
 
     private int id;
     @SerializedName("teacher_name") private String teacherName;
@@ -23,8 +28,55 @@ public class Session {
     private String comment;
     private int assignment;
 
+    public Session(Session session) {
+        this.id = session.getId();
+        this.teacherName = session.getTeacherName();
+        this.teacherEmail = session.getTeacherEmail();
+        this.module = session.getModule();
+        this.section = session.getSection();
+        this.moduleType = session.getModuleType();
+        this.concernedGroups = new ArrayList<>(session.getConcernedGroups());
+        this.day = session.getDay();
+        this.startTime = session.getStartTime();
+        this.endTime = session.getEndTime();
+        this.meetingLink = session.getMeetingLink();
+        this.meetingNumber = session.getMeetingNumber();
+        this.meetingPassword = session.getMeetingPassword();
+        this.comment = session.getComment();
+        this.assignment = session.getAssignment();
+    }
+
     public Session() {
     }
+
+    protected Session(Parcel in) {
+        id = in.readInt();
+        teacherName = in.readString();
+        teacherEmail = in.readString();
+        module = in.readString();
+        section = in.readString();
+        moduleType = in.readString();
+        day = in.readInt();
+        startTime = in.readString();
+        endTime = in.readString();
+        meetingLink = in.readString();
+        meetingNumber = in.readString();
+        meetingPassword = in.readString();
+        comment = in.readString();
+        assignment = in.readInt();
+    }
+
+    public static final Creator<Session> CREATOR = new Creator<Session>() {
+        @Override
+        public Session createFromParcel(Parcel in) {
+            return new Session(in);
+        }
+
+        @Override
+        public Session[] newArray(int size) {
+            return new Session[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -90,20 +142,36 @@ public class Session {
         this.day = day;
     }
 
-    public LocalTime getStartTime() {
+    public LocalTime getLocalTimeStartTime() {
         return LocalTime.parse(startTime);
     }
 
-    public void setStartTime(LocalTime startTime) {
+    public void setLocalTimeStartTime(LocalTime startTime) {
         this.startTime = startTime.toString();
     }
 
-    public LocalTime getEndTime() {
+    public LocalTime getLocalTimeEndTime() {
         return LocalTime.parse(endTime);
     }
 
-    public void setEndTime(LocalTime endTime) {
+    public void setLocalTimeEndTime(LocalTime endTime) {
         this.endTime = endTime.toString();
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public String getMeetingLink() {
@@ -144,5 +212,28 @@ public class Session {
 
     public void setAssignment(int assignment) {
         this.assignment = assignment;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(teacherName);
+        dest.writeString(teacherEmail);
+        dest.writeString(module);
+        dest.writeString(section);
+        dest.writeString(moduleType);
+        dest.writeInt(day);
+        dest.writeString(startTime);
+        dest.writeString(endTime);
+        dest.writeString(meetingLink);
+        dest.writeString(meetingNumber);
+        dest.writeString(meetingPassword);
+        dest.writeString(comment);
+        dest.writeInt(assignment);
     }
 }
