@@ -174,6 +174,7 @@ public class LoginActivity extends AppCompatActivity {
                     saveCurrentUser();
                     startActivity(new Intent(LoginActivity.this, NavigationActivity.class));
                     Toast.makeText(LoginActivity.this, getString(R.string.logged_in_msg), Toast.LENGTH_SHORT).show();
+                    loadingDialog.dismiss();
                     finish();
                     break;
                 case Utils.HttpResponses.HTTP_400_BAD_REQUEST:

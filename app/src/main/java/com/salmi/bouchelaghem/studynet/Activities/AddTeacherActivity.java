@@ -53,18 +53,18 @@ public class AddTeacherActivity extends AppCompatActivity {
     private ActivityAddTeacherBinding binding;
 
     private String grade;
-    private List<String> grades;
+    private List<String> grades = new ArrayList<>();
 
     private String department;
-    private List<String> departments;
+    private final List<String> departments = new ArrayList<>();
 
     private String[] sectionsArray; // All sections as an array
-    private ArrayList<String> selectedSections; // The sections selected by the user
+    private ArrayList<String> selectedSections = new ArrayList<>(); // The sections selected by the user
     private boolean[] sectionsStates; // We need this just for the dialog
     private boolean sectionsSelected = false;
 
     // Recycler view
-    private ArrayList<Assignment> assignments;
+    private ArrayList<Assignment> assignments = new ArrayList<>();
     private AssignmentsAdapter adapter;
 
     // Studynet Api
@@ -432,7 +432,6 @@ public class AddTeacherActivity extends AppCompatActivity {
     }
 
     private void initRecView() {
-        assignments = new ArrayList<>();
         binding.assignmentsRecView.setLayoutManager(new LinearLayoutManager(AddTeacherActivity.this));
         binding.assignmentsRecView.addItemDecoration(new DividerItemDecoration(AddTeacherActivity.this, LinearLayout.VERTICAL));
         adapter = new AssignmentsAdapter(AddTeacherActivity.this);
@@ -510,7 +509,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                     assert sectionList != null;
                     sectionsArray = new String[sectionList.size()];
                     sectionsStates = new boolean[sectionList.size()];
-                    selectedSections = new ArrayList<>();
+                    selectedSections.clear();
 
                     // Fill the sections array
                     for (int i = 0; i < sectionList.size(); i++) {
@@ -538,7 +537,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                     List<Department> departmentsList = response.body();
 
                     // Get the names of the departments
-                    departments = new ArrayList<>();
+                    departments.clear();
                     assert departmentsList != null;
                     for (Department department:departmentsList){
                         departments.add(department.getCode());
@@ -593,7 +592,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                     assert sectionList != null;
                     sectionsArray = new String[sectionList.size()];
                     sectionsStates = new boolean[sectionList.size()];
-                    selectedSections = new ArrayList<>();
+                    selectedSections.clear();
 
                     // Fill the sections array
                     for (int i = 0; i < sectionList.size(); i++) {
@@ -760,20 +759,27 @@ public class AddTeacherActivity extends AppCompatActivity {
         @Override
         public void onResponse(@NonNull Call<JsonObject> call, Response<JsonObject> response) {
             if (response.code() == Utils.HttpResponses.HTTP_201_CREATED) {
-                if (TeachersFragment.getSelectedDepartment().equals(department)){
-                    //Add the teacher in the teachers fragment.
-                    List<Teacher> teachers = TeachersFragment.getTeachers();
-                    Teacher newTeacher = Serializers.TeacherDeserializer(response.body());
-                    teachers.add(newTeacher);
-                    //Sort the teachers list.
-                    Collections.sort(teachers, new Comparator<Teacher>() {
-                        @Override
-                        public int compare(Teacher o1, Teacher o2) {
-                            return o1.getLastName().compareToIgnoreCase(o2.getLastName());
-                        }
-                    });
+                String selectedDepartment = TeachersFragment.getSelectedDepartment();
+                if(selectedDepartment != null)
+                {
+                    if(selectedDepartment.equals(department))
+                    {
+                        //Add the teacher in the teachers fragment.
+                        List<Teacher> teachers = TeachersFragment.getTeachers();
+                        assert teachers != null;
+                        Teacher newTeacher = Serializers.TeacherDeserializer(response.body());
+                        teachers.add(newTeacher);
+                        //Sort the teachers list.
+                        Collections.sort(teachers, new Comparator<Teacher>() {
+                            @Override
+                            public int compare(Teacher o1, Teacher o2) {
+                                return o1.getLastName().compareToIgnoreCase(o2.getLastName());
+                            }
+                        });
+                    }
                 }
                 Toast.makeText(AddTeacherActivity.this, "Teacher successfully created.", Toast.LENGTH_SHORT).show();
+                loadingDialog.dismiss();
                 finish();
             } else {
                 Toast.makeText(AddTeacherActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
@@ -800,6 +806,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                 TeachersFragment.getTeachers().set(index, updatedTeacher);
 
                 Toast.makeText(AddTeacherActivity.this, "Teacher successfully updated.", Toast.LENGTH_SHORT).show();
+                loadingDialog.dismiss();
                 finish();
             } else {
                 Toast.makeText(AddTeacherActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
