@@ -14,6 +14,7 @@ public class Utils {
     public static final String HOMEWORK = "Homework";
     public static final String TEACHER = "Teacher";
     public static final String ASSIGNMENT = "Assignment";
+    public static final String SESSION = "Session";
 
     // Fields
     public static final String ID = "id";

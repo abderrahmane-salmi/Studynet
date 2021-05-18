@@ -15,7 +15,6 @@ import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityClassDetailsBinding;
-import com.salmi.bouchelaghem.studynet.databinding.ActivityHomeworkDetailsBinding;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,40 +37,26 @@ public class ClassDetailsActivity extends AppCompatActivity {
 
         fillFields(id);
 
-        binding.btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        binding.btnClose.setOnClickListener(v -> finish());
 
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 
-        binding.btnCopyMeetingLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipData clipData = ClipData.newPlainText(Utils.MEETING_LINK, binding.classMeetingLink.getText());
-                clipboard.setPrimaryClip(clipData);
-                Toast.makeText(ClassDetailsActivity.this, getString(R.string.meeting_link_copied), Toast.LENGTH_SHORT).show();
-            }
+        binding.btnCopyMeetingLink.setOnClickListener(v -> {
+            ClipData clipData = ClipData.newPlainText(Utils.MEETING_LINK, binding.classMeetingLink.getText());
+            clipboard.setPrimaryClip(clipData);
+            Toast.makeText(ClassDetailsActivity.this, getString(R.string.meeting_link_copied), Toast.LENGTH_SHORT).show();
         });
 
-        binding.btnCopyMeetingNumber.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipData clipData = ClipData.newPlainText(Utils.MEETING_NUMBER, binding.classMeetingNumber.getText());
-                clipboard.setPrimaryClip(clipData);
-                Toast.makeText(ClassDetailsActivity.this, getString(R.string.meeting_number_copied), Toast.LENGTH_SHORT).show();
-            }
+        binding.btnCopyMeetingNumber.setOnClickListener(v -> {
+            ClipData clipData = ClipData.newPlainText(Utils.MEETING_NUMBER, binding.classMeetingNumber.getText());
+            clipboard.setPrimaryClip(clipData);
+            Toast.makeText(ClassDetailsActivity.this, getString(R.string.meeting_number_copied), Toast.LENGTH_SHORT).show();
         });
 
-        binding.btnCopyMeetingPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipData clipData = ClipData.newPlainText(Utils.MEETING_PASSWORD, binding.classMeetingPassword.getText());
-                clipboard.setPrimaryClip(clipData);
-                Toast.makeText(ClassDetailsActivity.this, getString(R.string.meeting_password_copied), Toast.LENGTH_SHORT).show();
-            }
+        binding.btnCopyMeetingPassword.setOnClickListener(v -> {
+            ClipData clipData = ClipData.newPlainText(Utils.MEETING_PASSWORD, binding.classMeetingPassword.getText());
+            clipboard.setPrimaryClip(clipData);
+            Toast.makeText(ClassDetailsActivity.this, getString(R.string.meeting_password_copied), Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -94,8 +79,8 @@ public class ClassDetailsActivity extends AppCompatActivity {
         binding.classDay.setText(days.get(session.getDay()-1));
 
         // Time
-        binding.classStartHour.setText(session.getStartTime().toString());
-        binding.classEndHour.setText(session.getEndTime().toString());
+        binding.classStartHour.setText(session.getLocalTimeStartTime().toString());
+        binding.classEndHour.setText(session.getLocalTimeEndTime().toString());
 
         // Section
         binding.classSection.setText(session.getSection());
@@ -124,6 +109,12 @@ public class ClassDetailsActivity extends AppCompatActivity {
 
             binding.classMeetingNumber.setText(session.getMeetingNumber());
             binding.classMeetingPassword.setText(session.getMeetingPassword());
+        }
+
+        // Notes
+        if (session.getComment() != null && !session.getComment().isEmpty()){
+            binding.classNotesGroup.setVisibility(View.VISIBLE);
+            binding.txtClassNotes.setText(session.getComment());
         }
 
     }

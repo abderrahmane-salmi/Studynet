@@ -400,6 +400,57 @@
             android:visibility="gone"
             app:constraint_referenced_ids="btnCopyMeetingPassword,classMeetingNumber,textView5,num_icon,classMeetingPassword,textView6,btnCopyMeetingNumber,password_icon" />
 
+        <!--        Notes-->
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/classNotesGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:constraint_referenced_ids="imageView4, textView7, txtClassNotes" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_list"
+            app:tint="@color/secondary_text_color"
+            android:layout_marginStart="24dp"
+            app:layout_constraintBottom_toBottomOf="@id/txtClassNotes"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textView7"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/notes"
+            android:textColor="@color/primary_text_color"
+            android:textSize="18sp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView4"
+            app:layout_constraintTop_toBottomOf="@+id/classMeetingPassword" />
+
+        <TextView
+            android:id="@+id/txtClassNotes"
+            android:lineSpacingExtra="-2dp"
+            android:layout_width="0dp"
+            android:layout_marginEnd="16dp"
+            android:layout_height="wrap_content"
+            android:text="Faites le deuxième exercice de la première série, ne faites pas la dernière question car nous le ferons dans le cours."
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            android:fontFamily="@font/tabularasa_regular"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/textView7"
+            app:layout_constraintTop_toBottomOf="@id/textView7" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
