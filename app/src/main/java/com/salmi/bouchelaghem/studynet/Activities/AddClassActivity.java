@@ -12,8 +12,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.salmi.bouchelaghem.studynet.Models.Assignment;
-import com.salmi.bouchelaghem.studynet.Models.Module;
-import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Session;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
@@ -87,20 +85,6 @@ public class AddClassActivity extends AppCompatActivity {
         initSectionsSpinner();
         // Init Days spinner
         initDays();
-
-        binding.btnClose.setOnClickListener(v -> finish());
-
-        binding.btnShowOtherMeetingFields.setOnClickListener(v -> {
-            if (!otherMeetingFields){
-                otherMeetingFields = true;
-                binding.meetingFieldsGroup.setVisibility(View.VISIBLE);
-                binding.btnShowOtherMeetingFields.setImageResource(R.drawable.ic_arrow_up);
-            } else {
-                otherMeetingFields = false;
-                binding.meetingFieldsGroup.setVisibility(View.GONE);
-                binding.btnShowOtherMeetingFields.setImageResource(R.drawable.ic_arrow_down);
-            }
-        });
 
         switch (action){
             case Utils.ACTION_ADD: // Add a new session
@@ -207,6 +191,7 @@ public class AddClassActivity extends AppCompatActivity {
                 break;
         }
 
+        // Spinners
         binding.classSection.setOnClickListener(v -> {
             if (sections.isEmpty()){
                 Toast.makeText(AddClassActivity.this, getString(R.string.no_sections), Toast.LENGTH_SHORT).show();
@@ -220,21 +205,21 @@ public class AddClassActivity extends AppCompatActivity {
             binding.classSectionTextLayout.setError(null);
 
             // Disable other spinners
-            binding.classModule.setText("");
+            binding.classModule.setText("", false);
             moduleSelected = false;
 
             binding.classTypeTextLayout.setEnabled(false);
-            binding.classType.setText("");
+            binding.classType.setText("", false);
             moduleTypeSelected = false;
 
             binding.classGroup.setEnabled(false);
             binding.classGroup.setText("");
-            binding.classGroup.setHint(R.string.group);
+            binding.classGroup.setHint(R.string.groups);
             groupSelected = false;
 
             // Setup the next spinner
             binding.classModuleLayout.setEnabled(true);
-            getModules(currentTeacher.getId(), section);
+            setupModulesSpinner(section);
         });
 
         binding.classModule.setOnItemClickListener((parent, view14, position, id) -> {
@@ -366,6 +351,21 @@ public class AddClassActivity extends AppCompatActivity {
             picker.addOnCancelListener(dialog -> picker.dismiss());
         });
 
+        // Buttons
+        binding.btnClose.setOnClickListener(v -> finish());
+
+        binding.btnShowOtherMeetingFields.setOnClickListener(v -> {
+            if (!otherMeetingFields){
+                otherMeetingFields = true;
+                binding.meetingFieldsGroup.setVisibility(View.VISIBLE);
+                binding.btnShowOtherMeetingFields.setImageResource(R.drawable.ic_arrow_up);
+            } else {
+                otherMeetingFields = false;
+                binding.meetingFieldsGroup.setVisibility(View.GONE);
+                binding.btnShowOtherMeetingFields.setImageResource(R.drawable.ic_arrow_down);
+            }
+        });
+
     }
 
     private MaterialTimePicker openTimePicker(String title, int hour, int minute) {
@@ -403,7 +403,7 @@ public class AddClassActivity extends AppCompatActivity {
             String moduleCode = session.getModule();
             getModule(moduleCode);
             // Fill the spinner
-            getModules(currentTeacher.getId(), sectionCode);
+            setupModulesSpinner(sectionCode);
             binding.classModuleLayout.setEnabled(true);
             // Set selected item
             binding.classModule.setText(moduleCode, false);
@@ -474,7 +474,7 @@ public class AddClassActivity extends AppCompatActivity {
 
     // Get the module object from its code (From the API)
     private void getModule(String moduleCode) {
-//        for (Module m:testAPI.getModules()){
+//        for (Module m:testAPI.setupModulesSpinner()){
 //            if (m.getCode().equals(moduleCode))
 //                module = m;
 //        }
@@ -518,19 +518,17 @@ public class AddClassActivity extends AppCompatActivity {
 //        }
     }
 
-    // Get the modules taught by the current teacher in the selected section (From the API)
-    private void getModules(int teacherId, String sectionCode) {
-//        modules = testAPI.getModules();
-//
-//        // Get only names
-//        List<String> modulesNames = new ArrayList<>();
-//        for (Module module : modules) {
-//            modulesNames.add(module.getCode());
-//        }
-//        if (!modulesNames.isEmpty()) {
-//            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddClassActivity.this, R.layout.dropdown_item, modulesNames);
-//            binding.classModule.setAdapter(arrayAdapter);
-//        }
+    // Get the modules taught by the current teacher in the selected section
+    private void setupModulesSpinner(String sectionCode) {
+        modules.clear();
+        for (Assignment assignment:teacherAssignments){
+            if (assignment.getSectionCode().equals(sectionCode) && !modules.contains(assignment.getModuleCode())){
+                modules.add(assignment.getModuleCode());
+            }
+        }
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddClassActivity.this, R.layout.dropdown_item, modules);
+        binding.classModule.setAdapter(arrayAdapter);
     }
 
     // Get only the current teacher's sections
