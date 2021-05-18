@@ -229,17 +229,17 @@ public class AddClassActivity extends AppCompatActivity {
             binding.classModuleLayout.setError(null);
 
             // Disable other spinners
-            binding.classType.setText("");
+            binding.classType.setText("", false);
             moduleTypeSelected = false;
 
             binding.classGroup.setEnabled(false);
             binding.classGroup.setText("");
-            binding.classGroup.setHint(R.string.group);
+            binding.classGroup.setHint(R.string.groups);
             groupSelected = false;
 
             // Setup the next spinner
             binding.classTypeTextLayout.setEnabled(true);
-            getModuleTypes(currentTeacher.getId(), section, module);
+            setupModuleTypesSpinner(section, module);
         });
 
         binding.classType.setOnItemClickListener((parent, view13, position, id) -> {
@@ -412,7 +412,7 @@ public class AddClassActivity extends AppCompatActivity {
             moduleTypeSelected = true;
             String classType = session.getModuleType();
             // Fill the spinner
-            getModuleTypes(currentTeacher.getId(), sectionCode, moduleCode);
+            setupModuleTypesSpinner(sectionCode, moduleCode);
             binding.classTypeTextLayout.setEnabled(true);
             // Set selected item
             binding.classType.setText(classType, false);
@@ -507,15 +507,17 @@ public class AddClassActivity extends AppCompatActivity {
 
     }
 
-    // Get the module's types depending on the teacher and the section
-    // Example: Teacher 1 teaches Section ISIL B the module GL2 -> Types = TD, TP
-    private void getModuleTypes(int teacherId, String sectionCode, String moduleCode) {
-//        moduleTypes = module.getTypes();
-//
-//        if (!moduleTypes.isEmpty()) {
-//            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddClassActivity.this, R.layout.dropdown_item, moduleTypes);
-//            binding.classType.setAdapter(arrayAdapter);
-//        }
+    // Get the module's types depending on the module and the section
+    private void setupModuleTypesSpinner(String sectionCode, String moduleCode) {
+        moduleTypes.clear();
+        for (Assignment assignment:teacherAssignments){
+            if (assignment.getSectionCode().equals(sectionCode) && assignment.getModuleCode().equals(moduleCode)){
+                moduleTypes.add(assignment.getModuleType());
+            }
+        }
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddClassActivity.this, R.layout.dropdown_item, moduleTypes);
+        binding.classType.setAdapter(arrayAdapter);
     }
 
     // Get the modules taught by the current teacher in the selected section
