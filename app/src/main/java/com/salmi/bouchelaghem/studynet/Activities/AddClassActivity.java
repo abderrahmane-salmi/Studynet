@@ -96,28 +96,43 @@ public class AddClassActivity extends AppCompatActivity {
                     if (sectionSelected & moduleSelected & moduleTypeSelected
                             & groupSelected & daySelected & validateMeetingLink()
                             & startTime != null & endTime != null) {
+                        //Check if end time is after start time.
+                        if(endTime.isBefore(startTime))
+                        {
+                            Toast.makeText(this, getString(R.string.endtime_after_starttime), Toast.LENGTH_LONG).show();
+                        }
+                        else
+                        {
+                            //Check that the given time is allowed.
+                            if(startTime.isBefore(LocalTime.parse("08:00:00")) || endTime.isAfter(LocalTime.parse("18:10:00")))
+                            {
+                                Toast.makeText(this, getString(R.string.time_not_allowed), Toast.LENGTH_LONG).show();
+                            }
+                            else
+                            {
+                                //All of the data is valid, send it to the api.
+                                String meetingLink = binding.txtMeetingNumber.getEditText().getText().toString().trim();
+                                String meetingNumber = binding.txtMeetingNumber.getEditText().getText().toString().trim();
+                                String meetingPassword = binding.txtMeetingPassword.getEditText().getText().toString().trim();
+                                String notes = binding.txtClassNotes.getEditText().getText().toString().trim();
 
-                        String meetingLink = binding.txtMeetingNumber.getEditText().getText().toString().trim();
-                        String meetingNumber = binding.txtMeetingNumber.getEditText().getText().toString().trim();
-                        String meetingPassword = binding.txtMeetingPassword.getEditText().getText().toString().trim();
-                        String notes = binding.txtClassNotes.getEditText().getText().toString().trim();
+                                session = new Session();
+                                session.setId(-1);
+                                session.setSection(section);
+                                session.setModule(module);
+                                session.setModuleType(moduleType);
+                                session.setConcernedGroups(selectedGroupsInt);
+                                session.setLocalTimeStartTime(startTime);
+                                session.setLocalTimeEndTime(endTime);
+                                session.setDay(day);
+                                session.setMeetingLink(meetingLink);
+                                session.setMeetingNumber(meetingNumber);
+                                session.setMeetingNumber(meetingPassword);
+                                session.setComment(notes);
 
-                        session = new Session();
-                        session.setId(-1);
-                        session.setSection(section);
-                        session.setModule(module);
-                        session.setModuleType(moduleType);
-                        session.setConcernedGroups(selectedGroupsInt);
-                        session.setLocalTimeStartTime(startTime);
-                        session.setLocalTimeEndTime(endTime);
-                        session.setDay(day);
-                        session.setMeetingLink(meetingLink);
-                        session.setMeetingNumber(meetingNumber);
-                        session.setMeetingNumber(meetingPassword);
-                        session.setComment(notes);
-
-                        // Save the session to the database
-
+                                // Save the session to the database
+                            }
+                        }
 
                     } else {
                         if (!sectionSelected) {

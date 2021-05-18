@@ -179,4 +179,6 @@
     <string name="assignment_added">Assignment added successfully.</string>
     <string name="no_sections">No sections were found</string>
     <string name="no_groups">No groups were found</string>
+    <string name="endtime_after_starttime">End time must be set after the start time.</string>
+    <string name="time_not_allowed">A session cannot be created before 8AM or after 6PM.</string>
 </resources>
