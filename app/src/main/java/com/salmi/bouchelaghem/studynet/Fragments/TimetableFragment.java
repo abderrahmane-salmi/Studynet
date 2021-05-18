@@ -317,19 +317,9 @@ public class TimetableFragment extends Fragment {
     }
 
     private void getSessions(String sectionCode) {
-        // Get all the sessions
-        //TODO: Get sessions from the real API.
+        // Get all the sessions for this section
         Call<List<Session>> getSectionSessionsCall = api.getSectionSessions(sectionCode, "Token " + currentUser.getToken());
         getSectionSessionsCall.enqueue(new getSectionSessionsCallback());
-//        List<Session> allSessions = testAPI.getSessions();
-//
-//        // Get only the section's sessions
-//        sessions.clear();
-//        for (Session session : allSessions) {
-//            if (session.getSection().equals(sectionCode)) {
-//                sessions.add(session);
-//            }
-//        }
     }
 
     private void initRecView() {
@@ -607,6 +597,7 @@ public class TimetableFragment extends Fragment {
             if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
                 sessions = response.body();
                 Toast.makeText(getActivity(), "Retrieved sessions successfully.", Toast.LENGTH_SHORT).show();
+                showTodaySessions(currentDay);
             } else {
                 Toast.makeText(getActivity(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
             }
