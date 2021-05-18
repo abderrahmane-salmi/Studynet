@@ -178,4 +178,5 @@
     <string name="select_department_teacher_msg">Please Select a Department to See its Teachers</string>
     <string name="assignment_added">Assignment added successfully.</string>
     <string name="no_sections">No sections were found</string>
+    <string name="no_groups">No groups were found</string>
 </resources>

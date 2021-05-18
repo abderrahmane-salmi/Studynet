@@ -35,18 +35,19 @@ public class AddClassActivity extends AppCompatActivity {
     private Session session;
 
     private String section;
-    private List<String> sections = new ArrayList<>();
+    private final List<String> sections = new ArrayList<>();
     private boolean sectionSelected = false;
 
     private String module;
-    private List<String> modules = new ArrayList<>();
+    private final List<String> modules = new ArrayList<>();
     private boolean moduleSelected = false;
 
     private String moduleType;
-    private List<String> moduleTypes = new ArrayList<>();
+    private final List<String> moduleTypes = new ArrayList<>();
     private boolean moduleTypeSelected = false;
 
     private String[] groupsArray; // All groups as an array
+    private List<Integer> groups = new ArrayList<>(); // All groups as a list
     private List<String> selectedGroupsString = new ArrayList<>(); // The groups selected by the user (as a string)
     private ArrayList<Integer> selectedGroupsInt; // The groups selected by the user (as a int)
     private boolean[] groupsStates; // We need this just for the dialog
@@ -62,6 +63,8 @@ public class AddClassActivity extends AppCompatActivity {
 
     private boolean otherMeetingFields = false;
     private String meetingLink, meetingNumber, meetingPassword;
+
+    private Assignment selectedAssignment;
 
     // Current teacher
     private final CurrentUser currentUser = CurrentUser.getInstance();
@@ -250,69 +253,73 @@ public class AddClassActivity extends AppCompatActivity {
 
             // Disable other spinners
             binding.classGroup.setText("");
-            binding.classGroup.setHint(R.string.group);
+            binding.classGroup.setHint(R.string.groups);
             groupSelected = false;
 
             // Setup the next spinner
             binding.classGroup.setEnabled(true);
-            getGroups(currentTeacher.getId(), section);
+            getGroups(section, module, moduleType);
         });
 
         binding.classGroup.setOnClickListener(v -> {
-            binding.classGroup.setError(null);
-            // Init builder
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(AddClassActivity.this, R.style.MyAlertDialogTheme);
-            // Set title
-            builder.setTitle(R.string.select_groups);
-            // No cancel
-            builder.setCancelable(false);
+            if (groupsArray != null && groupsArray.length != 0){
+                binding.classGroup.setError(null);
+                // Init builder
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(AddClassActivity.this, R.style.MyAlertDialogTheme);
+                // Set title
+                builder.setTitle(R.string.select_groups);
+                // No cancel
+                builder.setCancelable(false);
 
-            builder.setMultiChoiceItems(groupsArray, groupsStates, (dialog, which, isChecked) -> {
+                // Clone the groups list + their states in case the user cancels
+                ArrayList<String> tmpSelectedGroups = new ArrayList<>(selectedGroupsString);
+                boolean[] tmpStates = groupsStates.clone();
 
-                // Get the current item
-                String currentGroup = groupsArray[which];
-                if (isChecked){ // If its selected then add it to the selected items list
-                    selectedGroupsString.add(currentGroup);
-                } else { // if not then remove it from the list
-                    selectedGroupsString.remove(currentGroup);
-                }
-            });
+                builder.setMultiChoiceItems(groupsArray, groupsStates, (dialog, which, isChecked) -> {
 
-            builder.setPositiveButton(R.string.save, (dialog, which) -> {
-
-                binding.classGroup.setText("");
-                selectedGroupsInt = new ArrayList<>();
-
-                if (!selectedGroupsString.isEmpty()){
-                    groupSelected = true;
-                    Collections.sort(selectedGroupsString);
-
-                    for (int i = 0; i< selectedGroupsString.size()-1; i++){
-                        // Show the selected groups in the text view
-                        binding.classGroup.append(selectedGroupsString.get(i) + ", ");
-                        // Save the selected groups as integers
-                        selectedGroupsInt.add(Integer.parseInt(selectedGroupsString.get(i)));
+                    // Get the current item
+                    String currentGroup = groupsArray[which];
+                    if (isChecked){ // If its selected then add it to the selected items list
+                        selectedGroupsString.add(currentGroup);
+                    } else { // if not then remove it from the list
+                        selectedGroupsString.remove(currentGroup);
                     }
-                    binding.classGroup.append(selectedGroupsString.get(selectedGroupsString.size()-1));
-                    selectedGroupsInt.add(Integer.parseInt(selectedGroupsString.get(selectedGroupsString.size()-1)));
-                } else {
-                    groupSelected = false;
-                    binding.classGroup.setHint(R.string.group);
-                }
-            });
+                });
 
-            builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+                builder.setPositiveButton(R.string.save, (dialog, which) -> {
 
-            builder.show();
+                    binding.classGroup.setText("");
+                    selectedGroupsInt = new ArrayList<>();
 
-        });
+                    if (!selectedGroupsString.isEmpty()){
+                        groupSelected = true;
+                        Collections.sort(selectedGroupsString);
 
-        binding.classDay.setOnItemClickListener((parent, view12, position, id) -> {
-            // Get selected item
-            daySelected = true;
-            dayName = days.get(position);
-            day = position+1;
-            binding.classDayTextLayout.setError(null);
+                        for (int i = 0; i< selectedGroupsString.size()-1; i++){
+                            // Show the selected groups in the text view
+                            binding.classGroup.append(selectedGroupsString.get(i) + ", ");
+                            // Save the selected groups as integers
+                            selectedGroupsInt.add(Integer.parseInt(selectedGroupsString.get(i)));
+                        }
+                        binding.classGroup.append(selectedGroupsString.get(selectedGroupsString.size()-1));
+                        selectedGroupsInt.add(Integer.parseInt(selectedGroupsString.get(selectedGroupsString.size()-1)));
+                    } else {
+                        groupSelected = false;
+                        binding.classGroup.setHint(R.string.groups);
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+                    // If the user cancels then restore the items and their states
+                    selectedGroupsString.clear();
+                    selectedGroupsString.addAll(tmpSelectedGroups);
+                    groupsStates = tmpStates.clone();
+                    dialog.dismiss();});
+
+                builder.show();
+            } else {
+                Toast.makeText(this, getString(R.string.no_groups), Toast.LENGTH_SHORT).show();
+            }
         });
 
         // Time pickers
@@ -364,6 +371,14 @@ public class AddClassActivity extends AppCompatActivity {
                 binding.meetingFieldsGroup.setVisibility(View.GONE);
                 binding.btnShowOtherMeetingFields.setImageResource(R.drawable.ic_arrow_down);
             }
+        });
+
+        binding.classDay.setOnItemClickListener((parent, view12, position, id) -> {
+            // Get selected item
+            daySelected = true;
+            dayName = days.get(position);
+            day = position+1;
+            binding.classDayTextLayout.setError(null);
         });
 
     }
@@ -419,7 +434,7 @@ public class AddClassActivity extends AppCompatActivity {
 
             // Groups
             groupSelected = true;
-            getGroups(currentTeacher.getId(), section);
+            getGroups(section, moduleCode, moduleType);
             // Fill the selected groups
             setSelectedGroups(session.getConcernedGroups());
             binding.classGroup.setEnabled(true);
@@ -487,13 +502,24 @@ public class AddClassActivity extends AppCompatActivity {
     }
 
     // Get the groups that belongs to the selected section and they are taught by the current teacher
-    private void getGroups(int teacherId, String section) {
-//        groupsArray = new String[section.getNbGroups()];
-//        for (int grp=0; grp<section.getNbGroups(); grp++){
-//            groupsArray[grp] = String.valueOf(grp+1);
-//        }
-//        groupsStates = new boolean[groupsArray.length];
-//        selectedGroupsString = new ArrayList<>();
+    private void getGroups(String sectionCode, String moduleCode, String moduleType) {
+        for (Assignment assignment:teacherAssignments){
+            if (assignment.getSectionCode().equals(sectionCode)
+                    && assignment.getModuleCode().equals(moduleCode)
+                    && assignment.getModuleType().equals(moduleType)){
+                groups = new ArrayList<>(assignment.getConcernedGroups());
+                // At this point we have a specific assignment so we will save it
+                selectedAssignment = new Assignment(assignment);
+            }
+        }
+
+        // Convert groups list to an array
+        groupsArray = new String[groups.size()];
+        for (int i=0; i<groups.size(); i++){
+            groupsArray[i] = String.valueOf(groups.get(i));
+        }
+        groupsStates = new boolean[groupsArray.length];
+        selectedGroupsString.clear();
     }
 
     // Set the selected groups in case of update
