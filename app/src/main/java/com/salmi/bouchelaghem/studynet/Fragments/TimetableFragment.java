@@ -318,7 +318,7 @@ public class TimetableFragment extends Fragment {
         // Get only the section's sessions
         sessions.clear();
         for (Session session : allSessions) {
-            if (session.getAssignment().getSectionCode().equals(sectionCode)) {
+            if (session.getSection().equals(sectionCode)) {
                 sessions.add(session);
             }
         }
