@@ -36,6 +36,8 @@ import com.salmi.bouchelaghem.studynet.databinding.ActivityAddTeacherBinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -759,8 +761,17 @@ public class AddTeacherActivity extends AppCompatActivity {
         public void onResponse(@NonNull Call<JsonObject> call, Response<JsonObject> response) {
             if (response.code() == Utils.HttpResponses.HTTP_201_CREATED) {
                 if (TeachersFragment.getSelectedDepartment().equals(department)){
+                    //Add the teacher in the teachers fragment.
+                    List<Teacher> teachers = TeachersFragment.getTeachers();
                     Teacher newTeacher = Serializers.TeacherDeserializer(response.body());
-                    TeachersFragment.getTeachers().add(newTeacher);
+                    teachers.add(newTeacher);
+                    //Sort the teachers list.
+                    Collections.sort(teachers, new Comparator<Teacher>() {
+                        @Override
+                        public int compare(Teacher o1, Teacher o2) {
+                            return o1.getLastName().compareToIgnoreCase(o2.getLastName());
+                        }
+                    });
                 }
                 Toast.makeText(AddTeacherActivity.this, "Teacher successfully created.", Toast.LENGTH_SHORT).show();
                 finish();
