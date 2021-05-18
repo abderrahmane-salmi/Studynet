@@ -15,6 +15,15 @@ public class Assignment implements Parcelable {
     private String moduleType;
     private ArrayList<Integer> concernedGroups;
 
+    public Assignment(Assignment assignment) {
+        this.id = assignment.getId();
+        this.sectionCode = assignment.getSectionCode();
+        this.moduleName = assignment.getModuleName();
+        this.moduleCode = assignment.getModuleCode();
+        this.moduleType = assignment.getModuleType();
+        this.concernedGroups = new ArrayList<>(assignment.getConcernedGroups());
+    }
+
     public Assignment() {
     }
 
