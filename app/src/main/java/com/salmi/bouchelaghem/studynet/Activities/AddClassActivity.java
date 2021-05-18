@@ -207,6 +207,12 @@ public class AddClassActivity extends AppCompatActivity {
                 break;
         }
 
+        binding.classSection.setOnClickListener(v -> {
+            if (sections.isEmpty()){
+                Toast.makeText(AddClassActivity.this, getString(R.string.no_sections), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         binding.classSection.setOnItemClickListener((parent, view1, position, id) -> {
             // Get selected item
             sectionSelected = true;
@@ -530,22 +536,18 @@ public class AddClassActivity extends AppCompatActivity {
     // Get only the current teacher's sections
     private void initSectionsSpinner(){
 
+        // We get the teacher's sections from its assignments
         sections.clear();
         for (Assignment assignment:teacherAssignments){
-
+            if (!sections.contains(assignment.getSectionCode())){
+                // We only add the section to the list if it doesn't exist already
+                sections.add(assignment.getSectionCode());
+            }
         }
 
-//        sections = testAPI.getSections();
-//
-//        // Get only names
-//        List<String> sectionsNames = new ArrayList<>();
-//        for (Section section : sections) {
-//            sectionsNames.add(section.getCode());
-//        }
-//        if (!sectionsNames.isEmpty()) {
-//            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddClassActivity.this, R.layout.dropdown_item, sectionsNames);
-//            binding.classSection.setAdapter(arrayAdapter);
-//        }
+        // Init spinner
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddClassActivity.this, R.layout.dropdown_item, sections);
+        binding.classSection.setAdapter(arrayAdapter);
 
     }
 

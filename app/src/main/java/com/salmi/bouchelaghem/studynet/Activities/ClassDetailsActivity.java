@@ -86,8 +86,8 @@ public class ClassDetailsActivity extends AppCompatActivity {
         }
 
         // Module
-        binding.classSubject.setText(session.getAssignment().getModuleName());
-        binding.classType.setText(session.getAssignment().getModuleType());
+        binding.classSubject.setText(session.getModule());
+        binding.classType.setText(session.getModuleType());
 
         // Day
         List<String> days = Arrays.asList(getResources().getStringArray(R.array.days));
@@ -98,7 +98,7 @@ public class ClassDetailsActivity extends AppCompatActivity {
         binding.classEndHour.setText(session.getEndTime().toString());
 
         // Section
-        binding.classSection.setText(session.getAssignment().getSectionCode());
+        binding.classSection.setText(session.getSection());
 
         // Session's groups
         if (session.getConcernedGroups().size() > 1){ // There are more then 1 grp
