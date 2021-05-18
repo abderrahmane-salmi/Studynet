@@ -30,6 +30,7 @@ import com.google.android.material.button.MaterialButton;
 import com.salmi.bouchelaghem.studynet.Activities.AddClassActivity;
 import com.salmi.bouchelaghem.studynet.Activities.AddTeacherActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
+import com.salmi.bouchelaghem.studynet.Activities.SignUpActivity;
 import com.salmi.bouchelaghem.studynet.Adapters.SessionsAdapter;
 import com.salmi.bouchelaghem.studynet.Models.Admin;
 import com.salmi.bouchelaghem.studynet.Models.Section;
@@ -75,6 +76,7 @@ public class TimetableFragment extends Fragment {
     private boolean sectionSelected = false;
     private String selectedSection;
     private boolean filterApplied = false;
+    private List<String> allSections;
 
     // Test api
     TestAPI testAPI;
@@ -137,19 +139,11 @@ public class TimetableFragment extends Fragment {
 
                     // Init sections list
                     // Get all the sections
-                    List<Section> sections = testAPI.getSections();
+                    List<String> sections = new ArrayList<>(teacher.getSections());
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sections);
+                    filterTimetableSection.setAdapter(arrayAdapter);
 
-                    // Get only the teacher's sections
-                    List<String> sectionsNames = new ArrayList<>();
-                    for (Section section : sections) {
-                        sectionsNames.add(section.getCode());
-                    }
-                    if (!sectionsNames.isEmpty()) {
-                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sectionsNames);
-                        filterTimetableSection.setAdapter(arrayAdapter);
-                    }
-
-                    if (filterApplied){
+                    if (filterApplied) {
                         restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
                     }
 
@@ -173,7 +167,7 @@ public class TimetableFragment extends Fragment {
 
                     filterTimetableSection.setOnItemClickListener((parent, view11, position, id) -> {
                         sectionSelected = true;
-                        selectedSection = sectionsNames.get(position);
+                        selectedSection = sections.get(position);
                     });
 
                     builder.setView(view1);
@@ -198,62 +192,54 @@ public class TimetableFragment extends Fragment {
                 // Show and setup the filter
                 context.btnFilter.setVisibility(View.VISIBLE);
                 context.btnFilter.setOnClickListener(v -> {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    View view12 = View.inflate(context, R.layout.popup_teacher_timetable_filter, null);
-                    // Init Views
-                    ImageView btnCloseFilter = view12.findViewById(R.id.btnCloseFilter);
-                    AutoCompleteTextView filterTimetableSection = view12.findViewById(R.id.filterTimetableSection);
-                    MaterialButton btnApplyFilter = view12.findViewById(R.id.btnApplyFilter);
+                    if (allSections != null) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        View view12 = View.inflate(context, R.layout.popup_teacher_timetable_filter, null);
+                        // Init Views
+                        ImageView btnCloseFilter = view12.findViewById(R.id.btnCloseFilter);
+                        AutoCompleteTextView filterTimetableSection = view12.findViewById(R.id.filterTimetableSection);
+                        MaterialButton btnApplyFilter = view12.findViewById(R.id.btnApplyFilter);
 
-                    // Init sections list
-                    // Get all the sections
-                    List<Section> sections = testAPI.getSections();
-
-                    // If its an admin get him all the sections
-                    List<String> sectionsNames = new ArrayList<>();
-                    for (Section section : sections) {
-                        sectionsNames.add(section.getCode());
-                    }
-                    if (!sectionsNames.isEmpty()) {
-                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sectionsNames);
+                        // Init sections spinner
+                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, allSections);
                         filterTimetableSection.setAdapter(arrayAdapter);
-                    }
 
-                    if (filterApplied){
-                        restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
-                    }
-
-                    // Init Buttons
-                    btnApplyFilter.setOnClickListener(v13 -> {
-
-                        if (sectionSelected) {
-
-                            getSessions(selectedSection);
-                            goToDay1();
-                            binding.selectSectionMsg.setVisibility(View.GONE);
-                            dialog.dismiss();
-                            filterApplied = true;
-
-                        } else {
-                            Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
+                        if (filterApplied) {
+                            restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
                         }
 
-                    });
+                        // Init Buttons
+                        btnApplyFilter.setOnClickListener(v13 -> {
 
-                    btnCloseFilter.setOnClickListener(v14 -> dialog.dismiss());
+                            if (sectionSelected) {
 
-                    filterTimetableSection.setOnItemClickListener((parent, view121, position, id) -> {
-                        sectionSelected = true;
-                        selectedSection = sectionsNames.get(position);
-                    });
+                                getSessions(selectedSection);
+                                goToDay1();
+                                binding.selectSectionMsg.setVisibility(View.GONE);
+                                dialog.dismiss();
+                                filterApplied = true;
 
-                    builder.setView(view12);
-                    dialog = builder.create(); // creating our dialog
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    dialog.show();
-                    // Show rounded corners
-                    WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-                    dialog.getWindow().setAttributes(params);
+                            } else {
+                                Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
+                            }
+
+                        });
+
+                        btnCloseFilter.setOnClickListener(v14 -> dialog.dismiss());
+
+                        filterTimetableSection.setOnItemClickListener((parent, view121, position, id) -> {
+                            sectionSelected = true;
+                            selectedSection = allSections.get(position);
+                        });
+
+                        builder.setView(view12);
+                        dialog = builder.create(); // creating our dialog
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialog.show();
+                        // Show rounded corners
+                        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                        dialog.getWindow().setAttributes(params);
+                    }
                 });
 
                 break;
@@ -288,7 +274,7 @@ public class TimetableFragment extends Fragment {
         binding.day6.setOnClickListener(v -> goToDay6());
 
         // If its a student show him today's classes
-        if (currentUserType.equals(Utils.STUDENT_ACCOUNT)){
+        if (currentUserType.equals(Utils.STUDENT_ACCOUNT)) {
 
             // Used ViewTreeObserver to wait for the UI to be sized and then we can get the the view's width
             binding.day2.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -297,7 +283,7 @@ public class TimetableFragment extends Fragment {
                     binding.day2.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     // Show today's classes by default
                     Calendar calendar = Calendar.getInstance();
-                    switch (calendar.get(Calendar.DAY_OF_WEEK)){
+                    switch (calendar.get(Calendar.DAY_OF_WEEK)) {
                         case 0:
                         case 6: // If its the weekend then show him the classes of the first day of next week
                             goToDay1();
@@ -357,27 +343,27 @@ public class TimetableFragment extends Fragment {
             // If its a teacher then show delete + edit buttons
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(teacherCallBack);
             itemTouchHelper.attachToRecyclerView(binding.classesRecView);
-        } else if (currentUserType.equals(Utils.ADMIN_ACCOUNT)){
+        } else if (currentUserType.equals(Utils.ADMIN_ACCOUNT)) {
             // If its an admin then show report button
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(adminCallBack);
             itemTouchHelper.attachToRecyclerView(binding.classesRecView);
         }
     }
 
-    private void showTodaySessions(int today){
+    private void showTodaySessions(int today) {
 
         List<Session> todaySessions = new ArrayList<>();
-        if (!sessions.isEmpty()){
+        if (!sessions.isEmpty()) {
             int sessionsCount = 0;
-            for (Session session:sessions){
+            for (Session session : sessions) {
                 // Get only today's sessions
-                if (session.getDay() == today){
+                if (session.getDay() == today) {
                     todaySessions.add(session);
-                    sessionsCount ++;
+                    sessionsCount++;
                 }
             }
 
-            if (!todaySessions.isEmpty()){
+            if (!todaySessions.isEmpty()) {
                 // Show the sessions in the rec view
                 adapter.setSessions(todaySessions);
                 binding.classesRecView.setAdapter(adapter);
@@ -388,7 +374,7 @@ public class TimetableFragment extends Fragment {
                 binding.emptyMsg.setVisibility(View.VISIBLE);
             }
             // Show the sessions counter
-            if (sessionsCount == 1){ // if its 1 then show the word "class" not "classes"
+            if (sessionsCount == 1) { // if its 1 then show the word "class" not "classes"
                 binding.textView4.setText(getString(R.string.class_1));
             } else {
                 binding.textView4.setText(getString(R.string.classes));
@@ -401,7 +387,7 @@ public class TimetableFragment extends Fragment {
         }
     }
 
-    private void goToDay1(){
+    private void goToDay1() {
         currentDay = 1;
         // Adding an animation
         binding.selectedDay.animate().x(0).setDuration(100);
@@ -417,13 +403,13 @@ public class TimetableFragment extends Fragment {
         binding.txtSelectedDay.setText(days.get(0));
 
         // Show today's sessions only if the user is a student or the teacher/admin applied a filter
-        if(currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+        if (currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
             // Show today's classes
             showTodaySessions(1);
         }
     }
 
-    private void goToDay2(){
+    private void goToDay2() {
         currentDay = 2;
         int size = binding.day2.getWidth();
         binding.selectedDay.animate().x(size).setDuration(100);
@@ -438,13 +424,13 @@ public class TimetableFragment extends Fragment {
         binding.txtSelectedDay.setText(days.get(1));
 
         // Show today's sessions only if the user is a student or the teacher/admin applied a filter
-        if(currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+        if (currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
             // Show today's classes
             showTodaySessions(2);
         }
     }
 
-    private void goToDay3(){
+    private void goToDay3() {
         currentDay = 3;
         int size = binding.day2.getWidth() * 2;
         binding.selectedDay.animate().x(size).setDuration(100);
@@ -459,13 +445,13 @@ public class TimetableFragment extends Fragment {
         binding.txtSelectedDay.setText(days.get(2));
 
         // Show today's sessions only if the user is a student or the teacher/admin applied a filter
-        if(currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+        if (currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
             // Show today's classes
             showTodaySessions(3);
         }
     }
 
-    private void goToDay4(){
+    private void goToDay4() {
         currentDay = 4;
         int size = binding.day2.getWidth() * 3;
         binding.selectedDay.animate().x(size).setDuration(100);
@@ -480,13 +466,13 @@ public class TimetableFragment extends Fragment {
         binding.txtSelectedDay.setText(days.get(3));
 
         // Show today's sessions only if the user is a student or the teacher/admin applied a filter
-        if(currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+        if (currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
             // Show today's classes
             showTodaySessions(4);
         }
     }
 
-    private void goToDay5(){
+    private void goToDay5() {
         currentDay = 5;
         int size = binding.day2.getWidth() * 4;
         binding.selectedDay.animate().x(size).setDuration(100);
@@ -501,13 +487,13 @@ public class TimetableFragment extends Fragment {
         binding.txtSelectedDay.setText(days.get(4));
 
         // Show today's sessions only if the user is a student or the teacher/admin applied a filter
-        if(currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+        if (currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
             // Show today's classes
             showTodaySessions(5);
         }
     }
 
-    private void goToDay6(){
+    private void goToDay6() {
         currentDay = 6;
         int size = binding.day2.getWidth() * 5;
         binding.selectedDay.animate().x(size).setDuration(100);
@@ -522,7 +508,7 @@ public class TimetableFragment extends Fragment {
         binding.txtSelectedDay.setText(days.get(5));
 
         // Show today's sessions only if the user is a student or the teacher/admin applied a filter
-        if(currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
+        if (currentUserType.equals(Utils.STUDENT_ACCOUNT) || filterApplied) {
             // Show today's classes
             showTodaySessions(6);
         }
@@ -541,7 +527,7 @@ public class TimetableFragment extends Fragment {
             int position = viewHolder.getAdapterPosition();
             Session currentSession = adapter.getSessions().get(position);
 
-            switch (direction){
+            switch (direction) {
                 case ItemTouchHelper.LEFT: // Swipe left to right <- : Delete item
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -595,7 +581,7 @@ public class TimetableFragment extends Fragment {
             int position = viewHolder.getAdapterPosition();
             Session currentSession = adapter.getSessions().get(position);
 
-            if (direction == ItemTouchHelper.LEFT){ // Swipe left to right <- : Report session
+            if (direction == ItemTouchHelper.LEFT) { // Swipe left to right <- : Report session
                 Toast.makeText(getContext(), "Report", Toast.LENGTH_SHORT).show();
                 adapter.notifyItemChanged(position); // To reset the item on the screen
             }
@@ -614,25 +600,51 @@ public class TimetableFragment extends Fragment {
         }
     };
 
-    private class getSectionSessionsCallback implements Callback<List<Session>>
-    {
+    private class getSectionSessionsCallback implements Callback<List<Session>> {
 
         @Override
-        public void onResponse(Call<List<Session>> call, Response<List<Session>> response) {
-            if(response.code() == Utils.HttpResponses.HTTP_200_OK)
-            {
+        public void onResponse(@NonNull Call<List<Session>> call, Response<List<Session>> response) {
+            if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
                 sessions = response.body();
                 Toast.makeText(getActivity(), "Retrieved sessions successfully.", Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
+            } else {
                 Toast.makeText(getActivity(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
-        public void onFailure(Call<List<Session>> call, Throwable t) {
+        public void onFailure(@NonNull Call<List<Session>> call, @NonNull Throwable t) {
 
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (currentUserType.equals(Utils.ADMIN_ACCOUNT)) {
+            Call<List<Section>> call = api.getAllSections();
+            call.enqueue(new Callback<List<Section>>() {
+                @Override
+                public void onResponse(@NonNull Call<List<Section>> call, @NonNull Response<List<Section>> response) {
+                    if (response.isSuccessful()) {
+                        List<Section> sectionsList = response.body();
+                        allSections = new ArrayList<>();
+                        if (sectionsList != null) {
+                            // Get names
+                            for (Section sec : sectionsList) {
+                                allSections.add(sec.getCode());
+                            }
+                        }
+                    } else {
+                        Toast.makeText(getContext(), getString(R.string.error) + response.code(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<List<Section>> call, @NonNull Throwable t) {
+                    Toast.makeText(getContext(), getString(R.string.error) + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 }
