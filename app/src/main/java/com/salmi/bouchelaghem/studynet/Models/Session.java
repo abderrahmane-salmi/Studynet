@@ -64,6 +64,7 @@ public class Session implements Parcelable {
         meetingPassword = in.readString();
         comment = in.readString();
         assignment = in.readInt();
+        concernedGroups = in.readArrayList(null);
     }
 
     public static final Creator<Session> CREATOR = new Creator<Session>() {
@@ -235,5 +236,6 @@ public class Session implements Parcelable {
         dest.writeString(meetingPassword);
         dest.writeString(comment);
         dest.writeInt(assignment);
+        dest.writeList(concernedGroups);
     }
 }
