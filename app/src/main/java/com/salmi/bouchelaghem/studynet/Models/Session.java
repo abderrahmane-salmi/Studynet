@@ -1,31 +1,29 @@
 package com.salmi.bouchelaghem.studynet.Models;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.threeten.bp.LocalTime;
 import java.util.List;
 
 public class Session {
 
     private int id;
-    private Assignment assignment;
-    private List<Integer> concernedGroups;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    @SerializedName("teacher_name") private String teacherName;
+    @SerializedName("teacher_email") private String teacherEmail;
+    private String module;
+    private String section;
+    @SerializedName("module_type") private String moduleType;
+    @SerializedName("concerned_groups") private List<Integer> concernedGroups;
     private int day;
-    private String meetingLink, meetingNumber, meetingPassword;
+    @SerializedName("start_time") private String startTime;
+    @SerializedName("end_time") private String endTime;
+    @SerializedName("meeting_link") private String meetingLink;
+    @SerializedName("meeting_number") private String meetingNumber;
+    @SerializedName("meeting_password") private String meetingPassword;
+    private String comment;
+    private int assignment;
 
     public Session() {
-    }
-
-    public Session(int id, Assignment assignment, List<Integer> concernedGroups, LocalTime startTime, LocalTime endTime, int day, String meetingLink, String meetingNumber, String meetingPassword) {
-        this.id = id;
-        this.assignment = assignment;
-        this.concernedGroups = concernedGroups;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.day = day;
-        this.meetingLink = meetingLink;
-        this.meetingNumber = meetingNumber;
-        this.meetingPassword = meetingPassword;
     }
 
     public int getId() {
@@ -36,12 +34,44 @@ public class Session {
         this.id = id;
     }
 
-    public Assignment getAssignment() {
-        return assignment;
+    public String getTeacherName() {
+        return teacherName;
     }
 
-    public void setAssignment(Assignment assignment) {
-        this.assignment = assignment;
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+    public String getTeacherEmail() {
+        return teacherEmail;
+    }
+
+    public void setTeacherEmail(String teacherEmail) {
+        this.teacherEmail = teacherEmail;
+    }
+
+    public String getModule() {
+        return module;
+    }
+
+    public void setModule(String module) {
+        this.module = module;
+    }
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
+    }
+
+    public String getModuleType() {
+        return moduleType;
+    }
+
+    public void setModuleType(String moduleType) {
+        this.moduleType = moduleType;
     }
 
     public List<Integer> getConcernedGroups() {
@@ -52,28 +82,28 @@ public class Session {
         this.concernedGroups = concernedGroups;
     }
 
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
-    }
-
     public int getDay() {
         return day;
     }
 
     public void setDay(int day) {
         this.day = day;
+    }
+
+    public LocalTime getStartTime() {
+        return LocalTime.parse(startTime);
+    }
+
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime.toString();
+    }
+
+    public LocalTime getEndTime() {
+        return LocalTime.parse(endTime);
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime.toString();
     }
 
     public String getMeetingLink() {
@@ -98,5 +128,21 @@ public class Session {
 
     public void setMeetingPassword(String meetingPassword) {
         this.meetingPassword = meetingPassword;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public int getAssignment() {
+        return assignment;
+    }
+
+    public void setAssignment(int assignment) {
+        this.assignment = assignment;
     }
 }
