@@ -62,7 +62,6 @@ public class AddClassActivity extends AppCompatActivity {
     private LocalTime endTime;
 
     private boolean otherMeetingFields = false;
-    private String meetingLink, meetingNumber, meetingPassword;
 
     private Assignment selectedAssignment;
 
@@ -98,6 +97,10 @@ public class AddClassActivity extends AppCompatActivity {
                             & groupSelected & daySelected & validateMeetingLink()
                             & startTime != null & endTime != null) {
 
+                        String meetingLink = binding.txtMeetingNumber.getEditText().getText().toString().trim();
+                        String meetingNumber = binding.txtMeetingNumber.getEditText().getText().toString().trim();
+                        String meetingPassword = binding.txtMeetingPassword.getEditText().getText().toString().trim();
+                        String notes = binding.txtClassNotes.getEditText().getText().toString().trim();
 
                         session = new Session();
                         session.setId(-1);
@@ -109,13 +112,9 @@ public class AddClassActivity extends AppCompatActivity {
                         session.setLocalTimeEndTime(endTime);
                         session.setDay(day);
                         session.setMeetingLink(meetingLink);
-
-                        String meetingNumber = binding.txtMeetingNumber.getEditText().getText().toString().trim();
-                        String meetingPassword = binding.txtMeetingPassword.getEditText().getText().toString().trim();
-                        if (!meetingNumber.isEmpty() && !meetingPassword.isEmpty()) {
-                            session.setMeetingNumber(meetingNumber);
-                            session.setMeetingNumber(meetingPassword);
-                        }
+                        session.setMeetingNumber(meetingNumber);
+                        session.setMeetingNumber(meetingPassword);
+                        session.setComment(notes);
 
                         // Save the session to the database
 
@@ -165,6 +164,17 @@ public class AddClassActivity extends AppCompatActivity {
                     if (sectionSelected & moduleSelected & moduleTypeSelected
                             & groupSelected & daySelected & validateMeetingLink()
                             & startTime != null & endTime != null) {
+
+                        String meetingLink = binding.txtMeetingNumber.getEditText().getText().toString().trim();
+                        String meetingNumber = binding.txtMeetingNumber.getEditText().getText().toString().trim();
+                        String meetingPassword = binding.txtMeetingPassword.getEditText().getText().toString().trim();
+                        String notes = binding.txtClassNotes.getEditText().getText().toString().trim();
+
+                        // Update meeting info + notes
+                        currentSession.setMeetingLink(meetingLink);
+                        currentSession.setMeetingNumber(meetingNumber);
+                        currentSession.setMeetingNumber(meetingPassword);
+                        currentSession.setComment(notes);
 
                         if (!ogSession.equals(currentSession)){
                             // Update the session in the database
@@ -470,6 +480,10 @@ public class AddClassActivity extends AppCompatActivity {
             binding.txtMeetingPassword.getEditText().setText(session.getMeetingPassword());
         }
 
+        if (session.getComment() != null){
+            binding.txtClassNotes.getEditText().setText(session.getComment());
+        }
+
     }
 
     private void initDays() {
@@ -555,7 +569,7 @@ public class AddClassActivity extends AppCompatActivity {
     }
 
     public boolean validateMeetingLink() {
-        meetingLink = binding.txtMeetingLink.getEditText().getText().toString().trim();
+        String meetingLink = binding.txtMeetingLink.getEditText().getText().toString().trim();
 
         if (meetingLink.isEmpty()) {
             binding.txtMeetingLink.setError(getString(R.string.link_msg));

@@ -425,6 +425,43 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!--        Comment-->
+        <ImageView
+            android:id="@+id/imageView11"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginStart="24dp"
+            android:src="@drawable/ic_list"
+            app:layout_constraintBottom_toBottomOf="@+id/txtClassNotes"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txtClassNotes"
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtClassNotes"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="24dp"
+            android:textColorHint="@color/secondary_text_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imageView11"
+            app:layout_constraintTop_toBottomOf="@+id/txtMeetingPassword">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/tabularasa_regular"
+                android:hint="@string/notes"
+                android:inputType="textPersonName|textCapSentences"
+                android:textSize="15sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSave"
             android:layout_width="wrap_content"
@@ -444,7 +481,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtMeetingPassword"
+            app:layout_constraintTop_toBottomOf="@+id/txtClassNotes"
             app:strokeColor="#969696"
             app:strokeWidth="0.9dp" />
 
