@@ -37,6 +37,7 @@ import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
+import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
@@ -48,6 +49,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -83,6 +85,9 @@ public class TimetableFragment extends Fragment {
     // Studynet Api
     private StudynetAPI api;
 
+    private CustomLoadingDialog loadingDialog;
+
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -109,6 +114,8 @@ public class TimetableFragment extends Fragment {
         NavigationActivity context = (NavigationActivity) getActivity();
         assert context != null;
 
+        //Init loading dialog
+        loadingDialog = new CustomLoadingDialog(getContext());
         switch (currentUserType) {
             case Utils.TEACHER_ACCOUNT:  // If the user is a teacher
 
@@ -525,10 +532,33 @@ public class TimetableFragment extends Fragment {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setMessage(R.string.are_you_sure);
                         builder.setPositiveButton(R.string.yes, (dialog, which) -> {
-                            sessions.remove(currentSession);
-                            adapter.getSessions().remove(position);
-                            adapter.notifyItemRemoved(position);
-                            Toast.makeText(getContext(), getString(R.string.session_deleted_msg), Toast.LENGTH_SHORT).show();
+                            //Delete the session from the api
+                            Call<ResponseBody> deleteSessionCall = api.deleteSession(currentSession.getId(),"Token " + currentUser.getToken());
+                            loadingDialog.show();
+                            deleteSessionCall.enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                    if(response.code() == Utils.HttpResponses.HTTP_204_NO_CONTENT)
+                                    {
+                                        sessions.remove(currentSession);
+                                        adapter.getSessions().remove(position);
+                                        adapter.notifyItemRemoved(position);
+                                        Toast.makeText(getContext(), getString(R.string.session_deleted_msg), Toast.LENGTH_SHORT).show();
+                                    }
+                                    else
+                                    {
+                                        Toast.makeText(getContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                                    }
+                                    loadingDialog.dismiss();
+                                }
+
+                                @Override
+                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                    Toast.makeText(getContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+                                    loadingDialog.dismiss();
+                                }
+                            });
+
                         });
                         builder.setNegativeButton(R.string.no, (dialog, which) -> {
                             // Do Nothing

@@ -14,6 +14,7 @@ import java.util.List;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -74,6 +75,9 @@ public interface StudynetAPI {
 
     @POST("sessions/")
     Call<JsonObject> createSession(@Body JsonObject session, @Header("Authorization") String token);
+
+    @DELETE("sessions/{id}/")
+    Call<ResponseBody> deleteSession(@Path("id") int id, @Header("Authorization") String token);
 
     // *** Teachers ***
     /** Get teachers based on section*/
