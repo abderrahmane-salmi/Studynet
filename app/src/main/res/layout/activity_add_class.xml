@@ -178,7 +178,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="24dp"
-            android:hint="@string/group"
+            android:hint="@string/groups"
             android:textSize="15sp"
             android:fontFamily="@font/tabularasa_regular"
             android:gravity="center_vertical"

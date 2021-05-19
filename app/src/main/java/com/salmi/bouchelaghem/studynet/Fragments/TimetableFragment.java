@@ -62,9 +62,9 @@ public class TimetableFragment extends Fragment {
     private Dialog dialog;
 
     // Days
-    // TODO: use it or delete it
     private int currentDay = 1;
     private List<String> days;
+    private static int sessionsCount = 0;
 
     // Rec view
     private List<Session> sessions;
@@ -341,8 +341,8 @@ public class TimetableFragment extends Fragment {
     private void showTodaySessions(int today) {
 
         List<Session> todaySessions = new ArrayList<>();
+        sessionsCount = 0;
         if (!sessions.isEmpty()) {
-            int sessionsCount = 0;
             for (Session session : sessions) {
                 // Get only today's sessions
                 if (session.getDay() == today) {
@@ -502,6 +502,10 @@ public class TimetableFragment extends Fragment {
         }
     }
 
+    public static void incrementSessionsCount() {
+        TimetableFragment.sessionsCount++;
+    }
+
     // Swipe to delete and edit in the recycler view
     ItemTouchHelper.SimpleCallback teacherCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
@@ -618,6 +622,15 @@ public class TimetableFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        // Set sessions count
+        // Show the sessions counter
+        if (sessionsCount == 1) { // if its 1 then show the word "class" not "classes"
+            binding.textView4.setText(getString(R.string.class_1));
+        } else {
+            binding.textView4.setText(getString(R.string.classes));
+        }
+        binding.txtClassesCount.setText(String.valueOf(sessionsCount));
+
         if (currentUserType.equals(Utils.ADMIN_ACCOUNT)) {
             Call<List<Section>> call = api.getAllSections();
             call.enqueue(new Callback<List<Section>>() {

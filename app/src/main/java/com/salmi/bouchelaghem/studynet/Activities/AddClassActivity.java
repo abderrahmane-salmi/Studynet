@@ -13,6 +13,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.google.gson.JsonObject;
+import com.salmi.bouchelaghem.studynet.Fragments.TimetableFragment;
 import com.salmi.bouchelaghem.studynet.Models.Assignment;
 import com.salmi.bouchelaghem.studynet.Models.Session;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
@@ -21,7 +22,6 @@ import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
 import com.salmi.bouchelaghem.studynet.Utils.Serializers;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
-import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityAddClassBinding;
 
@@ -84,8 +84,6 @@ public class AddClassActivity extends AppCompatActivity {
     private final Teacher currentTeacher = currentUser.getCurrentTeacher();
     private final List<Assignment> teacherAssignments = new ArrayList<>(currentTeacher.getAssignments());
 
-    TestAPI testAPI = TestAPI.getInstance();
-
     // Studynet Api
     private StudynetAPI api;
 
@@ -126,19 +124,13 @@ public class AddClassActivity extends AppCompatActivity {
                             & groupSelected & daySelected & validateMeetingLink()
                             & startTime != null & endTime != null) {
                         //Check if end time is after start time.
-                        if(endTime.isBefore(startTime))
-                        {
+                        if (endTime.isBefore(startTime)) {
                             Toast.makeText(this, getString(R.string.endtime_after_starttime), Toast.LENGTH_LONG).show();
-                        }
-                        else
-                        {
+                        } else {
                             //Check that the given time is allowed.
-                            if(startTime.isBefore(LocalTime.parse("08:00:00")) || endTime.isAfter(LocalTime.parse("18:10:00")))
-                            {
+                            if (startTime.isBefore(LocalTime.parse("08:00:00")) || endTime.isAfter(LocalTime.parse("18:10:00"))) {
                                 Toast.makeText(this, getString(R.string.time_not_allowed), Toast.LENGTH_LONG).show();
-                            }
-                            else
-                            {
+                            } else {
                                 //All of the data is valid, send it to the api.
                                 String meetingLink = binding.txtMeetingLink.getEditText().getText().toString().trim();
                                 String meetingNumber = binding.txtMeetingNumber.getEditText().getText().toString().trim();
@@ -226,7 +218,7 @@ public class AddClassActivity extends AppCompatActivity {
                         currentSession.setMeetingNumber(meetingPassword);
                         currentSession.setComment(notes);
 
-                        if (!ogSession.equals(currentSession)){
+                        if (!ogSession.equals(currentSession)) {
                             // Update the session in the database
                         } else {
                             Toast.makeText(this, getString(R.string.no_changes_msg), Toast.LENGTH_SHORT).show();
@@ -528,7 +520,7 @@ public class AddClassActivity extends AppCompatActivity {
             binding.txtMeetingPassword.getEditText().setText(session.getMeetingPassword());
         }
 
-        if (session.getComment() != null){
+        if (session.getComment() != null) {
             binding.txtClassNotes.getEditText().setText(session.getComment());
         }
 
@@ -629,29 +621,28 @@ public class AddClassActivity extends AppCompatActivity {
         }
     }
 
-    private class CreateSessionCallback implements Callback<JsonObject>
-    {
+    private class CreateSessionCallback implements Callback<JsonObject> {
         @Override
         public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-            if(response.code() == Utils.HttpResponses.HTTP_201_CREATED)
-            {
+            if (response.code() == Utils.HttpResponses.HTTP_201_CREATED) {
                 Toast.makeText(getApplicationContext(), getString(R.string.session_created), Toast.LENGTH_LONG).show();
                 loadingDialog.dismiss();
+                // TODO: Add the session to the timetable sessions list
+                // Only if its the same section as the filter
+                // And if the session's day is the selected day in the timetable then re-call show today sessions and increment the sessions count
+                //                TimetableFragment.incrementSessionsCount();
                 finish();
-            }
-            else
-            {
+            } else {
                 //Parse the error response and check if it is because of a session overlap.
                 try {
+                    assert response.errorBody() != null;
                     JSONObject errorBody = new JSONObject(response.errorBody().string());
-                    if(errorBody.has("overlapping"))
-                    {
+                    if (errorBody.has("overlapping")) {
                         Toast.makeText(getApplicationContext(), getString(R.string.overlapping_sessions), Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     Toast.makeText(getApplicationContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
                 }
-
                 loadingDialog.dismiss();
             }
         }
