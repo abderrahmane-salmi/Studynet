@@ -76,18 +76,14 @@ public class SplashActivity extends AppCompatActivity {
 
         } else {
 
-            new Handler().postDelayed(() -> {
-                //Check if the user is already logged in using shared preferences.
-                if (sharedPreferences.getBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,false))
-                {
-                    loadUserData();
-                }
-                else
-                {
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                }
-                //finish();
-            }, 1000);
+            //Check if the user is already logged in using shared preferences.
+            if (sharedPreferences.getBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,false))
+            {
+                loadUserData();
+            }
+            else {
+                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+            }
 
         }
     }
@@ -137,6 +133,7 @@ public class SplashActivity extends AppCompatActivity {
                             }
                         }
                         startActivity(new Intent(SplashActivity.this, NavigationActivity.class));
+                        finish();
                         break;
                     case Utils.HttpResponses.HTTP_401_UNAUTHORIZED:
                         //Token is invalid, disconnect the user.
@@ -145,6 +142,7 @@ public class SplashActivity extends AppCompatActivity {
                         prefsEditor.apply();
                         Toast.makeText(SplashActivity.this, getString(R.string.session_expired), Toast.LENGTH_LONG).show();
                         startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                        finish();
                         break;
                     default:
                         Toast.makeText(SplashActivity.this, getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
