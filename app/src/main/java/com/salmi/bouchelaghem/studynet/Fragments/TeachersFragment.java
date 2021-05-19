@@ -223,12 +223,7 @@ public class TeachersFragment extends Fragment {
                         }
                         if (!teachers.isEmpty()) {
                             //Sort the teacher list by their names.
-                            Collections.sort(teachers, new Comparator<Teacher>() {
-                                @Override
-                                public int compare(Teacher o1, Teacher o2) {
-                                    return o1.getLastName().compareToIgnoreCase(o2.getLastName());
-                                }
-                            });
+                            Collections.sort(teachers, (o1, o2) -> o1.getLastName().compareToIgnoreCase(o2.getLastName()));
                             //Display the teachers list.
                             adapter.setTeachers(teachers);
                             binding.teachersRecView.setAdapter(adapter);

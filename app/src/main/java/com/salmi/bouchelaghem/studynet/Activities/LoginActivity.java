@@ -11,7 +11,6 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
@@ -38,50 +37,41 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
         // Set the light theme is the default theme.
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
+        loadingDialog = new CustomLoadingDialog(LoginActivity.this);
+
         //Get the shared preferences.
         sharedPreferences = getApplicationContext().getSharedPreferences(Utils.SHARED_PREFERENCES_USER_DATA, MODE_PRIVATE);
+
         // Init retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Utils.API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        loadingDialog = new CustomLoadingDialog(LoginActivity.this);
-
         // Init our api, this will implement the code of all the methods in the interface.
         api = retrofit.create(StudynetAPI.class);
 
-        binding.btnGoToSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
-            }
-        });
+        loadingDialog = new CustomLoadingDialog(LoginActivity.this);
 
-        binding.btnGoToResetPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class));
-            }
-        });
+        binding.btnGoToSignUp.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, SignUpActivity.class)));
 
-        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateEmail() & validatePassword()) {
-                    loadingDialog.show();
-                    JsonObject credentials = new JsonObject();
-                    credentials.addProperty("email", binding.txtLoginEmail.getEditText().getText().toString().trim());
-                    credentials.addProperty("password", binding.txtLoginPassword.getEditText().getText().toString());
-                    Call<JsonObject> login = api.login(credentials);
-                    login.enqueue(new LoginCallback());
-                }
+        binding.btnGoToResetPassword.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class)));
+
+        binding.btnLogin.setOnClickListener(v -> {
+            if (validateEmail() & validatePassword()) {
+                loadingDialog.show();
+                JsonObject credentials = new JsonObject();
+                credentials.addProperty("email", binding.txtLoginEmail.getEditText().getText().toString().trim());
+                credentials.addProperty("password", binding.txtLoginPassword.getEditText().getText().toString());
+                Call<JsonObject> login = api.login(credentials);
+                login.enqueue(new LoginCallback());
             }
         });
     }
@@ -119,13 +109,12 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Logs in the teacher given in the teacher data. (takes care of the token too)
      */
-    public static CurrentUser loginTeacher(JsonObject teacher) {
+    public static void loginTeacher(JsonObject teacher) {
         CurrentUser currentUser = CurrentUser.getInstance();
         //Set the current user
         currentUser.setUserType(Utils.TEACHER_ACCOUNT);
         currentUser.setCurrentTeacher(Serializers.TeacherDeserializer(teacher));
         currentUser.setToken(teacher.get("token").getAsString());
-        return currentUser;
     }
 
     /**
