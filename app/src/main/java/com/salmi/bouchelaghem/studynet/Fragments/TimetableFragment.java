@@ -28,9 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.salmi.bouchelaghem.studynet.Activities.AddClassActivity;
-import com.salmi.bouchelaghem.studynet.Activities.AddTeacherActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
-import com.salmi.bouchelaghem.studynet.Activities.SignUpActivity;
 import com.salmi.bouchelaghem.studynet.Adapters.SessionsAdapter;
 import com.salmi.bouchelaghem.studynet.Models.Admin;
 import com.salmi.bouchelaghem.studynet.Models.Section;
@@ -519,34 +517,36 @@ public class TimetableFragment extends Fragment {
 
             switch (direction) {
                 case ItemTouchHelper.LEFT: // Swipe left to right <- : Delete item
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setMessage(R.string.are_you_sure);
-                    builder.setPositiveButton(R.string.yes, (dialog, which) -> {
-                        sessions.remove(currentSession);
-                        adapter.getSessions().remove(position);
-                        adapter.notifyItemRemoved(position);
-                        Toast.makeText(getContext(), getString(R.string.session_deleted_msg), Toast.LENGTH_SHORT).show();
-                    });
-                    builder.setNegativeButton(R.string.no, (dialog, which) -> {
-                        // Do Nothing
+                    if (currentSession.getTeacherEmail().equals(currentUser.getCurrentTeacher().getEmail())) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setMessage(R.string.are_you_sure);
+                        builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+                            sessions.remove(currentSession);
+                            adapter.getSessions().remove(position);
+                            adapter.notifyItemRemoved(position);
+                            Toast.makeText(getContext(), getString(R.string.session_deleted_msg), Toast.LENGTH_SHORT).show();
+                        });
+                        builder.setNegativeButton(R.string.no, (dialog, which) -> {
+                            // Do Nothing
+                            adapter.notifyItemChanged(position); // To reset the item on the screen
+                        });
+                        builder.create().show();
+                    } else {
+                        Toast.makeText(getContext(), getString(R.string.delete_your_session_msg), Toast.LENGTH_SHORT).show();
                         adapter.notifyItemChanged(position); // To reset the item on the screen
-                    });
-                    builder.create().show();
+                    }
                     break;
                 case ItemTouchHelper.RIGHT: // Swipe right to left -> : Edit item
-                    if(currentSession.getTeacherEmail().equals(currentUser.getCurrentTeacher().getEmail()))
-                    {
+                    // To reset the item on the screen
+                    if (currentSession.getTeacherEmail().equals(currentUser.getCurrentTeacher().getEmail())) {
                         Intent intent = new Intent(getContext(), AddClassActivity.class);
                         intent.putExtra(Utils.ACTION, Utils.ACTION_UPDATE);
                         intent.putExtra(Utils.SESSION, currentSession);
                         startActivity(intent);
-                        adapter.notifyItemChanged(position); // To reset the item on the screen
+                    } else {
+                        Toast.makeText(getContext(), getString(R.string.edit_your_session_msg), Toast.LENGTH_SHORT).show();
                     }
-                    else
-                    {
-                        Toast.makeText(getContext(), "You can only edit your own sessions.", Toast.LENGTH_SHORT).show();
-                    }
+                    adapter.notifyItemChanged(position); // To reset the item on the screen
                     break;
             }
         }
@@ -603,7 +603,6 @@ public class TimetableFragment extends Fragment {
         public void onResponse(@NonNull Call<List<Session>> call, Response<List<Session>> response) {
             if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
                 sessions = response.body();
-                Toast.makeText(getActivity(), "Retrieved sessions successfully.", Toast.LENGTH_SHORT).show();
                 showTodaySessions(currentDay);
             } else {
                 Toast.makeText(getActivity(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();

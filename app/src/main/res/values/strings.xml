@@ -172,16 +172,18 @@
     <string name="email_msg3">Please try to use another email</string>
     <string name="loading">Loading …</string>
     <string name="logged_in_msg">You have logged in successfully</string>
-    <string name="assignment_already_exists">This assignment already exists.</string>
+    <string name="assignment_already_exists">This assignment already exists</string>
     <string name="select_section_teacher_msg">Please Select a Section to See its Teachers</string>
     <string name="email_password_incorrect">The email or password you entered is incorrect</string>
     <string name="select_department_teacher_msg">Please Select a Department to See its Teachers</string>
-    <string name="assignment_added">Assignment added successfully.</string>
+    <string name="assignment_added">Assignment added successfully</string>
     <string name="no_sections">No sections were found</string>
     <string name="no_groups">No groups were found</string>
-    <string name="endtime_after_starttime">End time must be set after the start time.</string>
-    <string name="time_not_allowed">A session cannot be created before 8AM or after 6PM.</string>
-    <string name="overlapping_sessions">This session is overlapping an existing one.</string>
-    <string name="session_created">Session created successfully.</string>
+    <string name="endtime_after_starttime">End time must be set after the start time</string>
+    <string name="time_not_allowed">A session cannot be created before 8AM or after 6PM</string>
+    <string name="overlapping_sessions">This session is overlapping an existing one</string>
+    <string name="session_created">Session created successfully</string>
     <string name="none">None</string>
+    <string name="edit_your_session_msg">You can only edit your own sessions</string>
+    <string name="delete_your_session_msg">You can only delete your own sessions</string>
 </resources>
