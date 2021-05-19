@@ -98,29 +98,17 @@ public class ClassDetailsActivity extends AppCompatActivity {
         binding.classMeetingLink.setText(session.getMeetingLink());
 
         // Other meeting info
-        if (session.getMeetingNumber() != null && session.getMeetingPassword() != null){
+        if (!session.getMeetingNumber().isEmpty() && !session.getMeetingPassword().isEmpty()){
             // Show other meeting info
             binding.otherMeetingInfoGroup.setVisibility(View.VISIBLE);
-            if(session.getMeetingNumber().isEmpty())
-            {
-                binding.classMeetingNumber.setText(R.string.none);
-            }
-            else {
-                binding.classMeetingNumber.setText(session.getMeetingNumber());
-            }
-            if(session.getMeetingPassword().isEmpty())
-            {
-                binding.classMeetingPassword.setText(R.string.none);
-            }
-            else
-            {
-                binding.classMeetingPassword.setText(session.getMeetingPassword());
-            }
+
+            binding.classMeetingNumber.setText(session.getMeetingNumber());
+            binding.classMeetingPassword.setText(session.getMeetingPassword());
 
         }
 
         // Notes
-        if (session.getComment() != null && !session.getComment().isEmpty()){
+        if (!session.getComment().isEmpty()){
             binding.classNotesGroup.setVisibility(View.VISIBLE);
             binding.txtClassNotes.setText(session.getComment());
         }

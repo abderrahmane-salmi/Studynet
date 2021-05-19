@@ -346,7 +346,7 @@ public class TimetableFragment extends Fragment {
     }
 
     private void showTodaySessions(int today) {
-
+        //TODO: sort sessions by start time
         List<Session> todaySessions = new ArrayList<>();
         sessionsCount = 0;
         if (!sessions.isEmpty()) {
