@@ -540,9 +540,22 @@ public class TimetableFragment extends Fragment {
                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                     if(response.code() == Utils.HttpResponses.HTTP_204_NO_CONTENT)
                                     {
+                                        //The session has been removed from the api, remove it locally
                                         sessions.remove(currentSession);
                                         adapter.getSessions().remove(position);
                                         adapter.notifyItemRemoved(position);
+                                        //Decrease the number of sessions by 1
+                                        --sessionsCount;
+                                        binding.txtClassesCount.setText(String.valueOf(sessionsCount));
+                                        if (sessionsCount == 1) { // if its 1 then show the word "class" not "classes"
+                                            binding.textView4.setText(getString(R.string.class_1));
+                                        } else {
+                                            binding.textView4.setText(getString(R.string.classes));
+                                        }
+                                        if(sessionsCount == 0)
+                                        {
+                                            binding.emptyMsg.setVisibility(View.VISIBLE);
+                                        }
                                         Toast.makeText(getContext(), getString(R.string.session_deleted_msg), Toast.LENGTH_SHORT).show();
                                     }
                                     else
