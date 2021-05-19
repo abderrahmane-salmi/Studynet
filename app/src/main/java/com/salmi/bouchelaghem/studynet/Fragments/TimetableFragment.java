@@ -67,7 +67,6 @@ public class TimetableFragment extends Fragment {
     private boolean firstTime = true;
     private int currentDay = 1;
     private List<String> days;
-    private static int sessionsCount = 0;
 
     // Rec view
     private List<Session> sessions;
@@ -308,7 +307,7 @@ public class TimetableFragment extends Fragment {
     private void showTodaySessions(int today) {
         //TODO: sort sessions by start time
         List<Session> todaySessions = new ArrayList<>();
-        sessionsCount = 0;
+        int sessionsCount = 0;
         if (!sessions.isEmpty()) {
             for (Session session : sessions) {
                 // Get only today's sessions
@@ -502,10 +501,6 @@ public class TimetableFragment extends Fragment {
         }
     }
 
-    public static void incrementSessionsCount() {
-        TimetableFragment.sessionsCount++;
-    }
-
     // Swipe to delete and edit in the recycler view
     ItemTouchHelper.SimpleCallback teacherCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
@@ -538,7 +533,8 @@ public class TimetableFragment extends Fragment {
                                         adapter.getSessions().remove(position);
                                         adapter.notifyItemRemoved(position);
                                         //Decrease the number of sessions by 1
-                                        --sessionsCount;
+                                        int sessionsCount = Integer.parseInt(binding.txtClassesCount.getText().toString());
+                                        sessionsCount--;
                                         binding.txtClassesCount.setText(String.valueOf(sessionsCount));
                                         if (sessionsCount == 1) { // if its 1 then show the word "class" not "classes"
                                             binding.textView4.setText(getString(R.string.class_1));
@@ -559,7 +555,7 @@ public class TimetableFragment extends Fragment {
                                 }
 
                                 @Override
-                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                                     Toast.makeText(getContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
                                     loadingDialog.dismiss();
                                 }
@@ -641,7 +637,6 @@ public class TimetableFragment extends Fragment {
 
         @Override
         public void onResponse(@NonNull Call<List<Session>> call, Response<List<Session>> response) {
-            sessionsCount = 0;
             if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
                 sessions = response.body();
 
@@ -699,15 +694,6 @@ public class TimetableFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        // Set sessions count
-        // Show the sessions counter
-        if (sessionsCount == 1) { // if its 1 then show the word "class" not "classes"
-            binding.textView4.setText(getString(R.string.class_1));
-        } else {
-            binding.textView4.setText(getString(R.string.classes));
-        }
-        binding.txtClassesCount.setText(String.valueOf(sessionsCount));
-
         // If its an admin then get all sections to setup the filter
         if (currentUserType.equals(Utils.ADMIN_ACCOUNT) && firstTime) {
             Call<List<Section>> call = api.getAllSections();
@@ -744,11 +730,5 @@ public class TimetableFragment extends Fragment {
                 getSessions(selectedSection);
             }
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        sessionsCount = 0;
-        super.onDestroy();
     }
 }
