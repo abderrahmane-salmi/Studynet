@@ -64,6 +64,7 @@ public class TimetableFragment extends Fragment {
     private Dialog dialog;
 
     // Days
+    private boolean firstTime = true;
     private int currentDay = 1;
     private List<String> days;
     private static int sessionsCount = 0;
@@ -248,14 +249,8 @@ public class TimetableFragment extends Fragment {
                 break;
             case Utils.STUDENT_ACCOUNT: // If the user is a student
 
-                // Get the current student
-                Student student = currentUser.getCurrentStudent();
-
                 // Hide the filter button
                 context.btnFilter.setVisibility(View.GONE);
-
-                // Get the student's sessions
-                getSessions(student.getSection().getCode());
 
                 break;
         }
@@ -275,42 +270,6 @@ public class TimetableFragment extends Fragment {
         binding.day5.setOnClickListener(v -> goToDay5());
 
         binding.day6.setOnClickListener(v -> goToDay6());
-
-        // If its a student show him today's classes
-        if (currentUserType.equals(Utils.STUDENT_ACCOUNT)) {
-
-            // Used ViewTreeObserver to wait for the UI to be sized and then we can get the the view's width
-            binding.day2.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    binding.day2.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    // Show today's classes by default
-                    Calendar calendar = Calendar.getInstance();
-                    switch (calendar.get(Calendar.DAY_OF_WEEK)) {
-                        case 0:
-                        case 6: // If its the weekend then show him the classes of the first day of next week
-                            goToDay1();
-                            break;
-                        case 1:
-                            goToDay2();
-                            break;
-                        case 2:
-                            goToDay3();
-                            break;
-                        case 3:
-                            goToDay4();
-                            break;
-                        case 4:
-                            goToDay5();
-                            break;
-                        case 5:
-                            goToDay6();
-                            break;
-                    }
-                }
-            });
-
-        }
 
         return view;
     }
@@ -381,6 +340,39 @@ public class TimetableFragment extends Fragment {
             binding.textView4.setText(getString(R.string.classes));
         }
         binding.txtClassesCount.setText(String.valueOf(sessionsCount));
+    }
+
+    private void goToToday() {
+        // Used ViewTreeObserver to wait for the UI to be sized and then we can get the the view's width
+        binding.day2.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                binding.day2.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                // Show today's classes by default
+                Calendar calendar = Calendar.getInstance();
+                switch (calendar.get(Calendar.DAY_OF_WEEK)) {
+                    case 0:
+                    case 6: // If its the weekend then show him the classes of the first day of next week
+                        goToDay1();
+                        break;
+                    case 1:
+                        goToDay2();
+                        break;
+                    case 2:
+                        goToDay3();
+                        break;
+                    case 3:
+                        goToDay4();
+                        break;
+                    case 4:
+                        goToDay5();
+                        break;
+                    case 5:
+                        goToDay6();
+                        break;
+                }
+            }
+        });
     }
 
     private void goToDay1() {
@@ -652,7 +644,41 @@ public class TimetableFragment extends Fragment {
             sessionsCount = 0;
             if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
                 sessions = response.body();
-                showTodaySessions(currentDay);
+
+                if (firstTime){
+                    // If its the first time we launch the fragment and its a student then show him today's classes
+                    if (currentUserType.equals(Utils.STUDENT_ACCOUNT)) {
+                        goToToday();
+                    } else if (currentUserType.equals(Utils.ADMIN_ACCOUNT) || currentUserType.equals(Utils.TEACHER_ACCOUNT)){
+                        // If its the first time we launch the fragment and its a teacher or an admin then show him first day's classes
+                        goToDay1();
+                    }
+                    firstTime = false;
+                } else {
+                    // Show the user the classes he last checked
+                    switch (currentDay){
+                        case 1:
+                        case 7: // If its the weekend then show him the classes of the first day of next week
+                            goToDay1();
+                            break;
+                        case 2:
+                            goToDay2();
+                            break;
+                        case 3:
+                            goToDay3();
+                            break;
+                        case 4:
+                            goToDay4();
+                            break;
+                        case 5:
+                            goToDay5();
+                            break;
+                        case 6:
+                            goToDay6();
+                            break;
+                    }
+                }
+
             } else {
                 Toast.makeText(getActivity(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
             }
@@ -682,7 +708,8 @@ public class TimetableFragment extends Fragment {
         }
         binding.txtClassesCount.setText(String.valueOf(sessionsCount));
 
-        if (currentUserType.equals(Utils.ADMIN_ACCOUNT)) {
+        // If its an admin then get all sections to setup the filter
+        if (currentUserType.equals(Utils.ADMIN_ACCOUNT) && firstTime) {
             Call<List<Section>> call = api.getAllSections();
             call.enqueue(new Callback<List<Section>>() {
                 @Override
@@ -706,6 +733,16 @@ public class TimetableFragment extends Fragment {
                     Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+
+        if (currentUserType.equals(Utils.STUDENT_ACCOUNT)){
+            Student student = currentUser.getCurrentStudent();
+            // Get the student's sessions
+            getSessions(student.getSection().getCode());
+        } else if (currentUserType.equals(Utils.TEACHER_ACCOUNT) || currentUserType.equals(Utils.ADMIN_ACCOUNT)){
+            if (filterApplied){
+                getSessions(selectedSection);
+            }
         }
     }
 
