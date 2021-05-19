@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Models.Assignment;
 import com.salmi.bouchelaghem.studynet.Models.Session;
@@ -26,11 +25,9 @@ import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityAddClassBinding;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.threeten.bp.LocalTime;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -512,11 +509,8 @@ public class AddClassActivity extends AppCompatActivity {
         }
 
 
-        //TODO: for some reason init days is not properly filling the list of days, it's only showing the chosen day.
-        // Day
-        initDays();
         daySelected = true;
-        binding.classDay.setText(days.get(session.getDay() - 1));
+        binding.classDay.setText(days.get(session.getDay() - 1), false);
 
         // Time
         startTime = session.getLocalTimeStartTime();
