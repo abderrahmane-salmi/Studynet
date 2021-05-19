@@ -115,7 +115,7 @@ public class TimetableFragment extends Fragment {
         assert context != null;
 
         //Init loading dialog
-        loadingDialog = new CustomLoadingDialog(getContext());
+        loadingDialog = new CustomLoadingDialog(requireContext());
         switch (currentUserType) {
             case Utils.TEACHER_ACCOUNT:  // If the user is a teacher
 
@@ -159,7 +159,6 @@ public class TimetableFragment extends Fragment {
 
                             filterApplied = true;
                             getSessions(selectedSection);
-                            goToDay1();
                             binding.selectSectionMsg.setVisibility(View.GONE);
                             dialog.dismiss();
 
@@ -219,7 +218,6 @@ public class TimetableFragment extends Fragment {
                             if (sectionSelected) {
 
                                 getSessions(selectedSection);
-                                goToDay1();
                                 binding.selectSectionMsg.setVisibility(View.GONE);
                                 dialog.dismiss();
                                 filterApplied = true;
@@ -322,6 +320,9 @@ public class TimetableFragment extends Fragment {
     }
 
     private void getSessions(String sectionCode) {
+        // Start loading animation
+        binding.loadingAnimation.setVisibility(View.VISIBLE);
+        binding.loadingAnimation.playAnimation();
         // Get all the sessions for this section
         Call<List<Session>> getSectionSessionsCall = api.getSectionSessions(sectionCode, "Token " + currentUser.getToken());
         getSectionSessionsCall.enqueue(new getSectionSessionsCallback());
@@ -537,7 +538,7 @@ public class TimetableFragment extends Fragment {
                             loadingDialog.show();
                             deleteSessionCall.enqueue(new Callback<ResponseBody>() {
                                 @Override
-                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                                     if(response.code() == Utils.HttpResponses.HTTP_204_NO_CONTENT)
                                     {
                                         //The session has been removed from the api, remove it locally
@@ -654,11 +655,17 @@ public class TimetableFragment extends Fragment {
             } else {
                 Toast.makeText(getActivity(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
             }
+            // Stop loading animation
+            binding.loadingAnimation.setVisibility(View.GONE);
+            binding.loadingAnimation.cancelAnimation();
         }
 
         @Override
         public void onFailure(@NonNull Call<List<Session>> call, @NonNull Throwable t) {
-
+            // Stop loading animation
+            binding.loadingAnimation.setVisibility(View.GONE);
+            binding.loadingAnimation.cancelAnimation();
+            Toast.makeText(getContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -695,9 +702,15 @@ public class TimetableFragment extends Fragment {
 
                 @Override
                 public void onFailure(@NonNull Call<List<Section>> call, @NonNull Throwable t) {
-                    Toast.makeText(getContext(), getString(R.string.error) + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                 }
             });
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        sessionsCount = 0;
+        super.onDestroy();
     }
 }

@@ -271,6 +271,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageView2"/>
 
+    <!--        Loading animation-->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/loadingAnimation"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/classesRecView"
+        app:layout_constraintEnd_toEndOf="@id/classesRecView"
+        app:layout_constraintStart_toStartOf="@id/classesRecView"
+        app:layout_constraintTop_toTopOf="@id/classesRecView"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/search_anim" />
+
 <!--    Add button-->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnAdd"
