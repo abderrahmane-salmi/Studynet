@@ -1,7 +1,5 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -10,9 +8,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.salmi.bouchelaghem.studynet.Models.Session;
 import com.salmi.bouchelaghem.studynet.R;
-import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityClassDetailsBinding;
 
@@ -82,13 +81,17 @@ public class ClassDetailsActivity extends AppCompatActivity {
             int nbGroups = session.getConcernedGroups().size();
             binding.classGroup.setText("");
             for (int grp=0; grp<nbGroups-1; grp++){
-                binding.classGroup.append(String.valueOf(grp+1) + ", ");
+                binding.classGroup.append((grp + 1) + ", ");
             }
             binding.classGroup.append(String.valueOf(nbGroups)); // The last group doesn't have a ',' after it
 
         } else { // There is only one grp
             binding.classGroup.setText(String.valueOf(session.getConcernedGroups().get(0)));
         }
+
+        // Teacher
+        binding.classTeacher.setText(session.getTeacherName());
+        binding.classTeacherEmail.setText(session.getTeacherEmail());
 
         // Meeting info
         // Link

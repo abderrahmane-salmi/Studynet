@@ -210,6 +210,49 @@
             app:layout_constraintStart_toEndOf="@id/textView3"
             app:layout_constraintTop_toTopOf="@id/textView3" />
 
+<!--        Teacher + Email-->
+        <!--        Section + Group-->
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="24dp"
+            android:src="@drawable/ic_person"
+            app:layout_constraintBottom_toBottomOf="@id/classTeacherEmail"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/classTeacher"
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/classTeacher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="Mohammed Djamel"
+            android:textColor="@color/primary_text_color"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView7"
+            app:layout_constraintTop_toBottomOf="@+id/classGroup" />
+
+        <TextView
+            android:id="@+id/classTeacherEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="teacher1@me.com"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="@id/classTeacher"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/classTeacher"
+            app:layout_constraintTop_toBottomOf="@id/classTeacher" />
+
         <!--        Meeting link-->
         <ImageView
             android:id="@+id/link_icon"
@@ -239,7 +282,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/link_icon"
-            app:layout_constraintTop_toBottomOf="@+id/classGroup" />
+            app:layout_constraintTop_toBottomOf="@+id/classTeacherEmail" />
 
         <TextView
             android:id="@+id/classMeetingLink"
