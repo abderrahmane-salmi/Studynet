@@ -369,18 +369,18 @@ public class TimetableFragment extends Fragment {
                 binding.classesRecView.setVisibility(View.GONE);
                 binding.emptyMsg.setVisibility(View.VISIBLE);
             }
-            // Show the sessions counter
-            if (sessionsCount == 1) { // if its 1 then show the word "class" not "classes"
-                binding.textView4.setText(getString(R.string.class_1));
-            } else {
-                binding.textView4.setText(getString(R.string.classes));
-            }
-            binding.txtClassesCount.setText(String.valueOf(sessionsCount));
-
         } else {
             binding.classesRecView.setVisibility(View.GONE);
             binding.emptyMsg.setVisibility(View.VISIBLE);
         }
+
+        // Show the sessions counter
+        if (sessionsCount == 1) { // if its 1 then show the word "class" not "classes"
+            binding.textView4.setText(getString(R.string.class_1));
+        } else {
+            binding.textView4.setText(getString(R.string.classes));
+        }
+        binding.txtClassesCount.setText(String.valueOf(sessionsCount));
     }
 
     private void goToDay1() {
@@ -649,6 +649,7 @@ public class TimetableFragment extends Fragment {
 
         @Override
         public void onResponse(@NonNull Call<List<Session>> call, Response<List<Session>> response) {
+            sessionsCount = 0;
             if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
                 sessions = response.body();
                 showTodaySessions(currentDay);
