@@ -92,12 +92,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         assert btnLogoutAll != null;
-        btnLogoutAll.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                // TODO: Logout from all sessions
-                return true;
-            }
+        btnLogoutAll.setOnPreferenceClickListener(preference -> {
+            // TODO: Logout from all sessions
+            return true;
         });
     }
 

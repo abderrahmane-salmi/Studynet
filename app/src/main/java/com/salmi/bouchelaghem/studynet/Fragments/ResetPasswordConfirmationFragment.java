@@ -10,20 +10,20 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.salmi.bouchelaghem.studynet.R;
-import com.salmi.bouchelaghem.studynet.databinding.FragmentChangePasswordBinding;
+import com.salmi.bouchelaghem.studynet.databinding.FragmentResetPasswordConfirmationBinding;
 
-public class ChangePasswordFragment extends BottomSheetDialogFragment {
+public class ResetPasswordConfirmationFragment extends BottomSheetDialogFragment {
 
-    private FragmentChangePasswordBinding binding;
+    private FragmentResetPasswordConfirmationBinding binding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentChangePasswordBinding.inflate(inflater, container, false);
+        binding = FragmentResetPasswordConfirmationBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
         binding.btnSave.setOnClickListener(v -> {
-            if (validateOldPassword() & validateNewPassword()){
+            if (validateConfirmationCode() & validateNewPassword()){
                 // TODO: Change password
                 Toast.makeText(getContext(), "Changed", Toast.LENGTH_SHORT).show();
             }
@@ -32,17 +32,14 @@ public class ChangePasswordFragment extends BottomSheetDialogFragment {
         return view;
     }
 
-    public boolean validateOldPassword() {
-        String password = binding.txtOldPassword.getEditText().getText().toString().trim();
+    public boolean validateConfirmationCode() {
+        String code = binding.txtConfirmationCode.getEditText().getText().toString().trim();
 
-        if (password.isEmpty()) {
-            binding.txtOldPassword.setError(getString(R.string.empty_password_msg));
-            return false;
-        } else if (password.length() < 8) {
-            binding.txtOldPassword.setError(getString(R.string.password_msg2));
+        if (code.isEmpty()) {
+            binding.txtConfirmationCode.setError(getString(R.string.empty_code_msg));
             return false;
         } else {
-            binding.txtOldPassword.setError(null);
+            binding.txtConfirmationCode.setError(null);
             return true;
         }
     }

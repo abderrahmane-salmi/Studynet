@@ -1,14 +1,14 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.salmi.bouchelaghem.studynet.Fragments.ResetPasswordConfirmationFragment;
 import com.salmi.bouchelaghem.studynet.R;
-import com.salmi.bouchelaghem.studynet.databinding.ActivityLoginBinding;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityResetPasswordBinding;
 
 public class ResetPasswordActivity extends AppCompatActivity {
@@ -18,28 +18,28 @@ public class ResetPasswordActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityResetPasswordBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
 
-        binding.btnGoBackFromReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
+        binding.btnGoBackFromReset.setOnClickListener(v -> finish());
+
+        binding.btnResetPassword.setOnClickListener(v -> {
+            if (validateEmail()){
+                String email = binding.txtEmail.getEditText().getText().toString().trim();
+                // TODO: Send reset password email
+                // Show the confirmation fragment after you send the email
+                // use: showConfirmationFragment() to show the fragment
+                Toast.makeText(ResetPasswordActivity.this, "Done", Toast.LENGTH_SHORT).show();
             }
         });
 
-        binding.btnResetPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateEmail()){
-                    String email = binding.txtEmail.getEditText().getText().toString().trim();
+        binding.btnConfirmReset.setOnClickListener(v -> showConfirmationFragment());
+    }
 
-                    Toast.makeText(ResetPasswordActivity.this, "Done", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+    private void showConfirmationFragment(){
+        ResetPasswordConfirmationFragment fragment = new ResetPasswordConfirmationFragment();
+        fragment.show(getSupportFragmentManager(), "ResetPasswordConfirmationFragment");
     }
 
     public boolean validateEmail(){

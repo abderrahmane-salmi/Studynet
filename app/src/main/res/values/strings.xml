@@ -213,4 +213,7 @@
     <string name="Homeworks">Homeworks</string>
     <string name="old_password">Old Password</string>
     <string name="new_password">New Password</string>
+    <string name="confirmation_code">Confirmation Code</string>
+    <string name="empty_code_msg">Confirmation code can\'t be empty</string>
+    <string name="already_have_a_code">Already have a code?</string>
 </resources>
