@@ -27,6 +27,15 @@
         <item>Doc</item>
     </string-array>
 
+    <string-array name="languages">
+        <item>English</item>
+        <item>Français</item>
+    </string-array>
+    <string-array name="languages_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
     <string name="meeting_link">Meeting Link</string>
     <string name="meeting_number">Meeting Number</string>
     <string name="meeting_password">Meeting Password</string>
@@ -77,7 +86,7 @@
     <string name="teacher_details">Teacher Details</string>
     <string name="close">CLOSE</string>
     <string name="contact1">Contact:</string>
-    <string name="developer_email1">its.abdou.ss@gmail.com</string>
+    <string name="developer_email1">abderrahmane.salmi.pro@gmail.com</string>
     <string name="developer_2">Developer 2:</string>
     <string name="developer_email2">bouchlaghem@gmail.com</string>
     <string name="developer_1">Developer 1:</string>
@@ -187,4 +196,21 @@
     <string name="edit_your_session_msg">You can only edit your own sessions</string>
     <string name="delete_your_session_msg">You can only delete your own sessions</string>
     <string name="signed_up_msg">You have signed up successfully</string>
+    <string name="general">General</string>
+    <string name="about_section">About Section</string>
+    <string name="change_app_language">Change the app\'s language</string>
+    <string name="key_language">LANGUAGE</string>
+    <string name="report_bugs">Report Bugs</string>
+    <string name="report_bugs_msg">Report any bugs or issues you\'ve encountered</string>
+    <string name="key_report_bugs">REPORT_BUGS</string>
+    <string name="account_section">Account Section</string>
+    <string name="change_password">Change Password</string>
+    <string name="change_password_msg">Change your account\'s password</string>
+    <string name="key_change_password">CHANGE_PASSWORD</string>
+    <string name="logout_all">Logout All</string>
+    <string name="logout_all_msg">Logout from all your sessions</string>
+    <string name="key_logout_all">LOGOUT_ALL</string>
+    <string name="Homeworks">Homeworks</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
 </resources>

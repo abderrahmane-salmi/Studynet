@@ -8,17 +8,17 @@
     <fragment
         android:id="@+id/nav_timetable"
         android:name="com.salmi.bouchelaghem.studynet.Fragments.TimetableFragment"
-        android:label="Timetable"
+        android:label="@string/timetable"
         tools:layout="@layout/fragment_timetable" />
     <fragment
         android:id="@+id/nav_homeworks"
         android:name="com.salmi.bouchelaghem.studynet.Fragments.HomeworksFragment"
-        android:label="Homeworks"
+        android:label="@string/Homeworks"
         tools:layout="@layout/fragment_homeworks" />
     <fragment
         android:id="@+id/nav_subjects"
         android:name="com.salmi.bouchelaghem.studynet.Fragments.SubjectsFragment"
-        android:label="Subjects"
+        android:label="@string/subjects"
         tools:layout="@layout/fragment_subjects" >
         <action
             android:id="@+id/action_nav_subjects_to_subjectDetailsFragment"
@@ -27,7 +27,7 @@
     <fragment
         android:id="@+id/nav_teachers"
         android:name="com.salmi.bouchelaghem.studynet.Fragments.TeachersFragment"
-        android:label="Teachers"
+        android:label="@string/teachers"
         tools:layout="@layout/fragment_teachers" >
         <action
             android:id="@+id/action_nav_teachers_to_teacherDetailsFragment"
@@ -36,7 +36,7 @@
     <dialog
         android:id="@+id/subjectDetailsFragment"
         android:name="com.salmi.bouchelaghem.studynet.Fragments.SubjectDetailsFragment"
-        android:label="Subjects"
+        android:label="@string/subjects"
         tools:layout="@layout/fragment_subject_details" >
         <action
             android:id="@+id/action_subjectDetailsFragment_to_nav_subjects"
@@ -48,7 +48,7 @@
     <dialog
         android:id="@+id/teacherDetailsFragment"
         android:name="com.salmi.bouchelaghem.studynet.Fragments.TeacherDetailsFragment"
-        android:label="Teachers"
+        android:label="@string/teachers"
         tools:layout="@layout/fragment_teacher_details" >
         <action
             android:id="@+id/action_teacherDetailsFragment_to_nav_teachers"
@@ -60,11 +60,28 @@
     <dialog
         android:id="@+id/nav_contact_us"
         android:name="com.salmi.bouchelaghem.studynet.Fragments.ContactUsFragment"
-        android:label="Contact Us"
+        android:label="@string/contact_us"
         tools:layout="@layout/fragment_contact_us" />
     <dialog
         android:id="@+id/nav_about_us"
         android:name="com.salmi.bouchelaghem.studynet.Fragments.AboutUsFragment"
-        android:label="About Us"
+        android:label="@string/about_us"
         tools:layout="@layout/fragment_about_us" />
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.salmi.bouchelaghem.studynet.Fragments.SettingsFragment"
+        android:label="@string/settings" >
+        <action
+            android:id="@+id/action_nav_settings_to_changePasswordFragment"
+            app:destination="@id/nav_change_password" />
+    </fragment>
+    <dialog
+        android:id="@+id/nav_change_password"
+        android:name="com.salmi.bouchelaghem.studynet.Fragments.ChangePasswordFragment"
+        android:label="@string/settings"
+        tools:layout="@layout/fragment_change_password">
+        <action
+            android:id="@+id/action_changePasswordFragment_to_nav_settings2"
+            app:destination="@id/nav_settings" />
+    </dialog>
 </navigation>

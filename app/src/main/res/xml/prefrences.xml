@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/general">
+
+        <ListPreference
+            app:defaultValue="false"
+            app:entries="@array/languages"
+            app:entryValues="@array/languages_values"
+            app:icon="@drawable/ic_settings_language"
+            app:key="@string/key_language"
+            app:summary="@string/change_app_language"
+            app:title="Language" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/about_section">
+
+        <Preference
+            app:icon="@drawable/ic_settings_report_bug"
+            app:key="@string/key_report_bugs"
+            app:summary="@string/report_bugs_msg"
+            app:title="@string/report_bugs" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/account_section">
+
+        <Preference
+            app:icon="@drawable/ic_settings_password"
+            app:key="@string/key_change_password"
+            app:summary="@string/change_password_msg"
+            app:title="@string/change_password" />
+
+        <Preference
+            app:icon="@drawable/ic_settings_logout_all"
+            app:key="@string/key_logout_all"
+            app:summary="@string/logout_all_msg"
+            app:title="@string/logout_all" />
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

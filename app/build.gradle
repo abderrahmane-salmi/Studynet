@@ -44,10 +44,10 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'it.xabaras.android:recyclerview-swipedecorator:1.2.3'
 
     // Lottie animations
     implementation "com.airbnb.android:lottie:3.6.0"
-    implementation 'it.xabaras.android:recyclerview-swipedecorator:1.2.3'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -58,4 +58,7 @@ dependencies {
 
     // Loading animations
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+
+    // Preferences
+    implementation 'androidx.preference:preference:1.1.1'
 }
