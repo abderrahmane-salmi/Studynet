@@ -211,4 +211,6 @@
     <string name="logout_all_msg">Logout from all your sessions</string>
     <string name="key_logout_all">LOGOUT_ALL</string>
     <string name="Homeworks">Homeworks</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
 </resources>

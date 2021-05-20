@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -17,6 +19,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.salmi.bouchelaghem.studynet.R;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
@@ -80,11 +83,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         assert btnChangePassword != null;
-        btnChangePassword.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                return true;
+        btnChangePassword.setOnPreferenceClickListener(preference -> {
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+            if (Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.nav_change_password){
+                navController.navigate(R.id.action_nav_settings_to_changePasswordFragment);
             }
+            return true;
         });
 
         assert btnLogoutAll != null;
