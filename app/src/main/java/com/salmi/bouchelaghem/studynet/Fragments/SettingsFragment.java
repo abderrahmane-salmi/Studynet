@@ -3,25 +3,51 @@ package com.salmi.bouchelaghem.studynet.Fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.salmi.bouchelaghem.studynet.Activities.LoginActivity;
+import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
 import com.salmi.bouchelaghem.studynet.R;
+import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
+import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
+import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
+import com.salmi.bouchelaghem.studynet.Utils.Utils;
 
 import java.util.Locale;
 import java.util.Objects;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class SettingsFragment extends PreferenceFragmentCompat {
+
+    // Studynet Api
+    private StudynetAPI api;
+    //Current user
+    private CurrentUser currentUser = CurrentUser.getInstance();
+    //Shared preferences
+    private SharedPreferences sharedPreferences;
+    //Loading dialog
+    private CustomLoadingDialog loadingDialog;
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.prefrences, rootKey);
@@ -32,6 +58,18 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         Preference btnChangePassword = findPreference(getString(R.string.key_change_password));
         Preference btnLogoutAll = findPreference(getString(R.string.key_logout_all));
 
+        //Init loading dialog
+        loadingDialog = new CustomLoadingDialog(getActivity());
+        //Get the shared preferences.
+        sharedPreferences = getActivity().getSharedPreferences(Utils.SHARED_PREFERENCES_USER_DATA, Context.MODE_PRIVATE);
+        // Init retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Utils.API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // Init our api, this will implement the code of all the methods in the interface.
+        api = retrofit.create(StudynetAPI.class);
         // TODO: Get the selected language from shared prefs (if the user already chosen a language) and set it in the languages list
 
         // Language List
@@ -94,6 +132,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         assert btnLogoutAll != null;
         btnLogoutAll.setOnPreferenceClickListener(preference -> {
             // TODO: Logout from all sessions
+            Call<ResponseBody> logoutAllCall = api.logoutAll(currentUser.getToken());
+            loadingDialog.show();
+            logoutAllCall.enqueue(new LogoutAllCallback());
             return true;
         });
     }
@@ -105,5 +146,41 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         Configuration config = resources.getConfiguration();
         config.setLocale(locale);
         resources.updateConfiguration(config, resources.getDisplayMetrics());
+    }
+
+    private class LogoutAllCallback implements Callback<ResponseBody>
+    {
+
+        @Override
+        public void onResponse(@NonNull Call<ResponseBody> call, Response<ResponseBody> response) {
+            switch(response.code())
+            {
+
+                case Utils.HttpResponses.HTTP_204_NO_CONTENT: //Logout successful.
+                case Utils.HttpResponses.HTTP_401_UNAUTHORIZED: //Expired token, logout anyway since this token cannot be used.
+                    currentUser.logout();
+                    //Save that the user is no longer logged in locally.
+                    SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
+                    prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,false);
+                    prefsEditor.apply();
+                    //Take the user to the login page.
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    Toast.makeText(getActivity(), getString(R.string.logout_all_sucess), Toast.LENGTH_SHORT).show();
+                    loadingDialog.dismiss();
+                    getActivity().finish();
+                    break;
+                default:
+                    Toast.makeText(getActivity(), getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
+                    loadingDialog.dismiss();
+                    break;
+            }
+
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+            Toast.makeText(getActivity(), getString(R.string.connection_failed), Toast.LENGTH_LONG).show();
+            loadingDialog.dismiss();
+        }
     }
 }

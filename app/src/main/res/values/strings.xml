@@ -217,4 +217,5 @@
     <string name="empty_code_msg">Confirmation code can\'t be empty</string>
     <string name="already_have_a_code">Already have a code?</string>
     <string name="session_updated">Session updated</string>
+    <string name="logout_all_sucess">Logged out from all sessions successfully</string>
 </resources>
