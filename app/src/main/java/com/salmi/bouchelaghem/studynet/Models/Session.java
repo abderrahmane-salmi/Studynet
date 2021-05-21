@@ -9,6 +9,7 @@ import org.threeten.bp.LocalTime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Session implements Parcelable {
 
@@ -78,6 +79,33 @@ public class Session implements Parcelable {
             return new Session[size];
         }
     };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Session session = (Session) o;
+        return id == session.id &&
+                day == session.day &&
+                assignment == session.assignment &&
+                Objects.equals(teacherName, session.teacherName) &&
+                Objects.equals(teacherEmail, session.teacherEmail) &&
+                Objects.equals(module, session.module) &&
+                Objects.equals(section, session.section) &&
+                Objects.equals(moduleType, session.moduleType) &&
+                Objects.equals(concernedGroups, session.concernedGroups) &&
+                this.getLocalTimeStartTime().equals(session.getLocalTimeStartTime()) &&
+                this.getLocalTimeEndTime().equals(session.getLocalTimeEndTime()) &&
+                Objects.equals(meetingLink, session.meetingLink) &&
+                Objects.equals(meetingNumber, session.meetingNumber) &&
+                Objects.equals(meetingPassword, session.meetingPassword) &&
+                Objects.equals(comment, session.comment);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, teacherName, teacherEmail, module, section, moduleType, concernedGroups, day, startTime, endTime, meetingLink, meetingNumber, meetingPassword, comment, assignment);
+    }
 
     public int getId() {
         return id;
