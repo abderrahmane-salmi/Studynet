@@ -181,7 +181,7 @@ public class Serializers {
     }
 
     /** Creates JsonObject from a session object*/
-    public static JsonObject CreateSessionSerializer(@NonNull Session session)
+    public static JsonObject SessionSerializer(@NonNull Session session)
     {
         JsonObject sessionJson = new JsonObject();
         JsonArray concernedGroupsJson = new JsonArray();
