@@ -76,6 +76,9 @@ public interface StudynetAPI {
     @POST("sessions/")
     Call<JsonObject> createSession(@Body JsonObject session, @Header("Authorization") String token);
 
+    @PUT("sessions/{id}/")
+    Call<Session> updateSession(@Path("id") int id, @Body JsonObject session, @Header("Authorization") String token);
+
     @DELETE("sessions/{id}/")
     Call<ResponseBody> deleteSession(@Path("id") int id, @Header("Authorization") String token);
 

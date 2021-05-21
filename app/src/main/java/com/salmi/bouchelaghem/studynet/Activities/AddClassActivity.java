@@ -152,7 +152,7 @@ public class AddClassActivity extends AppCompatActivity {
                                 session.setAssignment(selectedAssignment.getId());
 
                                 //Get the session json object.
-                                JsonObject sessionJson = Serializers.CreateSessionSerializer(session);
+                                JsonObject sessionJson = Serializers.SessionSerializer(session);
                                 //Send the data to the api.
                                 Call<JsonObject> createSessionCall = api.createSession(sessionJson, "Token " + currentUser.getToken());
                                 loadingDialog.show();
@@ -198,7 +198,9 @@ public class AddClassActivity extends AppCompatActivity {
 
                 // Fill the session's fields
                 fillFields(currentSession);
-
+                //Fill the concerned groups variable:
+                selectedGroupsInt = (ArrayList<Integer>) currentSession.getConcernedGroups();
+                day = currentSession.getDay();
                 // When the user clicks on save we update an existing session
                 binding.btnSave.setOnClickListener(v -> {
 
@@ -206,19 +208,29 @@ public class AddClassActivity extends AppCompatActivity {
                             & groupSelected & daySelected & validateMeetingLink()
                             & startTime != null & endTime != null) {
 
-                        String meetingLink = binding.txtMeetingNumber.getEditText().getText().toString().trim();
+                        String meetingLink = binding.txtMeetingLink.getEditText().getText().toString().trim();
                         String meetingNumber = binding.txtMeetingNumber.getEditText().getText().toString().trim();
                         String meetingPassword = binding.txtMeetingPassword.getEditText().getText().toString().trim();
                         String notes = binding.txtClassNotes.getEditText().getText().toString().trim();
 
                         // Update meeting info + notes
+                        currentSession.setConcernedGroups(selectedGroupsInt);
+                        currentSession.setLocalTimeStartTime(startTime);
+                        currentSession.setLocalTimeEndTime(endTime);
+                        currentSession.setDay(day);
                         currentSession.setMeetingLink(meetingLink);
                         currentSession.setMeetingNumber(meetingNumber);
-                        currentSession.setMeetingNumber(meetingPassword);
+                        currentSession.setMeetingPassword(meetingPassword);
                         currentSession.setComment(notes);
+                        currentSession.setAssignment(selectedAssignment.getId());
 
                         if (!ogSession.equals(currentSession)) {
                             // Update the session in the database
+                            // Create the json data to send
+                            JsonObject updatedSessionJson = Serializers.SessionSerializer(currentSession);
+                            Call<Session> updateSessionCall = api.updateSession(currentSession.getId(),updatedSessionJson,"Token " + currentUser.getToken());
+                            loadingDialog.show();
+                            updateSessionCall.enqueue(new UpdateSessionCallback());
                         } else {
                             Toast.makeText(this, getString(R.string.no_changes_msg), Toast.LENGTH_SHORT).show();
                         }
@@ -648,7 +660,31 @@ public class AddClassActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
+            Toast.makeText(getApplicationContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            loadingDialog.dismiss();
+        }
+    }
 
+    private class UpdateSessionCallback implements Callback<Session>
+    {
+        @Override
+        public void onResponse(Call<Session> call, Response<Session> response) {
+            if(response.code() == Utils.HttpResponses.HTTP_200_OK)
+            {
+                Toast.makeText(getApplicationContext(), getString(R.string.session_updated), Toast.LENGTH_SHORT).show();
+                finish();
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+            }
+            loadingDialog.dismiss();
+        }
+
+        @Override
+        public void onFailure(Call<Session> call, Throwable t) {
+            Toast.makeText(getApplicationContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            loadingDialog.dismiss();
         }
     }
 
