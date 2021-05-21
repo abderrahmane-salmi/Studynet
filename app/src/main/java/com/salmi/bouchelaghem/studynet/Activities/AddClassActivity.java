@@ -648,10 +648,6 @@ public class AddClassActivity extends AppCompatActivity {
             if (response.code() == Utils.HttpResponses.HTTP_201_CREATED) {
                 Toast.makeText(getApplicationContext(), getString(R.string.session_created), Toast.LENGTH_LONG).show();
                 loadingDialog.dismiss();
-                // TODO: Add the session to the timetable sessions list
-                // Only if its the same section as the filter
-                // And if the session's day is the selected day in the timetable then re-call show today sessions and increment the sessions count
-                //                TimetableFragment.incrementSessionsCount();
                 finish();
             } else {
                 //Parse the error response and check if it is because of a session overlap.
