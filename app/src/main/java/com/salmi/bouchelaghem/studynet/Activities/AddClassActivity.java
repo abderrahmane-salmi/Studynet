@@ -207,32 +207,42 @@ public class AddClassActivity extends AppCompatActivity {
                     if (sectionSelected & moduleSelected & moduleTypeSelected
                             & groupSelected & daySelected & validateMeetingLink()
                             & startTime != null & endTime != null) {
-
-                        String meetingLink = binding.txtMeetingLink.getEditText().getText().toString().trim();
-                        String meetingNumber = binding.txtMeetingNumber.getEditText().getText().toString().trim();
-                        String meetingPassword = binding.txtMeetingPassword.getEditText().getText().toString().trim();
-                        String notes = binding.txtClassNotes.getEditText().getText().toString().trim();
-
-                        // Update meeting info + notes
-                        currentSession.setConcernedGroups(selectedGroupsInt);
-                        currentSession.setLocalTimeStartTime(startTime);
-                        currentSession.setLocalTimeEndTime(endTime);
-                        currentSession.setDay(day);
-                        currentSession.setMeetingLink(meetingLink);
-                        currentSession.setMeetingNumber(meetingNumber);
-                        currentSession.setMeetingPassword(meetingPassword);
-                        currentSession.setComment(notes);
-                        currentSession.setAssignment(selectedAssignment.getId());
-
-                        if (!ogSession.equals(currentSession)) {
-                            // Update the session in the database
-                            // Create the json data to send
-                            JsonObject updatedSessionJson = Serializers.SessionSerializer(currentSession);
-                            Call<Session> updateSessionCall = api.updateSession(currentSession.getId(),updatedSessionJson,"Token " + currentUser.getToken());
-                            loadingDialog.show();
-                            updateSessionCall.enqueue(new UpdateSessionCallback());
+                        //Check if end time is after start time.
+                        if (endTime.isBefore(startTime)) {
+                            Toast.makeText(this, getString(R.string.endtime_after_starttime), Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(this, getString(R.string.no_changes_msg), Toast.LENGTH_SHORT).show();
+                            //Check that the given time is allowed.
+                            if (startTime.isBefore(LocalTime.parse("08:00:00")) || endTime.isAfter(LocalTime.parse("18:10:00"))) {
+                                Toast.makeText(this, getString(R.string.time_not_allowed), Toast.LENGTH_LONG).show();
+                            } else {
+
+                                String meetingLink = binding.txtMeetingLink.getEditText().getText().toString().trim();
+                                String meetingNumber = binding.txtMeetingNumber.getEditText().getText().toString().trim();
+                                String meetingPassword = binding.txtMeetingPassword.getEditText().getText().toString().trim();
+                                String notes = binding.txtClassNotes.getEditText().getText().toString().trim();
+
+                                // Update meeting info
+                                currentSession.setConcernedGroups(selectedGroupsInt);
+                                currentSession.setLocalTimeStartTime(startTime);
+                                currentSession.setLocalTimeEndTime(endTime);
+                                currentSession.setDay(day);
+                                currentSession.setMeetingLink(meetingLink);
+                                currentSession.setMeetingNumber(meetingNumber);
+                                currentSession.setMeetingPassword(meetingPassword);
+                                currentSession.setComment(notes);
+                                currentSession.setAssignment(selectedAssignment.getId());
+
+                                if (!ogSession.equals(currentSession)) {
+                                    // Send the update to the database
+                                    // Create the json data to send
+                                    JsonObject updatedSessionJson = Serializers.SessionSerializer(currentSession);
+                                    Call<Session> updateSessionCall = api.updateSession(currentSession.getId(), updatedSessionJson, "Token " + currentUser.getToken());
+                                    loadingDialog.show();
+                                    updateSessionCall.enqueue(new UpdateSessionCallback());
+                                } else {
+                                    Toast.makeText(this, getString(R.string.no_changes_msg), Toast.LENGTH_SHORT).show();
+                                }
+                            }
                         }
                     } else {
                         if (!sectionSelected) {
