@@ -269,7 +269,28 @@ public class HomeworksFragment extends Fragment {
     }
 
     private void getHomeworks(String section) {
-        // TODO: Get homeworks from api
+        Call<List<Homework>> getHomeworksCall = api.getSectionHomeworks(section,"Token " + currentUser.getToken());
+        getHomeworksCall.enqueue(new Callback<List<Homework>>() {
+            @Override
+            public void onResponse(Call<List<Homework>> call, Response<List<Homework>> response) {
+                if(response.code() == Utils.HttpResponses.HTTP_200_OK)
+                {
+                    homeworks = response.body();
+                    adapter.setHomeworks(homeworks);
+                    binding.homeworksRecView.setAdapter(adapter);
+
+                }
+                else
+                {
+                    Toast.makeText(getActivity(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Homework>> call, Throwable t) {
+                Toast.makeText(getActivity(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void restoreFilterState(AutoCompleteTextView filter) {

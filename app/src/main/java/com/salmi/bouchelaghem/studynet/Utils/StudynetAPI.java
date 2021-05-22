@@ -3,6 +3,7 @@ package com.salmi.bouchelaghem.studynet.Utils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Models.Department;
+import com.salmi.bouchelaghem.studynet.Models.Homework;
 import com.salmi.bouchelaghem.studynet.Models.Module;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Session;
@@ -81,6 +82,10 @@ public interface StudynetAPI {
 
     @DELETE("sessions/{id}/")
     Call<ResponseBody> deleteSession(@Path("id") int id, @Header("Authorization") String token);
+
+    // *** Homeworks ***
+    @GET("homeworks/")
+    Call<List<Homework>> getSectionHomeworks(@Query("section") String section, @Header("Authorization") String token);
 
     // *** Teachers ***
     /** Get teachers based on section*/
