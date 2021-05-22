@@ -28,6 +28,21 @@ public class Homework implements Parcelable {
     public Homework() {
     }
 
+    public Homework(int id, String teacherName, String teacherEmail, String module, String moduleType, String section, ArrayList<Integer> concernedGroups, String title, LocalDate dueDate, String dueTime, String comment, int assignment) {
+        this.id = id;
+        this.teacherName = teacherName;
+        this.teacherEmail = teacherEmail;
+        this.module = module;
+        this.moduleType = moduleType;
+        this.section = section;
+        this.concernedGroups = concernedGroups;
+        this.title = title;
+        this.dueDate = dueDate;
+        this.dueTime = dueTime;
+        this.comment = comment;
+        this.assignment = assignment;
+    }
+
     protected Homework(Parcel in) {
         id = in.readInt();
         teacherName = in.readString();
@@ -35,8 +50,9 @@ public class Homework implements Parcelable {
         module = in.readString();
         moduleType = in.readString();
         section = in.readString();
-        in.readList(concernedGroups, Integer.class.getClassLoader());
+        concernedGroups = in.readArrayList(null);
         title = in.readString();
+        dueDate = (LocalDate) in.readSerializable();
         dueTime = in.readString();
         comment = in.readString();
         assignment = in.readInt();
@@ -173,6 +189,7 @@ public class Homework implements Parcelable {
         dest.writeString(section);
         dest.writeList(concernedGroups);
         dest.writeString(title);
+        dest.writeSerializable(dueDate);
         dest.writeString(dueTime);
         dest.writeString(comment);
         dest.writeInt(assignment);

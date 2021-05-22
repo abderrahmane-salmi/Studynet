@@ -65,7 +65,7 @@ public class Session implements Parcelable {
         meetingPassword = in.readString();
         comment = in.readString();
         assignment = in.readInt();
-        in.readList(concernedGroups, Integer.class.getClassLoader());
+        concernedGroups = in.readArrayList(null);
     }
 
     public static final Creator<Session> CREATOR = new Creator<Session>() {

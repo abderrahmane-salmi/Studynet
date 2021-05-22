@@ -80,11 +80,12 @@ public class ClassDetailsActivity extends AppCompatActivity {
         if (session.getConcernedGroups().size() > 1){ // There are more then 1 grp
             int nbGroups = session.getConcernedGroups().size();
             binding.classGroup.setText("");
-            for (int grp=0; grp<nbGroups-1; grp++){
-                binding.classGroup.append((grp + 1) + ", ");
+            for (int i=0; i<nbGroups-1; i++){
+                binding.classGroup.append(session.getConcernedGroups().get(i) + ", ");
             }
-            binding.classGroup.append(String.valueOf(nbGroups)); // The last group doesn't have a ',' after it
+            binding.classGroup.append(String.valueOf(session.getConcernedGroups().get(nbGroups-1))); // The last group doesn't have a ',' after it
 
+            binding.textView3.setText(R.string.groups);
         } else { // There is only one grp
             binding.classGroup.setText(String.valueOf(session.getConcernedGroups().get(0)));
         }

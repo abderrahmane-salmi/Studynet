@@ -210,8 +210,7 @@
             app:layout_constraintStart_toEndOf="@id/textView3"
             app:layout_constraintTop_toTopOf="@id/textView3" />
 
-<!--        Teacher + Email-->
-        <!--        Section + Group-->
+        <!--        Teacher + Email-->
         <ImageView
             android:id="@+id/imageView7"
             android:layout_width="20dp"
@@ -455,7 +454,7 @@
             android:id="@+id/imageView4"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/ic_list"
+            android:src="@drawable/ic_notes"
             app:tint="@color/secondary_text_color"
             android:layout_marginStart="24dp"
             app:layout_constraintBottom_toBottomOf="@id/txtClassNotes"
