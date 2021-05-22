@@ -154,6 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
                                 //Unexpected response from the server.
                                 Toast.makeText(LoginActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                                loadingDialog.dismiss();
                                 break;
                             }
                         }
@@ -177,6 +178,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
             Toast.makeText(LoginActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            loadingDialog.dismiss();
         }
     }
 

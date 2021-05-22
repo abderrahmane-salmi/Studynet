@@ -1,30 +1,31 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.salmi.bouchelaghem.studynet.Models.Admin;
-import com.salmi.bouchelaghem.studynet.Models.Student;
-import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.Serializers;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivitySplashBinding;
+
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,6 +37,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private ActivitySplashBinding binding;
     private SharedPreferences sharedPreferences;
+    private SharedPreferences defaultSharedPreferences;
     private CurrentUser currentUser;
     private boolean loggedIn;
     private StudynetAPI api;
@@ -57,9 +59,24 @@ public class SplashActivity extends AppCompatActivity {
         currentUser = CurrentUser.getInstance();
         //Get the shared preferences.
         sharedPreferences = getApplicationContext().getSharedPreferences(Utils.SHARED_PREFERENCES_USER_DATA,MODE_PRIVATE);
+        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //Load the language specified in settings if specified.
+        String language = defaultSharedPreferences.getString(getString(R.string.key_language),"");
+        if(!language.isEmpty())
+        {
+            switch(language)
+            {
+                case "1":
+                    setLocale(this,Locale.ENGLISH);
+                    break;
+                case "2":
+                    //TODO: check if this is properly working after adding french translation.
+                    setLocale(this,Locale.FRENCH);
+                    break;
+            }
+        }
         // Set light theme as the default theme
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
         verifyInternet();
 
         binding.btnTryAgain.setOnClickListener(v -> verifyInternet());
@@ -188,7 +205,14 @@ public class SplashActivity extends AppCompatActivity {
 //                return false;
 //        }
 //  }
-
+    // Change the device's language
+    public static void setLocale(Activity activity, Locale locale) {
+        Locale.setDefault(locale);
+        Resources resources = activity.getResources();
+        Configuration config = resources.getConfiguration();
+        config.setLocale(locale);
+        resources.updateConfiguration(config, resources.getDisplayMetrics());
+    }
 
     private void loadStudent(JsonObject student) {
         currentUser.setUserType(Utils.STUDENT_ACCOUNT);
