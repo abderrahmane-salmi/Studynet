@@ -1,19 +1,16 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.salmi.bouchelaghem.studynet.Models.Homework;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityHomeworkDetailsBinding;
 
 import org.threeten.bp.format.DateTimeFormatter;
-
-import java.text.SimpleDateFormat;
 
 public class HomeworkDetailsActivity extends AppCompatActivity {
 
@@ -36,12 +33,12 @@ public class HomeworkDetailsActivity extends AppCompatActivity {
     }
 
     private void fillFields(Homework homework) {
-        binding.txtSubject.setText(homework.getAssignment().getModuleName());
-        binding.txtSubjectCode.setText(homework.getAssignment().getModuleCode());
+        binding.txtSubject.setText(homework.getModule());
+        binding.txtSubjectCode.setText(homework.getModuleType());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         binding.txtHomeworkDueDate.setText(formatter.format(homework.getDueDate()));
-        binding.txtHomeworkDueHour.setText(homework.getDueTime().toString());
+        binding.txtHomeworkDueHour.setText(homework.getDueTime());
 
         binding.txtHomeworkTitle.setText(homework.getTitle());
         binding.txtHomeworkDescription.setText(homework.getComment());

@@ -87,7 +87,7 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
         Homework homework = homeworks.get(position);
 
         holder.binding.homeworkTitle.setText(homework.getTitle());
-        holder.binding.homeworkSubject.setText(homework.getAssignment().getModuleName());
+        holder.binding.homeworkSubject.setText(homework.getModule());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         holder.binding.homeworkDate.setText(formatter.format(homework.getDueDate()));
     }

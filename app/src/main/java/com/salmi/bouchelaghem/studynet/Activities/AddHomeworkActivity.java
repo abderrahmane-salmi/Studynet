@@ -339,13 +339,13 @@ public class AddHomeworkActivity extends AppCompatActivity {
     private void fillFields(Homework homework){
         // Section
         sectionSelected = true;
-        String sectionCode = homework.getAssignment().getSectionCode();
+        String sectionCode = homework.getSection();
         binding.classSection.setText(sectionCode, false);
         getSection(sectionCode);
 
         // Module
         moduleSelected = true;
-        String moduleCode = homework.getAssignment().getModuleCode();
+        String moduleCode = homework.getModule();
         // Fill the spinner
         getModules(currentTeacher.getId(), sectionCode);
         binding.txtHomeworkSubject.setEnabled(true);
@@ -381,7 +381,7 @@ public class AddHomeworkActivity extends AppCompatActivity {
         binding.btnSelectDueDate.setText(formatter.format(dueDate));
 
         // Time
-        dueTime = homework.getDueTime();
+        dueTime = homework.getLocalTimeDueTime();
         binding.btnSelectDueTime.setText(dueTime.toString());
 
         // Notes
