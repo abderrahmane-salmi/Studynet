@@ -86,7 +86,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     case "2":
                         Toast.makeText(requireContext(), "FR", Toast.LENGTH_SHORT).show();
                         // TODO: uncomment this when we add french language to the app
-//                        setLocale(requireActivity(), Locale.FRENCH);
+                        setLocale(requireActivity(), Locale.FRENCH);
                         break;
                 }
                 // TODO: Save the selected language to shared prefs and then read it from the splash screen every time
