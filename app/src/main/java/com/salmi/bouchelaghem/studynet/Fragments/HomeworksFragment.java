@@ -29,7 +29,6 @@ import com.google.android.material.button.MaterialButton;
 import com.salmi.bouchelaghem.studynet.Activities.AddHomeworkActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
 import com.salmi.bouchelaghem.studynet.Adapters.HomeworkAdapter;
-import com.salmi.bouchelaghem.studynet.Models.Admin;
 import com.salmi.bouchelaghem.studynet.Models.Homework;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Student;
@@ -66,8 +65,9 @@ public class HomeworksFragment extends Fragment {
     private String selectedSection;
     private boolean filterApplied = false;
     private List<String> allSections;
+    private int filteredDatePosition;
     private String filteredDate;
-    private boolean firstTime = true;
+    private boolean dateSelected = false;
 
     // Current User
     private final CurrentUser currentUser = CurrentUser.getInstance();
@@ -130,7 +130,7 @@ public class HomeworksFragment extends Fragment {
                     filterTimetableSection.setAdapter(arrayAdapter);
 
                     if (filterApplied) {
-                        restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
+                        restoreSectionsFilterState(filterTimetableSection); // set the filter values to the last filter applied
                     }
 
                     // Init Buttons
@@ -165,8 +165,6 @@ public class HomeworksFragment extends Fragment {
                 });
                 break;
             case Utils.ADMIN_ACCOUNT:
-                // Get the current teacher from the app API
-                Admin admin = currentUser.getCurrentAdmin();
                 // Show the select section msg
                 binding.selectSectionMsg.setVisibility(View.VISIBLE);
 
@@ -185,7 +183,7 @@ public class HomeworksFragment extends Fragment {
                         filterTimetableSection.setAdapter(arrayAdapter);
 
                         if (filterApplied) {
-                            restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
+                            restoreSectionsFilterState(filterTimetableSection); // set the filter values to the last filter applied
                         }
 
                         // Init Buttons
@@ -222,9 +220,6 @@ public class HomeworksFragment extends Fragment {
                 });
                 break;
             case Utils.STUDENT_ACCOUNT:
-                // Get current student
-                Student student = currentUser.getCurrentStudent();
-
                 // Init filter
                 context.btnFilter.setOnClickListener(v -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -235,24 +230,46 @@ public class HomeworksFragment extends Fragment {
                     MaterialButton btnApplyFilter = view1.findViewById(R.id.btnApplyFilter);
 
                     // Init filter values
-                    // TODO: Get the values in english (not local language)
                     List<String> filterValues = Arrays.asList(getResources().getStringArray(R.array.homework_filter_values));
                     ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, filterValues);
                     filterHomeworksDate.setAdapter(arrayAdapter);
 
-                    // TODO: restoreFilterState(); // set the filter values to the last filter applied
+                    restoreDateFilterState(filterHomeworksDate); // set the filter values to the last filter applied
 
                     // Init Buttons
-                    btnApplyFilter.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
+                    btnApplyFilter.setOnClickListener(v15 -> {
+                        if (dateSelected){
+                            switch (filteredDatePosition){
+                                case 0:
+                                    // TODO: Get all homeworks
+                                    break;
+                                case 1:
+                                    // TODO: Get yesterday homeworks
+                                    break;
+                                case 2:
+                                    // TODO: Get today homeworks
+                                    break;
+                                case 3:
+                                    // TODO: Get tomorrow homeworks
+                                    break;
+                                case 4:
+                                    // TODO: Get this week homeworks
+                                    break;
+                            }
+                            filterApplied = true;
+                            dialog.dismiss();
+                        } else {
+                            Toast.makeText(requireContext(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
                         }
                     });
 
                     btnCloseFilter.setOnClickListener(v12 -> dialog.dismiss());
 
-                    filterHomeworksDate.setOnItemClickListener((parent, view2, position, id) -> filteredDate = filterValues.get(position));
+                    filterHomeworksDate.setOnItemClickListener((parent, view2, position, id) -> {
+                        filteredDatePosition = position;
+                        filteredDate = filterValues.get(position);
+                        dateSelected = true;
+                    });
 
                     builder.setView(view1);
                     dialog = builder.create(); // creating our dialog
@@ -311,8 +328,12 @@ public class HomeworksFragment extends Fragment {
         });
     }
 
-    private void restoreFilterState(AutoCompleteTextView filter) {
+    private void restoreSectionsFilterState(AutoCompleteTextView filter) {
         filter.setText(selectedSection, false);
+    }
+
+    private void restoreDateFilterState(AutoCompleteTextView filter) {
+        filter.setText(filteredDate, false);
     }
 
     private void initRecView() {
@@ -393,7 +414,7 @@ public class HomeworksFragment extends Fragment {
     public void onStart() {
         super.onStart();
         // If its an admin then get all sections to setup the filter
-        if (currentUserType.equals(Utils.ADMIN_ACCOUNT) && firstTime) {
+        if (currentUserType.equals(Utils.ADMIN_ACCOUNT)) {
             Call<List<Section>> call = api.getAllSections();
             call.enqueue(new Callback<List<Section>>() {
                 @Override

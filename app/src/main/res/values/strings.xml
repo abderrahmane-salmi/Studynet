@@ -11,11 +11,11 @@
     </string-array>
 
     <string-array name="homework_filter_values">
+        <item>All</item>
         <item>Yesterday</item>
         <item>Today</item>
         <item>Tomorrow</item>
         <item>This week</item>
-        <item>All</item>
     </string-array>
 
     <string-array name="grades">
