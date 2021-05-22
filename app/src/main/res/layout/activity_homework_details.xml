@@ -50,7 +50,7 @@
             android:layout_height="24dp"
             android:layout_marginStart="24dp"
             android:src="@drawable/ic_section"
-            app:layout_constraintBottom_toBottomOf="@id/txtSubjectCode"
+            app:layout_constraintBottom_toBottomOf="@id/txtSubjectType"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/txtSubject"
             app:tint="@color/secondary_text_color"
@@ -73,11 +73,11 @@
             app:layout_constraintTop_toBottomOf="@+id/textView1" />
 
         <TextView
-            android:id="@+id/txtSubjectCode"
+            android:id="@+id/txtSubjectType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/tabularasa_regular"
-            android:text="BD2"
+            android:text="TP"
             android:textColor="@color/secondary_text_color"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="@id/txtSubject"
@@ -92,7 +92,7 @@
             android:layout_height="20dp"
             android:layout_marginStart="24dp"
             android:src="@drawable/ic_time"
-            app:layout_constraintBottom_toBottomOf="@id/txtHomeworkDueHour"
+            app:layout_constraintBottom_toBottomOf="@id/txtHomeworkDueTime"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/txtHomeworkDueDate"
             app:tint="@color/secondary_text_color"
@@ -112,10 +112,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
-            app:layout_constraintTop_toBottomOf="@+id/txtSubjectCode" />
+            app:layout_constraintTop_toBottomOf="@+id/txtSubjectType" />
 
         <TextView
-            android:id="@+id/txtHomeworkDueHour"
+            android:id="@+id/txtHomeworkDueTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/tabularasa_regular"
@@ -127,12 +127,111 @@
             app:layout_constraintStart_toStartOf="@id/txtHomeworkDueDate"
             app:layout_constraintTop_toBottomOf="@id/txtHomeworkDueDate" />
 
+        <!--        Section + Group-->
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="24dp"
+            android:src="@drawable/ic_list"
+            app:layout_constraintBottom_toBottomOf="@id/txtHomeworksGroups"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/txtHomeworkSection"
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/txtHomeworkSection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="L3 ISIL B"
+            android:textColor="@color/primary_text_color"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView4"
+            app:layout_constraintTop_toBottomOf="@+id/txtHomeworkDueTime" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="@string/group"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="@id/txtHomeworkSection"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/txtHomeworkSection"
+            app:layout_constraintTop_toBottomOf="@id/txtHomeworkSection" />
+
+        <TextView
+            android:id="@+id/txtHomeworksGroups"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="1"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@id/textView3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/textView3"
+            app:layout_constraintTop_toTopOf="@id/textView3" />
+
+        <!--        Teacher + Email-->
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="24dp"
+            android:src="@drawable/ic_person"
+            app:layout_constraintBottom_toBottomOf="@id/txtHomeworkTeacherEmail"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/txtHomeworkTeacher"
+            app:tint="@color/secondary_text_color"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/txtHomeworkTeacher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="Mohammed Djamel"
+            android:textColor="@color/primary_text_color"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView7"
+            app:layout_constraintTop_toBottomOf="@+id/txtHomeworksGroups" />
+
+        <TextView
+            android:id="@+id/txtHomeworkTeacherEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/tabularasa_regular"
+            android:text="teacher1@me.com"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="@id/txtHomeworkTeacher"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/txtHomeworkTeacher"
+            app:layout_constraintTop_toBottomOf="@id/txtHomeworkTeacher" />
+
 <!--        Homework content-->
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/ic_list"
+            android:src="@drawable/ic_notes"
             app:tint="@color/secondary_text_color"
             android:layout_marginStart="24dp"
             app:layout_constraintBottom_toBottomOf="@id/txtHomeworkDescription"
@@ -154,7 +253,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
-            app:layout_constraintTop_toBottomOf="@+id/txtHomeworkDueHour" />
+            app:layout_constraintTop_toBottomOf="@+id/txtHomeworkTeacherEmail" />
 
         <TextView
             android:id="@+id/txtHomeworkDescription"

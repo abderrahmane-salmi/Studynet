@@ -51,13 +51,13 @@
             android:src="@drawable/ic_section"
             app:tint="@color/secondary_text_color"
             android:layout_marginStart="24dp"
-            app:layout_constraintBottom_toBottomOf="@+id/txtHomeworkSection"
+            app:layout_constraintBottom_toBottomOf="@+id/txtHomeworkSectionLayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/txtHomeworkSection"
+            app:layout_constraintTop_toTopOf="@+id/txtHomeworkSectionLayout"
             tools:ignore="ContentDescription" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txtHomeworkSection"
+            android:id="@+id/txtHomeworkSectionLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
             app:layout_constraintTop_toBottomOf="@+id/title">
 
             <AutoCompleteTextView
-                android:id="@+id/classSection"
+                android:id="@+id/sectionsSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/section"
@@ -80,7 +80,83 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-<!--        Group-->
+<!--        Subject-->
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_book"
+            app:tint="@color/secondary_text_color"
+            android:layout_marginStart="24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/txtHomeworkSubjectLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txtHomeworkSubjectLayout"
+            tools:ignore="ContentDescription"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtHomeworkSubjectLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/secondary_text_color"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView3"
+            app:layout_constraintTop_toBottomOf="@+id/txtHomeworkSectionLayout"
+            android:enabled="false">
+
+            <AutoCompleteTextView
+                android:id="@+id/modulesSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/module"
+                android:inputType="none"
+                android:fontFamily="@font/tabularasa_regular"
+                android:textSize="15sp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--        Subject Type-->
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_class_type"
+            app:tint="@color/secondary_text_color"
+            android:layout_marginStart="24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/txtHomeworkSubjectTypeLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txtHomeworkSubjectTypeLayout"
+            tools:ignore="ContentDescription"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtHomeworkSubjectTypeLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/secondary_text_color"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView8"
+            app:layout_constraintTop_toBottomOf="@+id/txtHomeworkSubjectLayout"
+            android:enabled="false">
+
+            <AutoCompleteTextView
+                android:id="@+id/moduleTypesSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/module_type"
+                android:inputType="none"
+                android:fontFamily="@font/tabularasa_regular"
+                android:textSize="15sp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--        Group-->
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="22dp"
@@ -97,7 +173,7 @@
             android:id="@+id/txtHomeworkGroup"
             android:layout_width="0dp"
             android:layout_height="57dp"
-            android:hint="@string/group"
+            android:hint="@string/groups"
             android:textSize="15sp"
             android:fontFamily="@font/tabularasa_regular"
             android:gravity="center_vertical"
@@ -109,51 +185,14 @@
             android:layout_marginEnd="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
-            app:layout_constraintTop_toBottomOf="@+id/txtHomeworkSubject"
+            app:layout_constraintTop_toBottomOf="@+id/txtHomeworkSubjectTypeLayout"
             app:drawableEndCompat="@drawable/ic_arrow_drop_down"
             android:background="@drawable/rectangle_border_2"
             android:paddingEnd="12dp"
             android:enabled="false"/>
 
-<!--        Subject-->
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:src="@drawable/ic_book"
-            app:tint="@color/secondary_text_color"
-            android:layout_marginStart="24dp"
-            app:layout_constraintBottom_toBottomOf="@+id/txtHomeworkSubject"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/txtHomeworkSubject"
-            tools:ignore="ContentDescription"/>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txtHomeworkSubject"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textColorHint="@color/secondary_text_color"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView3"
-            app:layout_constraintTop_toBottomOf="@+id/txtHomeworkSection"
-            android:enabled="false">
-
-            <AutoCompleteTextView
-                android:id="@+id/classModule"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/module"
-                android:inputType="none"
-                android:fontFamily="@font/tabularasa_regular"
-                android:textSize="15sp"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-<!--        Homework title-->
+        <!--        Homework title-->
         <ImageView
             android:id="@+id/imageView4"
             android:layout_width="22dp"
@@ -262,7 +301,7 @@
         <ImageView
             android:layout_width="21dp"
             android:layout_height="21dp"
-            android:src="@drawable/ic_list"
+            android:src="@drawable/ic_notes"
             app:tint="@color/secondary_text_color"
             android:id="@+id/imageView7"
             android:layout_marginStart="24dp"

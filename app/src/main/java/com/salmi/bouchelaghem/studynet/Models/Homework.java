@@ -3,61 +3,60 @@ package com.salmi.bouchelaghem.studynet.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
+import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class Homework implements Parcelable {
 
     private int id;
-    private Assignment assignment;
+    @SerializedName("teacher_name") private String teacherName;
+    @SerializedName("teacher_email") private String teacherEmail;
+    private String module;
+    @SerializedName("module_type") private String moduleType;
+    private String section;
     private ArrayList<Integer> concernedGroups;
     private String title;
-    private LocalDate dueDate;
-    private LocalTime dueTime;
+    @SerializedName("due_date") private String dueDate;
+    @SerializedName("due_time") private String dueTime;
     private String comment;
+    private int assignment;
 
     public Homework() {
     }
 
-    public Homework(int id, Assignment assignment, ArrayList<Integer> concernedGroups, String title, LocalDate dueDate, LocalTime dueTime, String comment) {
-        this.id = id;
-        this.assignment = assignment;
-        this.concernedGroups = concernedGroups;
-        this.title = title;
-        this.dueDate = dueDate;
-        this.dueTime = dueTime;
-        this.comment = comment;
+    public Homework(Homework homework) {
+        this.id = homework.getId();
+        this.teacherName = homework.getTeacherName();
+        this.teacherEmail = homework.getTeacherEmail();
+        this.module = homework.getModule();
+        this.moduleType = homework.getModuleType();
+        this.section = homework.getSection();
+        this.concernedGroups = homework.getConcernedGroups();
+        this.title = homework.getTitle();
+        this.dueDate = homework.getDueDate();
+        this.dueTime = homework.getDueTime();
+        this.comment = homework.getComment();
+        this.assignment = homework.getAssignment();
     }
 
-    @SuppressWarnings("unchecked")
     protected Homework(Parcel in) {
         id = in.readInt();
-        assignment = in.readTypedObject(Assignment.CREATOR);
-        concernedGroups = (ArrayList<Integer>) in.readSerializable();
+        teacherName = in.readString();
+        teacherEmail = in.readString();
+        module = in.readString();
+        moduleType = in.readString();
+        section = in.readString();
+        concernedGroups = in.readArrayList(null);
         title = in.readString();
-        dueDate = (org.threeten.bp.LocalDate) in.readSerializable();
-        dueTime = (org.threeten.bp.LocalTime) in.readSerializable();
+        dueDate = in.readString();
+        dueTime = in.readString();
         comment = in.readString();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeTypedObject(assignment, flags);
-        dest.writeSerializable(concernedGroups);
-        dest.writeString(title);
-        dest.writeSerializable(dueDate);
-        dest.writeSerializable(dueTime);
-        dest.writeString(comment);
+        assignment = in.readInt();
     }
 
     public static final Creator<Homework> CREATOR = new Creator<Homework>() {
@@ -80,15 +79,47 @@ public class Homework implements Parcelable {
         this.id = id;
     }
 
-    public Assignment getAssignment() {
-        return assignment;
+    public String getTeacherName() {
+        return teacherName;
     }
 
-    public void setAssignment(Assignment assignment) {
-        this.assignment = assignment;
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
     }
 
-    public List<Integer> getConcernedGroups() {
+    public String getTeacherEmail() {
+        return teacherEmail;
+    }
+
+    public void setTeacherEmail(String teacherEmail) {
+        this.teacherEmail = teacherEmail;
+    }
+
+    public String getModule() {
+        return module;
+    }
+
+    public void setModule(String module) {
+        this.module = module;
+    }
+
+    public String getModuleType() {
+        return moduleType;
+    }
+
+    public void setModuleType(String moduleType) {
+        this.moduleType = moduleType;
+    }
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
+    }
+
+    public ArrayList<Integer> getConcernedGroups() {
         return concernedGroups;
     }
 
@@ -104,20 +135,37 @@ public class Homework implements Parcelable {
         this.title = title;
     }
 
-    public LocalDate getDueDate() {
+    public LocalDate getLocalDateDueDate() {
+        return LocalDate.parse(dueDate);
+    }
+
+    public void setLocalDateDueDate(LocalDate dueDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        this.dueDate = formatter.format(dueDate);
+    }
+
+    public String getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(LocalDate dueDate) {
+    public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
     }
 
-    public LocalTime getDueTime() {
+    public String getDueTime() {
         return dueTime;
     }
 
-    public void setDueTime(LocalTime dueTime) {
+    public void setDueTime(String dueTime) {
         this.dueTime = dueTime;
+    }
+
+    public LocalTime getLocalTimeDueTime() {
+        return LocalTime.parse(dueTime);
+    }
+
+    public void setLocalTimeDueTime(LocalTime dueTime) {
+        this.dueTime = dueTime.toString();
     }
 
     public String getComment() {
@@ -126,5 +174,34 @@ public class Homework implements Parcelable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public int getAssignment() {
+        return assignment;
+    }
+
+    public void setAssignment(int assignment) {
+        this.assignment = assignment;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(teacherName);
+        dest.writeString(teacherEmail);
+        dest.writeString(module);
+        dest.writeString(moduleType);
+        dest.writeString(section);
+        dest.writeList(concernedGroups);
+        dest.writeString(title);
+        dest.writeString(dueDate);
+        dest.writeString(dueTime);
+        dest.writeString(comment);
+        dest.writeInt(assignment);
     }
 }

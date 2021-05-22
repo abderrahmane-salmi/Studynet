@@ -91,17 +91,8 @@ public class TestAPI extends Application {
         assignments.add(new Assignment(6, sections.get(0).getCode(), modules.get(2).getName(), modules.get(2).getCode(), Utils.COURS, new ArrayList<>(Arrays.asList(1, 2, 3))));
 
         sessions = new ArrayList<>();
-//        sessions.add(new Session(1, assignments.get(0), Collections.singletonList(1), LocalTime.of(8, 0), LocalTime.of(9, 30),  5, "https://facultydz.webex.com/facultydz/j.php?MTID=m275c959d1786501ca18107725f7f883d", "957 867 485", "mfgUdkOp"));
-//        sessions.add(new Session(2, assignments.get(1), Collections.singletonList(3), LocalTime.of(9, 40), LocalTime.of(11, 20), 4, "https://facultydz.webex.com/facultydz/j.php?MTID=m275c959d1786501ca18107725f7f883d", "957 867 485", "mfgUdkOp"));
-//        sessions.add(new Session(3, assignments.get(2), Arrays.asList(1, 2, 3), LocalTime.of(13, 0), LocalTime.of(14, 30), 3, "https://facultydz.webex.com/facultydz/j.php?MTID=m275c959d1786501ca18107725f7f883d", "957 867 485", "mfgUdkOp"));
-//        sessions.add(new Session(4, assignments.get(3), Collections.singletonList(1), LocalTime.of(11, 30), LocalTime.of(12, 50), 1, "https://facultydz.webex.com/facultydz/j.php?MTID=m275c959d1786501ca18107725f7f883d", "957 867 485", "mfgUdkOp"));
-//        sessions.add(new Session(5, assignments.get(4), Collections.singletonList(3), LocalTime.of(8, 0), LocalTime.of(9, 30), 1, "https://facultydz.webex.com/facultydz/j.php?MTID=m275c959d1786501ca18107725f7f883d", "957 867 485", "mfgUdkOp"));
-//        sessions.add(new Session(6, assignments.get(5), Arrays.asList(1, 2, 3), LocalTime.of(14, 30), LocalTime.of(16, 10), 2, "https://facultydz.webex.com/facultydz/j.php?MTID=m275c959d1786501ca18107725f7f883d", "957 867 485", "mfgUdkOp"));
 
         homework = new ArrayList<>();
-        homework.add(new Homework(1, assignments.get(0), new ArrayList<>(Arrays.asList(1, 2)), "Serie 1, Exercice 2", LocalDate.of(2021, 5, 19), LocalTime.of(12, 0), "Faites le deuxième exercice de la première série, ne faites pas la dernière question car nous le ferons dans le cours."));
-        homework.add(new Homework(2, assignments.get(1), new ArrayList<>(Collections.singletonList(3)), "Serie 3, Exercice 1", LocalDate.of(2021, 5, 30), LocalTime.of(19, 0), "Faites le deuxième exercice de la première série, ne faites pas la dernière question car nous le ferons dans le cours."));
-        homework.add(new Homework(3, assignments.get(2), new ArrayList<>(Arrays.asList(1, 2, 3)), "Serie 2, Exercice 4", LocalDate.of(2021, 5, 25), LocalTime.of(23, 0), "Faites le deuxième exercice de la première série, ne faites pas la dernière question car nous le ferons dans le cours."));
     }
 
     public List<User> getUsers() {

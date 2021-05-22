@@ -10,6 +10,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,7 +43,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     // Studynet Api
     private StudynetAPI api;
     //Current user
-    private CurrentUser currentUser = CurrentUser.getInstance();
+    private final CurrentUser currentUser = CurrentUser.getInstance();
     //Shared preferences
     private SharedPreferences sharedPreferences;
     //Loading dialog
@@ -58,10 +59,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         Preference btnChangePassword = findPreference(getString(R.string.key_change_password));
         Preference btnLogoutAll = findPreference(getString(R.string.key_logout_all));
 
+        // Hide filter button
+        NavigationActivity context = (NavigationActivity) getActivity();
+        assert context != null;
+        context.btnFilter.setVisibility(View.GONE);
+
         //Init loading dialog
-        loadingDialog = new CustomLoadingDialog(getActivity());
+        loadingDialog = new CustomLoadingDialog(requireContext());
         //Get the shared preferences.
-        sharedPreferences = getActivity().getSharedPreferences(Utils.SHARED_PREFERENCES_USER_DATA, Context.MODE_PRIVATE);
+        sharedPreferences = requireContext().getSharedPreferences(Utils.SHARED_PREFERENCES_USER_DATA, Context.MODE_PRIVATE);
         // Init retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Utils.API_BASE_URL)

@@ -1,12 +1,12 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
@@ -15,13 +15,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.jakewharton.threetenabp.AndroidThreeTen;
+import com.salmi.bouchelaghem.studynet.Models.Assignment;
 import com.salmi.bouchelaghem.studynet.Models.Homework;
-import com.salmi.bouchelaghem.studynet.Models.Module;
-import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
-import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
+import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
+import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityAddHomeworkBinding;
 
@@ -35,21 +35,29 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class AddHomeworkActivity extends AppCompatActivity {
 
     private ActivityAddHomeworkBinding binding;
 
     // Fields
-    private Section section;
-    private List<Section> sections;
+    private String section;
+    private final List<String> sections = new ArrayList<>();
     private boolean sectionSelected = false;
 
-    private Module module;
-    private List<Module> modules;
+    private String module;
+    private final List<String> modules = new ArrayList<>();
     private boolean moduleSelected = false;
 
+    private String moduleType;
+    private final List<String> moduleTypes = new ArrayList<>();
+    private boolean moduleTypeSelected = false;
+
     private String[] groupsArray; // All groups as an array
-    private List<String> selectedGroupsString; // The groups selected by the user (as a string)
+    private List<Integer> groups = new ArrayList<>(); // All groups as a list
+    private final List<String> selectedGroupsString = new ArrayList<>(); // The groups selected by the user (as a string)
     private ArrayList<Integer> selectedGroupsInt; // The groups selected by the user (as a int)
     private boolean[] groupsStates; // We need this just for the dialog
     private boolean groupSelected = false;
@@ -57,9 +65,17 @@ public class AddHomeworkActivity extends AppCompatActivity {
     private LocalDate dueDate;
     private LocalTime dueTime;
 
-    TestAPI testAPI = TestAPI.getInstance();
-    private Teacher currentTeacher;
+    private Assignment selectedAssignment;
+
+    private CustomLoadingDialog loadingDialog;
+
+    // Current teacher
     private final CurrentUser currentUser = CurrentUser.getInstance();
+    private final Teacher currentTeacher = currentUser.getCurrentTeacher();
+    private final List<Assignment> teacherAssignments = new ArrayList<>(currentTeacher.getAssignments());
+
+    // Studynet Api
+    private StudynetAPI api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,30 +88,60 @@ public class AddHomeworkActivity extends AppCompatActivity {
         AndroidThreeTen.init(this);
         /* For more info : https://github.com/JakeWharton/ThreeTenABP */
 
-        // Get current teacher
-        currentTeacher = currentUser.getCurrentTeacher();
+        // Init retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Utils.API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // Init our api, this will implement the code of all the methods in the interface.
+        api = retrofit.create(StudynetAPI.class);
+
+        //Init loading dialog
+        loadingDialog = new CustomLoadingDialog(this);
 
         // Get the action type (Add/Update)
         Intent intent = getIntent();
         String action = intent.getStringExtra(Utils.ACTION);
 
-        setupSectionsSpinner(currentTeacher.getId());
+        initSectionsSpinner();
 
         switch (action) {
             case Utils.ACTION_ADD:
                 // When the user clicks on save we create a new homework
                 binding.btnSave.setOnClickListener(v -> {
-                    if (sectionSelected & moduleSelected & groupSelected & validateTitle()
+                    if (sectionSelected & moduleSelected & moduleTypeSelected & groupSelected & validateTitle()
                     & dueDate != null & dueTime != null){
 
-                        Toast.makeText(this, "Save", Toast.LENGTH_SHORT).show();
+                        String title = binding.txtHomeworkTitle.getEditText().getText().toString().trim();
+                        String notes = binding.txtHomeworkNotes.getEditText().getText().toString().trim();
+
+                        Homework homework = new Homework();
+                        homework.setId(-1);
+                        homework.setTeacherName(currentTeacher.getLastName() + " " + currentTeacher.getFirstName().toUpperCase().charAt(0));
+                        homework.setTeacherEmail(currentTeacher.getEmail());
+                        homework.setModule(module);
+                        homework.setModuleType(moduleType);
+                        homework.setSection(section);
+                        homework.setConcernedGroups(selectedGroupsInt);
+                        homework.setLocalDateDueDate(dueDate);
+                        homework.setLocalTimeDueTime(dueTime);
+                        homework.setTitle(title);
+                        homework.setComment(notes);
+                        homework.setAssignment(selectedAssignment.getId());
+
+                        // TODO: Save homework to database
+                        Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
 
                     } else {
                         if (!sectionSelected){
-                            binding.txtHomeworkSection.setError(getString(R.string.empty_section_msg));
+                            binding.txtHomeworkSectionLayout.setError(getString(R.string.empty_section_msg));
                         }
                         if (!moduleSelected){
-                            binding.txtHomeworkSubject.setError(getString(R.string.empty_module_msg));
+                            binding.txtHomeworkSubjectLayout.setError(getString(R.string.empty_module_msg));
+                        }
+                        if (!moduleTypeSelected){
+                            binding.txtHomeworkSubjectTypeLayout.setError(getString(R.string.empty_type_msg));
                         }
                         if (!groupSelected){
                             binding.txtHomeworkGroup.setError("");
@@ -114,23 +160,49 @@ public class AddHomeworkActivity extends AppCompatActivity {
                 binding.title.setText(getString(R.string.update_homework));
 
                 // Get the homework
-                Homework homework = intent.getParcelableExtra(Utils.HOMEWORK);
+                Homework currentHomework = intent.getParcelableExtra(Utils.HOMEWORK);
+                Homework ogHomework = new Homework(currentHomework);
 
-                fillFields(homework);
+                fillFields(currentHomework);
+                //Fill the concerned groups variable:
+                selectedGroupsInt = (ArrayList<Integer>) currentHomework.getConcernedGroups();
 
                 // When the user clicks on save we update an existing session
                 binding.btnSave.setOnClickListener(v -> {
-                    if (sectionSelected & moduleSelected & groupSelected & validateTitle()
+                    if (sectionSelected & moduleSelected & moduleTypeSelected & groupSelected & validateTitle()
                             & dueDate != null & dueTime != null){
-                        // TODO: Test if the user updated anything
-                        Toast.makeText(this, "Save", Toast.LENGTH_SHORT).show();
+
+                        String title = binding.txtHomeworkTitle.getEditText().getText().toString().trim();
+                        String notes = binding.txtHomeworkNotes.getEditText().getText().toString().trim();
+
+                        currentHomework.setTeacherName(currentTeacher.getLastName() + " " + currentTeacher.getFirstName().toUpperCase().charAt(0));
+                        currentHomework.setTeacherEmail(currentTeacher.getEmail());
+                        currentHomework.setModule(module);
+                        currentHomework.setModuleType(moduleType);
+                        currentHomework.setSection(section);
+                        currentHomework.setConcernedGroups(selectedGroupsInt);
+                        currentHomework.setLocalDateDueDate(dueDate);
+                        currentHomework.setLocalTimeDueTime(dueTime);
+                        currentHomework.setTitle(title);
+                        currentHomework.setComment(notes);
+                        currentHomework.setAssignment(selectedAssignment.getId());
+
+                        if (!ogHomework.equals(currentHomework)){
+                            // TODO: Update the homework in the database
+                            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, getString(R.string.no_changes_msg), Toast.LENGTH_SHORT).show();
+                        }
 
                     } else {
                         if (!sectionSelected){
-                            binding.txtHomeworkSection.setError(getString(R.string.empty_section_msg));
+                            binding.txtHomeworkSectionLayout.setError(getString(R.string.empty_section_msg));
                         }
                         if (!moduleSelected){
-                            binding.txtHomeworkSubject.setError(getString(R.string.empty_module_msg));
+                            binding.txtHomeworkSubjectLayout.setError(getString(R.string.empty_module_msg));
+                        }
+                        if (!moduleTypeSelected){
+                            binding.txtHomeworkSubjectTypeLayout.setError(getString(R.string.empty_type_msg));
                         }
                         if (!groupSelected){
                             binding.txtHomeworkGroup.setError("");
@@ -148,91 +220,135 @@ public class AddHomeworkActivity extends AppCompatActivity {
         }
 
         // Spinners
-        binding.classSection.setOnItemClickListener((parent, view1, position, id) -> {
+        binding.sectionsSpinner.setOnClickListener(v -> {
+            if (sections.isEmpty()) {
+                Toast.makeText(this, getString(R.string.no_sections), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        binding.sectionsSpinner.setOnItemClickListener((parent, view1, position, id) -> {
             // Get selected item
             sectionSelected = true;
             section = sections.get(position);
-            binding.txtHomeworkSection.setError(null);
+            binding.txtHomeworkSectionLayout.setError(null);
 
             // Disable other spinners
-            binding.classModule.setText("");
+            binding.modulesSpinner.setText("", false);
             moduleSelected = false;
+
+            binding.txtHomeworkSubjectTypeLayout.setEnabled(false);
+            binding.moduleTypesSpinner.setText("", false);
+            moduleTypeSelected = false;
 
             binding.txtHomeworkGroup.setEnabled(false);
             binding.txtHomeworkGroup.setText("");
-            binding.txtHomeworkGroup.setHint(R.string.group);
+            binding.txtHomeworkGroup.setHint(R.string.groups);
             groupSelected = false;
 
             // Setup the next spinner
-            binding.txtHomeworkSubject.setEnabled(true);
-            getModules(currentTeacher.getId(), section.getCode());
+            binding.txtHomeworkSubjectLayout.setEnabled(true);
+            setupModulesSpinner(section);
         });
 
-        binding.classModule.setOnItemClickListener((parent, view12, position, id) -> {
+        binding.modulesSpinner.setOnItemClickListener((parent, view12, position, id) -> {
             // Get selected item
             moduleSelected = true;
             module = modules.get(position);
-            binding.txtHomeworkSubject.setError(null);
+            binding.txtHomeworkSubjectLayout.setError(null);
+
+            // Disable other spinners
+            binding.moduleTypesSpinner.setText("", false);
+            moduleTypeSelected = false;
+
+            binding.txtHomeworkGroup.setEnabled(false);
+            binding.txtHomeworkGroup.setText("");
+            binding.txtHomeworkGroup.setHint(R.string.groups);
+            groupSelected = false;
+
+            // Setup the next spinner
+            binding.txtHomeworkSubjectTypeLayout.setEnabled(true);
+            setupModuleTypesSpinner(section, module);
+        });
+
+        binding.moduleTypesSpinner.setOnItemClickListener((parent, view13, position, id) -> {
+            // Get selected item
+            moduleTypeSelected = true;
+            moduleType = moduleTypes.get(position);
+            binding.txtHomeworkSubjectTypeLayout.setError(null);
 
             // Disable other spinners
             binding.txtHomeworkGroup.setText("");
-            binding.txtHomeworkGroup.setHint(R.string.group);
+            binding.txtHomeworkGroup.setHint(R.string.groups);
             groupSelected = false;
 
             // Setup the next spinner
             binding.txtHomeworkGroup.setEnabled(true);
-            getGroups(currentTeacher.getId(), section);
+            getGroups(section, module, moduleType);
         });
 
         binding.txtHomeworkGroup.setOnClickListener(v -> {
-            binding.txtHomeworkGroup.setError(null);
-            // Init builder
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(AddHomeworkActivity.this, R.style.MyAlertDialogTheme);
-            // Set title
-            builder.setTitle(R.string.select_groups);
-            // No cancel
-            builder.setCancelable(false);
+            if (groupsArray != null && groupsArray.length != 0) {
+                binding.txtHomeworkGroup.setError(null);
+                // Init builder
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this, R.style.MyAlertDialogTheme);
+                // Set title
+                builder.setTitle(R.string.select_groups);
+                // No cancel
+                builder.setCancelable(false);
 
-            builder.setMultiChoiceItems(groupsArray, groupsStates, (dialog, which, isChecked) -> {
+                // Clone the groups list + their states in case the user cancels
+                ArrayList<String> tmpSelectedGroups = new ArrayList<>(selectedGroupsString);
+                boolean[] tmpStates = groupsStates.clone();
 
-                // Get the current item
-                String currentGroup = groupsArray[which];
-                if (isChecked) { // If its selected then add it to the selected items list
-                    selectedGroupsString.add(currentGroup);
-                } else { // if not then remove it from the list
-                    selectedGroupsString.remove(currentGroup);
-                }
-            });
+                builder.setMultiChoiceItems(groupsArray, groupsStates, (dialog, which, isChecked) -> {
 
-            builder.setPositiveButton(R.string.save, (dialog, which) -> {
-
-                binding.txtHomeworkGroup.setText("");
-                selectedGroupsInt = new ArrayList<>();
-
-                if (!selectedGroupsString.isEmpty()) {
-                    groupSelected = true;
-                    Collections.sort(selectedGroupsString);
-
-                    for (int i = 0; i < selectedGroupsString.size() - 1; i++) {
-                        // Show the selected groups in the text view
-                        binding.txtHomeworkGroup.append(selectedGroupsString.get(i) + ", ");
-                        // Save the selected groups as integers
-                        selectedGroupsInt.add(Integer.parseInt(selectedGroupsString.get(i)));
+                    // Get the current item
+                    String currentGroup = groupsArray[which];
+                    if (isChecked) { // If its selected then add it to the selected items list
+                        selectedGroupsString.add(currentGroup);
+                    } else { // if not then remove it from the list
+                        selectedGroupsString.remove(currentGroup);
                     }
-                    binding.txtHomeworkGroup.append(selectedGroupsString.get(selectedGroupsString.size() - 1));
-                    selectedGroupsInt.add(Integer.parseInt(selectedGroupsString.get(selectedGroupsString.size() - 1)));
-                } else {
-                    groupSelected = false;
-                    binding.txtHomeworkGroup.setHint(R.string.group);
-                }
-            });
+                });
 
-            builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+                builder.setPositiveButton(R.string.save, (dialog, which) -> {
 
-            builder.show();
+                    binding.txtHomeworkGroup.setText("");
+                    selectedGroupsInt = new ArrayList<>();
 
+                    if (!selectedGroupsString.isEmpty()) {
+                        groupSelected = true;
+                        Collections.sort(selectedGroupsString);
+
+                        for (int i = 0; i < selectedGroupsString.size() - 1; i++) {
+                            // Show the selected groups in the text view
+                            binding.txtHomeworkGroup.append(selectedGroupsString.get(i) + ", ");
+                            // Save the selected groups as integers
+                            selectedGroupsInt.add(Integer.parseInt(selectedGroupsString.get(i)));
+                        }
+                        binding.txtHomeworkGroup.append(selectedGroupsString.get(selectedGroupsString.size() - 1));
+                        selectedGroupsInt.add(Integer.parseInt(selectedGroupsString.get(selectedGroupsString.size() - 1)));
+                    } else {
+                        groupSelected = false;
+                        binding.txtHomeworkGroup.setHint(R.string.groups);
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+                    // If the user cancels then restore the items and their states
+                    selectedGroupsString.clear();
+                    selectedGroupsString.addAll(tmpSelectedGroups);
+                    groupsStates = tmpStates.clone();
+                    dialog.dismiss();
+                });
+
+                builder.show();
+            } else {
+                Toast.makeText(this, getString(R.string.no_groups), Toast.LENGTH_SHORT).show();
+            }
         });
 
+        // Buttons
         binding.btnSelectDueDate.setOnClickListener(v -> {
             MaterialDatePicker<Long> picker;
             if (dueDate != null) { // If we have already a selected date
@@ -299,77 +415,113 @@ public class AddHomeworkActivity extends AppCompatActivity {
         return picker;
     }
 
-    private void getGroups(int id, Section section) {
-        groupsArray = new String[section.getNbGroups()];
-        for (int grp = 0; grp < section.getNbGroups(); grp++) {
-            groupsArray[grp] = String.valueOf(grp + 1);
+    // Get the groups that belongs to the selected section and they are taught by the current teacher
+    private void getGroups(String sectionCode, String moduleCode, String moduleType) {
+        for (Assignment assignment : teacherAssignments) {
+            if (assignment.getSectionCode().equals(sectionCode)
+                    && assignment.getModuleCode().equals(moduleCode)
+                    && assignment.getModuleType().equals(moduleType)) {
+                groups = new ArrayList<>(assignment.getConcernedGroups());
+                // At this point we have a specific assignment so we will save it
+                selectedAssignment = new Assignment(assignment);
+                break;
+            }
+        }
+
+        // Convert groups list to an array
+        groupsArray = new String[groups.size()];
+        for (int i = 0; i < groups.size(); i++) {
+            groupsArray[i] = String.valueOf(groups.get(i));
         }
         groupsStates = new boolean[groupsArray.length];
-        selectedGroupsString = new ArrayList<>();
+        selectedGroupsString.clear();
     }
 
-    private void getModules(int id, String code) {
-        modules = testAPI.getModules();
+    // Get the module's types depending on the module and the section
+    private void setupModuleTypesSpinner(String sectionCode, String moduleCode) {
+        moduleTypes.clear();
+        for (Assignment assignment : teacherAssignments) {
+            if (assignment.getSectionCode().equals(sectionCode) && assignment.getModuleCode().equals(moduleCode)) {
+                moduleTypes.add(assignment.getModuleType());
+            }
+        }
 
-        // Get only names
-        List<String> modulesNames = new ArrayList<>();
-        for (Module module : modules) {
-            modulesNames.add(module.getCode());
-        }
-        if (!modulesNames.isEmpty()) {
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddHomeworkActivity.this, R.layout.dropdown_item, modulesNames);
-            binding.classModule.setAdapter(arrayAdapter);
-        }
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.dropdown_item, moduleTypes);
+        binding.moduleTypesSpinner.setAdapter(arrayAdapter);
     }
 
-    private void setupSectionsSpinner(int id) {
-        sections = testAPI.getSections();
+    // Get the modules taught by the current teacher in the selected section
+    private void setupModulesSpinner(String sectionCode) {
+        modules.clear();
+        for (Assignment assignment : teacherAssignments) {
+            if (assignment.getSectionCode().equals(sectionCode) && !modules.contains(assignment.getModuleCode())) {
+                modules.add(assignment.getModuleCode());
+            }
+        }
 
-        // Get only names
-        List<String> sectionsNames = new ArrayList<>();
-        for (Section section : sections) {
-            sectionsNames.add(section.getCode());
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.dropdown_item, modules);
+        binding.modulesSpinner.setAdapter(arrayAdapter);
+    }
+
+    // Get only the current teacher's sections
+    private void initSectionsSpinner() {
+        // We get the teacher's sections from its assignments
+        sections.clear();
+        for (Assignment assignment : teacherAssignments) {
+            if (!sections.contains(assignment.getSectionCode())) {
+                // We only add the section to the list if it doesn't exist already
+                sections.add(assignment.getSectionCode());
+            }
         }
-        if (!sectionsNames.isEmpty()) {
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddHomeworkActivity.this, R.layout.dropdown_item, sectionsNames);
-            binding.classSection.setAdapter(arrayAdapter);
-        }
+
+        // Init spinner
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.dropdown_item, sections);
+        binding.sectionsSpinner.setAdapter(arrayAdapter);
     }
 
     private void fillFields(Homework homework){
         // Section
         sectionSelected = true;
-        String sectionCode = homework.getAssignment().getSectionCode();
-        binding.classSection.setText(sectionCode, false);
-        getSection(sectionCode);
+        section = homework.getSection();
+        // Set selected item
+        binding.sectionsSpinner.setText(section, false);
 
         // Module
         moduleSelected = true;
-        String moduleCode = homework.getAssignment().getModuleCode();
+        module = homework.getModule();
         // Fill the spinner
-        getModules(currentTeacher.getId(), sectionCode);
-        binding.txtHomeworkSubject.setEnabled(true);
+        setupModulesSpinner(section);
+        binding.txtHomeworkSubjectLayout.setEnabled(true);
         // Set selected item
-        binding.classModule.setText(moduleCode, false);
+        binding.modulesSpinner.setText(module, false);
+
+        // Class type
+        moduleTypeSelected = true;
+        moduleType = homework.getModuleType();
+        // Fill the spinner
+        setupModuleTypesSpinner(section, module);
+        binding.txtHomeworkSubjectTypeLayout.setEnabled(true);
+        // Set selected item
+        binding.moduleTypesSpinner.setText(moduleType, false);
 
         // Groups
         groupSelected = true;
-        getGroups(currentTeacher.getId(), section);
+        getGroups(section, module, moduleType);
         // Fill the selected groups
         setSelectedGroups(homework.getConcernedGroups());
         binding.txtHomeworkGroup.setEnabled(true);
 
         // Set the selected groups to the text view
         int nbGroups = homework.getConcernedGroups().size();
-        if (nbGroups == 1){ // If there is only one group
+        if (nbGroups == 1) { // If there is only one group
             binding.txtHomeworkGroup.setText(String.valueOf(homework.getConcernedGroups().get(0)));
         } else {
             binding.txtHomeworkGroup.setText("");
-            for (int i = 0; i< homework.getConcernedGroups().size()-1; i++){
-                // Show the selected groups in the text view
+            for (int i = 0; i < homework.getConcernedGroups().size() - 1; i++) {
+                // Show the homework groups in the text view
                 binding.txtHomeworkGroup.append(homework.getConcernedGroups().get(i) + ", ");
             }
-            binding.txtHomeworkGroup.append(String.valueOf(homework.getConcernedGroups().get(nbGroups-1)));
+            binding.txtHomeworkGroup.append(String.valueOf(homework.getConcernedGroups().get(nbGroups - 1)));
         }
 
         // Title
@@ -377,36 +529,27 @@ public class AddHomeworkActivity extends AppCompatActivity {
 
         // Date
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        dueDate = homework.getDueDate();
+        dueDate = homework.getLocalDateDueDate();
         binding.btnSelectDueDate.setText(formatter.format(dueDate));
 
         // Time
-        dueTime = homework.getDueTime();
+        dueTime = homework.getLocalTimeDueTime();
         binding.btnSelectDueTime.setText(dueTime.toString());
 
         // Notes
-        if (homework.getComment() != null)
+        if (!homework.getComment().isEmpty())
             binding.txtHomeworkNotes.getEditText().setText(homework.getComment());
     }
 
     // Set the selected groups in case of update
     private void setSelectedGroups(List<Integer> concernedGroups) {
 
-        selectedGroupsString = new ArrayList<>();
-        for (int grp:concernedGroups){
-            groupsStates[grp-1] = true;
+        selectedGroupsString.clear();
+        for (int grp : concernedGroups) {
+            groupsStates[grp - 1] = true;
             selectedGroupsString.add(String.valueOf(grp));
         }
 
-    }
-
-    // Get the section object from its code (From the API)
-    private void getSection(String sectionCode) {
-        for (Section s:testAPI.getSections()){
-            if (s.getCode().equals(sectionCode)){
-                section = s;
-            }
-        }
     }
 
     // Validation methods
