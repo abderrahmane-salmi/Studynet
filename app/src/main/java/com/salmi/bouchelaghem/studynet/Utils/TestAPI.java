@@ -93,11 +93,6 @@ public class TestAPI extends Application {
         sessions = new ArrayList<>();
 
         homework = new ArrayList<>();
-        Homework homework1 = new Homework(1, "Mohammed Djamel", "mohammed@gmail.com",
-                "COMPIL", "TD", "ISIL B L3", new ArrayList<>(Arrays.asList(1, 2)), "Serie 1, Exercice 2",
-                LocalDate.of(2021, 5, 25), "00:00",
-                "Faites le deuxième exercice de la première série, ne faites pas la dernière question car nous le ferons dans le cours.", 1);
-        homework.add(homework1);
     }
 
     public List<User> getUsers() {

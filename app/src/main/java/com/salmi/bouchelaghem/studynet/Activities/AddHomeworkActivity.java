@@ -92,10 +92,10 @@ public class AddHomeworkActivity extends AppCompatActivity {
 
                     } else {
                         if (!sectionSelected){
-                            binding.txtHomeworkSection.setError(getString(R.string.empty_section_msg));
+                            binding.txtHomeworkSectionLayout.setError(getString(R.string.empty_section_msg));
                         }
                         if (!moduleSelected){
-                            binding.txtHomeworkSubject.setError(getString(R.string.empty_module_msg));
+                            binding.txtHomeworkSubjectLayout.setError(getString(R.string.empty_module_msg));
                         }
                         if (!groupSelected){
                             binding.txtHomeworkGroup.setError("");
@@ -127,10 +127,10 @@ public class AddHomeworkActivity extends AppCompatActivity {
 
                     } else {
                         if (!sectionSelected){
-                            binding.txtHomeworkSection.setError(getString(R.string.empty_section_msg));
+                            binding.txtHomeworkSectionLayout.setError(getString(R.string.empty_section_msg));
                         }
                         if (!moduleSelected){
-                            binding.txtHomeworkSubject.setError(getString(R.string.empty_module_msg));
+                            binding.txtHomeworkSubjectLayout.setError(getString(R.string.empty_module_msg));
                         }
                         if (!groupSelected){
                             binding.txtHomeworkGroup.setError("");
@@ -148,14 +148,14 @@ public class AddHomeworkActivity extends AppCompatActivity {
         }
 
         // Spinners
-        binding.classSection.setOnItemClickListener((parent, view1, position, id) -> {
+        binding.sectionsSpinner.setOnItemClickListener((parent, view1, position, id) -> {
             // Get selected item
             sectionSelected = true;
             section = sections.get(position);
-            binding.txtHomeworkSection.setError(null);
+            binding.txtHomeworkSectionLayout.setError(null);
 
             // Disable other spinners
-            binding.classModule.setText("");
+            binding.modulesSpinner.setText("");
             moduleSelected = false;
 
             binding.txtHomeworkGroup.setEnabled(false);
@@ -164,15 +164,15 @@ public class AddHomeworkActivity extends AppCompatActivity {
             groupSelected = false;
 
             // Setup the next spinner
-            binding.txtHomeworkSubject.setEnabled(true);
+            binding.txtHomeworkSubjectLayout.setEnabled(true);
             getModules(currentTeacher.getId(), section.getCode());
         });
 
-        binding.classModule.setOnItemClickListener((parent, view12, position, id) -> {
+        binding.modulesSpinner.setOnItemClickListener((parent, view12, position, id) -> {
             // Get selected item
             moduleSelected = true;
             module = modules.get(position);
-            binding.txtHomeworkSubject.setError(null);
+            binding.txtHomeworkSubjectLayout.setError(null);
 
             // Disable other spinners
             binding.txtHomeworkGroup.setText("");
@@ -318,7 +318,7 @@ public class AddHomeworkActivity extends AppCompatActivity {
         }
         if (!modulesNames.isEmpty()) {
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddHomeworkActivity.this, R.layout.dropdown_item, modulesNames);
-            binding.classModule.setAdapter(arrayAdapter);
+            binding.modulesSpinner.setAdapter(arrayAdapter);
         }
     }
 
@@ -332,7 +332,7 @@ public class AddHomeworkActivity extends AppCompatActivity {
         }
         if (!sectionsNames.isEmpty()) {
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddHomeworkActivity.this, R.layout.dropdown_item, sectionsNames);
-            binding.classSection.setAdapter(arrayAdapter);
+            binding.sectionsSpinner.setAdapter(arrayAdapter);
         }
     }
 
@@ -340,7 +340,7 @@ public class AddHomeworkActivity extends AppCompatActivity {
         // Section
         sectionSelected = true;
         String sectionCode = homework.getSection();
-        binding.classSection.setText(sectionCode, false);
+        binding.sectionsSpinner.setText(sectionCode, false);
         getSection(sectionCode);
 
         // Module
@@ -348,9 +348,9 @@ public class AddHomeworkActivity extends AppCompatActivity {
         String moduleCode = homework.getModule();
         // Fill the spinner
         getModules(currentTeacher.getId(), sectionCode);
-        binding.txtHomeworkSubject.setEnabled(true);
+        binding.txtHomeworkSubjectLayout.setEnabled(true);
         // Set selected item
-        binding.classModule.setText(moduleCode, false);
+        binding.modulesSpinner.setText(moduleCode, false);
 
         // Groups
         groupSelected = true;
@@ -377,7 +377,7 @@ public class AddHomeworkActivity extends AppCompatActivity {
 
         // Date
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        dueDate = homework.getDueDate();
+        dueDate = homework.getLocalDateDueDate();
         binding.btnSelectDueDate.setText(formatter.format(dueDate));
 
         // Time

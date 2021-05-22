@@ -20,27 +20,12 @@ public class Homework implements Parcelable {
     private String section;
     private ArrayList<Integer> concernedGroups;
     private String title;
-    @SerializedName("due_date") private LocalDate dueDate;
+    @SerializedName("due_date") private String dueDate;
     @SerializedName("due_time") private String dueTime;
     private String comment;
     private int assignment;
 
     public Homework() {
-    }
-
-    public Homework(int id, String teacherName, String teacherEmail, String module, String moduleType, String section, ArrayList<Integer> concernedGroups, String title, LocalDate dueDate, String dueTime, String comment, int assignment) {
-        this.id = id;
-        this.teacherName = teacherName;
-        this.teacherEmail = teacherEmail;
-        this.module = module;
-        this.moduleType = moduleType;
-        this.section = section;
-        this.concernedGroups = concernedGroups;
-        this.title = title;
-        this.dueDate = dueDate;
-        this.dueTime = dueTime;
-        this.comment = comment;
-        this.assignment = assignment;
     }
 
     protected Homework(Parcel in) {
@@ -52,7 +37,7 @@ public class Homework implements Parcelable {
         section = in.readString();
         concernedGroups = in.readArrayList(null);
         title = in.readString();
-        dueDate = (LocalDate) in.readSerializable();
+        dueDate = in.readString();
         dueTime = in.readString();
         comment = in.readString();
         assignment = in.readInt();
@@ -134,11 +119,19 @@ public class Homework implements Parcelable {
         this.title = title;
     }
 
-    public LocalDate getDueDate() {
+    public LocalDate getLocalDateDueDate() {
+        return LocalDate.parse(dueDate);
+    }
+
+    public void setLocalDateDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate.toString();
+    }
+
+    public String getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(LocalDate dueDate) {
+    public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -189,7 +182,7 @@ public class Homework implements Parcelable {
         dest.writeString(section);
         dest.writeList(concernedGroups);
         dest.writeString(title);
-        dest.writeSerializable(dueDate);
+        dest.writeString(dueDate);
         dest.writeString(dueTime);
         dest.writeString(comment);
         dest.writeInt(assignment);
