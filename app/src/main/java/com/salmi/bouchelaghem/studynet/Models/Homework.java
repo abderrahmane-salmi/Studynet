@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
+import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 
@@ -26,6 +27,21 @@ public class Homework implements Parcelable {
     private int assignment;
 
     public Homework() {
+    }
+
+    public Homework(Homework homework) {
+        this.id = homework.getId();
+        this.teacherName = homework.getTeacherName();
+        this.teacherEmail = homework.getTeacherEmail();
+        this.module = homework.getModule();
+        this.moduleType = homework.getModuleType();
+        this.section = homework.getSection();
+        this.concernedGroups = homework.getConcernedGroups();
+        this.title = homework.getTitle();
+        this.dueDate = homework.getDueDate();
+        this.dueTime = homework.getDueTime();
+        this.comment = homework.getComment();
+        this.assignment = homework.getAssignment();
     }
 
     protected Homework(Parcel in) {
@@ -124,7 +140,8 @@ public class Homework implements Parcelable {
     }
 
     public void setLocalDateDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate.toString();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        this.dueDate = formatter.format(dueDate);
     }
 
     public String getDueDate() {
