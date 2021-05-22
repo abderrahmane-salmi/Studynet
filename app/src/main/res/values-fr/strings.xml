@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Studynet</string>
+    <string name="meeting_link">Lien de la réunion</string>
+    <string name="meeting_number">Identifiant de la réunion</string>
+    <string name="meeting_password">Mot de passe de la réunion</string>
+    <string name="save">Sauvegarder</string>
+    <string name="section">Section</string>
+    <string name="group">Group</string>
+    <string name="class_type">Type de cours</string>
+    <string name="module">Module</string>
+    <string name="class_day">Jour du cours</string>
+    <string name="start_time">Heure de début</string>
+    <string name="end_time">Heure de fin</string>
+    <string name="schedule_class">Planifier un cours</string>
+    <string name="group1">Groupe </string>
+    <string name="homework_details">Détails du travail</string>
+    <string name="welcome">Bienvenue</string>
+    <string name="sign_up">S\'inscrire</string>
+    <string name="sign_in_to_continue">Connectez vous pour continuer</string>
+    <string name="email">Email</string>
+    <string name="password">Mot de passe</string>
+    <string name="forgot_password">Mot de passe oublié?</string>
+    <string name="sign_in">Se connecter</string>
+    <string name="timetable">Calendrier</string>
+    <string name="reset_password">Réinitialiser le mot de passe</string>
+    <string name="you_have_no_homeworks">Vous n\'avez pas de travaux a faire</string>
+    <string name="sat">Sam</string>
+    <string name="sun">Dim</string>
+    <string name="mon">Lun</string>
+    <string name="tue">Mar</string>
+    <string name="wed">Mer</string>
+    <string name="thu">Jeu</string>
+</resources>
