@@ -98,7 +98,7 @@ public class HomeworksFragment extends Fragment {
         assert context != null;
         context.btnFilter.setVisibility(View.VISIBLE);
 
-        switch (currentUserType){
+        switch (currentUserType) {
             case Utils.TEACHER_ACCOUNT:
                 // Get the current teacher from the app API
                 Teacher teacher = currentUser.getCurrentTeacher();
@@ -259,7 +259,7 @@ public class HomeworksFragment extends Fragment {
                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     dialog.show();
                     // Show rounded corners
-                    WindowManager.LayoutParams params =   dialog.getWindow().getAttributes();
+                    WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
                     dialog.getWindow().setAttributes(params);
                 });
                 break;
@@ -269,25 +269,43 @@ public class HomeworksFragment extends Fragment {
     }
 
     private void getHomeworks(String section) {
-        Call<List<Homework>> getHomeworksCall = api.getSectionHomeworks(section,"Token " + currentUser.getToken());
+        // Start loading animation
+        binding.loadingAnimation.setVisibility(View.VISIBLE);
+        binding.loadingAnimation.playAnimation();
+        Call<List<Homework>> getHomeworksCall = api.getSectionHomeworks(section, "Token " + currentUser.getToken());
         getHomeworksCall.enqueue(new Callback<List<Homework>>() {
             @Override
-            public void onResponse(Call<List<Homework>> call, Response<List<Homework>> response) {
-                if(response.code() == Utils.HttpResponses.HTTP_200_OK)
-                {
+            public void onResponse(@NonNull Call<List<Homework>> call, @NonNull Response<List<Homework>> response) {
+                if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
                     homeworks = response.body();
-                    adapter.setHomeworks(homeworks);
-                    binding.homeworksRecView.setAdapter(adapter);
+                    if (homeworks != null) {
+                        if (!homeworks.isEmpty()) {
+                            adapter.setHomeworks(homeworks);
+                            binding.homeworksRecView.setAdapter(adapter);
+                            binding.homeworksRecView.setVisibility(View.VISIBLE);
+                            binding.emptyMsg.setVisibility(View.GONE);
+                        } else {
+                            binding.homeworksRecView.setVisibility(View.GONE);
+                            binding.emptyMsg.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        binding.homeworksRecView.setVisibility(View.GONE);
+                        binding.emptyMsg.setVisibility(View.VISIBLE);
+                    }
 
-                }
-                else
-                {
+                } else {
                     Toast.makeText(getActivity(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
                 }
+                // Stop loading animation
+                binding.loadingAnimation.setVisibility(View.GONE);
+                binding.loadingAnimation.cancelAnimation();
             }
 
             @Override
-            public void onFailure(Call<List<Homework>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Homework>> call, @NonNull Throwable t) {
+                // Stop loading animation
+                binding.loadingAnimation.setVisibility(View.GONE);
+                binding.loadingAnimation.cancelAnimation();
                 Toast.makeText(getActivity(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
             }
         });
@@ -298,14 +316,12 @@ public class HomeworksFragment extends Fragment {
     }
 
     private void initRecView() {
-        homeworks = new ArrayList<>();
-        filteredHomeworks = new ArrayList<>();
-        binding.homeworksRecView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.homeworksRecView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.homeworksRecView.addItemDecoration(new DividerItemDecoration(requireContext(), LinearLayout.VERTICAL));
         adapter = new HomeworkAdapter(getContext());
 
         // Swipe to action in rec view
-        if (currentUserType.equals(Utils.TEACHER_ACCOUNT)){
+        if (currentUserType.equals(Utils.TEACHER_ACCOUNT)) {
             // If its a teacher then show delete + edit buttons
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(teacherCallBack);
             itemTouchHelper.attachToRecyclerView(binding.homeworksRecView);
@@ -331,7 +347,7 @@ public class HomeworksFragment extends Fragment {
             int position = viewHolder.getAdapterPosition();
             Homework currentHomework = adapter.getHomeworks().get(position);
 
-            switch (direction){
+            switch (direction) {
                 case ItemTouchHelper.LEFT: // Swipe left to right <- : Delete item
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -403,12 +419,12 @@ public class HomeworksFragment extends Fragment {
             });
         }
 
-        if (currentUserType.equals(Utils.STUDENT_ACCOUNT)){
+        if (currentUserType.equals(Utils.STUDENT_ACCOUNT)) {
             Student student = currentUser.getCurrentStudent();
             // Get the student's sessions
             getHomeworks(student.getSection().getCode());
-        } else if (currentUserType.equals(Utils.TEACHER_ACCOUNT) || currentUserType.equals(Utils.ADMIN_ACCOUNT)){
-            if (filterApplied){
+        } else if (currentUserType.equals(Utils.TEACHER_ACCOUNT) || currentUserType.equals(Utils.ADMIN_ACCOUNT)) {
+            if (filterApplied) {
                 getHomeworks(selectedSection);
             }
         }
