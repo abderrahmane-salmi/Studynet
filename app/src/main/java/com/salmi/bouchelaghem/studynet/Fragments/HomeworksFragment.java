@@ -26,19 +26,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputLayout;
 import com.salmi.bouchelaghem.studynet.Activities.AddHomeworkActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
 import com.salmi.bouchelaghem.studynet.Adapters.HomeworkAdapter;
 import com.salmi.bouchelaghem.studynet.Models.Admin;
 import com.salmi.bouchelaghem.studynet.Models.Homework;
-import com.salmi.bouchelaghem.studynet.Models.Module;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
-import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
+import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.FragmentHomeworksBinding;
 
@@ -47,39 +45,52 @@ import java.util.Arrays;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HomeworksFragment extends Fragment {
 
     private FragmentHomeworksBinding binding;
-    private CurrentUser currentUser = CurrentUser.getInstance();
 
     // Recycler View
-    private List<Homework> homeworks;
-    private List<Homework> filteredHomeworks;
+    private List<Homework> homeworks = new ArrayList<>();
+    private List<Homework> filteredHomeworks = new ArrayList<>();
     private HomeworkAdapter adapter;
 
     // Filter
     private Dialog dialog;
-    // Fields
+    private boolean sectionSelected = false;
+    private String selectedSection;
     private boolean filterApplied = false;
-    private String filteredSection, filteredModule, filteredDate;
-    // Lists
-    private List<String> modulesNames, sectionsNames;
+    private List<String> allSections;
+    private String filteredDate;
+    private boolean firstTime = true;
 
-    // Test api
-    TestAPI testAPI = TestAPI.getInstance();
-    private String currentUserType;
+    // Current User
+    private final CurrentUser currentUser = CurrentUser.getInstance();
+    private final String currentUserType = currentUser.getUserType();
 
+    // Studynet Api
+    private StudynetAPI api;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         binding = FragmentHomeworksBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        // Get current user type
-        currentUserType = currentUser.getUserType();
+        // Init retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Utils.API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // Init our api
+        api = retrofit.create(StudynetAPI.class);
+
         initRecView();
 
         // Show the filter button
@@ -103,53 +114,53 @@ public class HomeworksFragment extends Fragment {
                     startActivity(intent);
                 });
 
-                // Init filter
+                // setup the filter
                 context.btnFilter.setOnClickListener(v -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    View view12 = View.inflate(context, R.layout.popup_teacher_homeworks_filter, null);
+                    View view1 = View.inflate(context, R.layout.popup_sections_filter, null);
                     // Init Views
-                    ImageView btnCloseFilter = view12.findViewById(R.id.btnCloseFilter);
-                    AutoCompleteTextView filterTimetableSection = view12.findViewById(R.id.filterHomeworksSection);
-                    AutoCompleteTextView filterHomeworksModule = view12.findViewById(R.id.filterHomeworksSubject);
-                    MaterialButton btnApplyFilter = view12.findViewById(R.id.btnApplyFilter);
-                    TextInputLayout filterHomeworksSubjectLayout = view12.findViewById(R.id.filterHomeworksSubjectLayout);
+                    ImageView btnCloseFilter = view1.findViewById(R.id.btnCloseFilter);
+                    AutoCompleteTextView filterTimetableSection = view1.findViewById(R.id.filterTimetableSection);
+                    MaterialButton btnApplyFilter = view1.findViewById(R.id.btnApplyFilter);
 
-                    // Init sections & modules list
                     // Init sections list
-                    sectionsNames = getTeacherSections(teacher.getId());
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sectionsNames);
+                    // Get all the sections
+                    List<String> sections = new ArrayList<>(teacher.getSections());
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sections);
                     filterTimetableSection.setAdapter(arrayAdapter);
 
-                    // TODO: restoreFilterState(); // set the filter values to the last filter applied
+                    if (filterApplied) {
+                        restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
+                    }
 
                     // Init Buttons
-                    btnApplyFilter.setOnClickListener(v14 -> {
-                        // TODO: Verify the the user selected section and module
-                        binding.selectSectionMsg.setVisibility(View.GONE);
-                        getAllHomeworks("");
-                        dialog.dismiss();
+                    btnApplyFilter.setOnClickListener(v1 -> {
+
+                        if (sectionSelected) {
+
+                            filterApplied = true;
+                            getHomeworks(selectedSection);
+                            binding.selectSectionMsg.setVisibility(View.GONE);
+                            dialog.dismiss();
+
+                        } else {
+                            Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
+                        }
                     });
 
-                    btnCloseFilter.setOnClickListener(v1 -> dialog.dismiss());
+                    btnCloseFilter.setOnClickListener(v12 -> dialog.dismiss());
 
-                    filterTimetableSection.setOnItemClickListener((parent, view13, position, id) -> {
-                        // Get the selected section
-                        filteredSection = sectionsNames.get(position);
-                        // When the user chooses a section we will fill the modules spinner for him
-                        modulesNames = getTeacherModules(teacher.getId(), filteredSection);
-                        ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<>(context, R.layout.dropdown_item, modulesNames);
-                        filterHomeworksModule.setAdapter(arrayAdapter2);
-                        filterHomeworksSubjectLayout.setEnabled(true);
+                    filterTimetableSection.setOnItemClickListener((parent, view11, position, id) -> {
+                        sectionSelected = true;
+                        selectedSection = sections.get(position);
                     });
 
-                    filterHomeworksModule.setOnItemClickListener((parent, view14, position, id) -> filteredModule = modulesNames.get(position));
-
-                    builder.setView(view12);
+                    builder.setView(view1);
                     dialog = builder.create(); // creating our dialog
                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     dialog.show();
                     // Show rounded corners
-                    WindowManager.LayoutParams params =   dialog.getWindow().getAttributes();
+                    WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
                     dialog.getWindow().setAttributes(params);
                 });
                 break;
@@ -159,61 +170,60 @@ public class HomeworksFragment extends Fragment {
                 // Show the select section msg
                 binding.selectSectionMsg.setVisibility(View.VISIBLE);
 
-                // Init filter
+                // Setup filter
                 context.btnFilter.setOnClickListener(v -> {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    View view12 = View.inflate(context, R.layout.popup_teacher_homeworks_filter, null);
-                    // Init Views
-                    ImageView btnCloseFilter = view12.findViewById(R.id.btnCloseFilter);
-                    AutoCompleteTextView filterTimetableSection = view12.findViewById(R.id.filterHomeworksSection);
-                    AutoCompleteTextView filterHomeworksModule = view12.findViewById(R.id.filterHomeworksSubject);
-                    MaterialButton btnApplyFilter = view12.findViewById(R.id.btnApplyFilter);
-                    TextInputLayout filterHomeworksSubjectLayout = view12.findViewById(R.id.filterHomeworksSubjectLayout);
+                    if (allSections != null) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        View view12 = View.inflate(context, R.layout.popup_sections_filter, null);
+                        // Init Views
+                        ImageView btnCloseFilter = view12.findViewById(R.id.btnCloseFilter);
+                        AutoCompleteTextView filterTimetableSection = view12.findViewById(R.id.filterTimetableSection);
+                        MaterialButton btnApplyFilter = view12.findViewById(R.id.btnApplyFilter);
 
-                    // Init sections & modules list
-                    // Init sections list
-                    sectionsNames = getAllSections();
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sectionsNames);
-                    filterTimetableSection.setAdapter(arrayAdapter);
+                        // Init sections spinner
+                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, allSections);
+                        filterTimetableSection.setAdapter(arrayAdapter);
 
-                    // TODO: restoreFilterState(); // set the filter values to the last filter applied
+                        if (filterApplied) {
+                            restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
+                        }
 
-                    // Init Buttons
-                    btnApplyFilter.setOnClickListener(v13 -> {
-                        // TODO: Verify the the user selected section and module
-                        binding.selectSectionMsg.setVisibility(View.GONE);
-                        getAllHomeworks("");
-                        dialog.dismiss();
-                    });
+                        // Init Buttons
+                        btnApplyFilter.setOnClickListener(v13 -> {
 
-                    btnCloseFilter.setOnClickListener(v1 -> dialog.dismiss());
+                            if (sectionSelected) {
 
-                    filterTimetableSection.setOnItemClickListener((parent, view13, position, id) -> {
-                        // Get the selected section
-                        filteredSection = sectionsNames.get(position);
-                        // When the user chooses a section we will fill the modules spinner for him
-                        modulesNames = getSectionModules(filteredSection);
-                        ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<>(context, R.layout.dropdown_item, modulesNames);
-                        filterHomeworksModule.setAdapter(arrayAdapter2);
-                        filterHomeworksSubjectLayout.setEnabled(true);
-                    });
+                                getHomeworks(selectedSection);
+                                binding.selectSectionMsg.setVisibility(View.GONE);
+                                dialog.dismiss();
+                                filterApplied = true;
 
-                    filterHomeworksModule.setOnItemClickListener((parent, view14, position, id) -> filteredModule = modulesNames.get(position));
+                            } else {
+                                Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
+                            }
 
-                    builder.setView(view12);
-                    dialog = builder.create(); // creating our dialog
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    dialog.show();
-                    // Show rounded corners
-                    WindowManager.LayoutParams params =   dialog.getWindow().getAttributes();
-                    dialog.getWindow().setAttributes(params);
+                        });
+
+                        btnCloseFilter.setOnClickListener(v14 -> dialog.dismiss());
+
+                        filterTimetableSection.setOnItemClickListener((parent, view121, position, id) -> {
+                            sectionSelected = true;
+                            selectedSection = allSections.get(position);
+                        });
+
+                        builder.setView(view12);
+                        dialog = builder.create(); // creating our dialog
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialog.show();
+                        // Show rounded corners
+                        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                        dialog.getWindow().setAttributes(params);
+                    }
                 });
                 break;
             case Utils.STUDENT_ACCOUNT:
                 // Get current student
                 Student student = currentUser.getCurrentStudent();
-                // Show all homeworks by default
-                getAllHomeworks(student.getSection().getCode());
 
                 // Init filter
                 context.btnFilter.setOnClickListener(v -> {
@@ -258,67 +268,12 @@ public class HomeworksFragment extends Fragment {
         return view;
     }
 
-    private void getAllHomeworks(String section) {
-        homeworks = testAPI.getHomework();
-        if (!homeworks.isEmpty()){
-            adapter.setHomeworks(homeworks);
-            binding.homeworksRecView.setAdapter(adapter);
-            binding.homeworksRecView.setVisibility(View.VISIBLE);
-            binding.emptyMsg.setVisibility(View.GONE);
-        } else {
-            binding.homeworksRecView.setVisibility(View.GONE);
-            binding.emptyMsg.setVisibility(View.VISIBLE);
-        }
+    private void getHomeworks(String section) {
+        // TODO: Get homeworks from api
     }
 
-    // Get all the selected section's modules
-    private List<String> getSectionModules(String section) {
-        // Get all the subjects
-        List<Module> modules = testAPI.getModules();
-
-        // Get only the teacher's sections
-        List<String> modulesNames = new ArrayList<>();
-        for (Module module : modules) {
-            modulesNames.add(module.getCode());
-        }
-        return modulesNames;
-    }
-
-    // Get all sections
-    private List<String> getAllSections() {
-        // Get all the sections
-        List<Section> sections = testAPI.getSections();
-
-        // Get only the teacher's sections
-        List<String> sectionsNames = new ArrayList<>();
-        for (Section section : sections) {
-            sectionsNames.add(section.getCode());
-        }
-        return sectionsNames;
-    }
-
-    private List<String> getTeacherModules(int teacherId, String section) {
-        // Get all the subjects
-        List<Module> modules = testAPI.getModules();
-
-        // Get only the teacher's sections
-        List<String> modulesNames = new ArrayList<>();
-        for (Module module : modules) {
-            modulesNames.add(module.getCode());
-        }
-        return modulesNames;
-    }
-
-    private List<String> getTeacherSections(int teacherId) {
-        // Get all the sections
-        List<Section> sections = testAPI.getSections();
-
-        // Get only the teacher's sections
-        List<String> sectionsNames = new ArrayList<>();
-        for (Section section : sections) {
-            sectionsNames.add(section.getCode());
-        }
-        return sectionsNames;
+    private void restoreFilterState(AutoCompleteTextView filter) {
+        filter.setText(selectedSection, false);
     }
 
     private void initRecView() {
@@ -397,4 +352,44 @@ public class HomeworksFragment extends Fragment {
         }
     };
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // If its an admin then get all sections to setup the filter
+        if (currentUserType.equals(Utils.ADMIN_ACCOUNT) && firstTime) {
+            Call<List<Section>> call = api.getAllSections();
+            call.enqueue(new Callback<List<Section>>() {
+                @Override
+                public void onResponse(@NonNull Call<List<Section>> call, @NonNull Response<List<Section>> response) {
+                    if (response.isSuccessful()) {
+                        List<Section> sectionsList = response.body();
+                        allSections = new ArrayList<>();
+                        if (sectionsList != null) {
+                            // Get names
+                            for (Section sec : sectionsList) {
+                                allSections.add(sec.getCode());
+                            }
+                        }
+                    } else {
+                        Toast.makeText(getContext(), getString(R.string.error) + response.code(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<List<Section>> call, @NonNull Throwable t) {
+                    Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        if (currentUserType.equals(Utils.STUDENT_ACCOUNT)){
+            Student student = currentUser.getCurrentStudent();
+            // Get the student's sessions
+            getHomeworks(student.getSection().getCode());
+        } else if (currentUserType.equals(Utils.TEACHER_ACCOUNT) || currentUserType.equals(Utils.ADMIN_ACCOUNT)){
+            if (filterApplied){
+                getHomeworks(selectedSection);
+            }
+        }
+    }
 }
