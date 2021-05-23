@@ -87,6 +87,15 @@ public interface StudynetAPI {
     @GET("homeworks/")
     Call<List<Homework>> getSectionHomeworks(@Query("section") String section, @Header("Authorization") String token);
 
+    @POST("homeworks/")
+    Call<Homework> createHomework(@Body JsonObject homework, @Header("Authorization") String token);
+
+    @PUT("homeworks/{id}/")
+    Call<Homework> updateHomework(@Path("id") int id, @Body JsonObject homework, @Header("Authorization") String token);
+
+    @DELETE("homeworks/{id}/")
+    Call<ResponseBody> deleteHomework(@Path("id") int id, @Header("Authorization") String token);
+
     // *** Teachers ***
     /** Get teachers based on section*/
     @GET("teachers")
