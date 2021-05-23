@@ -222,4 +222,5 @@
     <string name="delete_your_homework_msg">You can only delete your own homeworks</string>
     <string name="edit_your_homework_msg">You can only edit your own homeworks.</string>
     <string name="homework_edited_success">Homework updated successfully</string>
+    <string name="saturday">Saturday</string>
 </resources>

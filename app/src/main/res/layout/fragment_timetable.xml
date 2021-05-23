@@ -137,7 +137,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/tabularasa_medium"
-        android:text="Saturday"
+        android:text="@string/saturday"
         android:textColor="@color/primary_text_color"
         android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
