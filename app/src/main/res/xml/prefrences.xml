@@ -14,17 +14,14 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/about_section">
+    <PreferenceCategory app:title="@string/account">
 
         <Preference
-            app:icon="@drawable/ic_settings_report_bug"
-            app:key="@string/key_report_bugs"
-            app:summary="@string/report_bugs_msg"
-            app:title="@string/report_bugs" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/account_section">
+            app:isPreferenceVisible="false"
+            app:icon="@drawable/ic_settings_change_section"
+            app:key="@string/key_change_section"
+            app:summary="@string/change_section_msg"
+            app:title="@string/change_section" />
 
         <Preference
             app:icon="@drawable/ic_settings_password"
@@ -37,6 +34,16 @@
             app:key="@string/key_logout_all"
             app:summary="@string/logout_all_msg"
             app:title="@string/logout_all" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/about">
+
+        <Preference
+            app:icon="@drawable/ic_settings_report_bug"
+            app:key="@string/key_report_bugs"
+            app:summary="@string/report_bugs_msg"
+            app:title="@string/report_bugs" />
 
     </PreferenceCategory>
 

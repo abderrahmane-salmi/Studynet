@@ -197,13 +197,13 @@
     <string name="delete_your_session_msg">You can only delete your own sessions</string>
     <string name="signed_up_msg">You have signed up successfully</string>
     <string name="general">General</string>
-    <string name="about_section">About Section</string>
+    <string name="about">About</string>
     <string name="change_app_language">Change the app\'s language</string>
     <string name="key_language">LANGUAGE</string>
     <string name="report_bugs">Report Bugs</string>
     <string name="report_bugs_msg">Report any bugs or issues you\'ve encountered</string>
     <string name="key_report_bugs">REPORT_BUGS</string>
-    <string name="account_section">Account Section</string>
+    <string name="account">Account</string>
     <string name="change_password">Change Password</string>
     <string name="change_password_msg">Change your account\'s password</string>
     <string name="key_change_password">CHANGE_PASSWORD</string>
@@ -223,4 +223,7 @@
     <string name="edit_your_homework_msg">You can only edit your own homeworks.</string>
     <string name="homework_edited_success">Homework updated successfully</string>
     <string name="saturday">Saturday</string>
+    <string name="key_change_section">CHANGE_SECTION</string>
+    <string name="change_section">Change Section</string>
+    <string name="change_section_msg">Change your section</string>
 </resources>

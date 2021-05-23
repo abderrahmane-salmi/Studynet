@@ -56,6 +56,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         // Init Views
         ListPreference languageList = findPreference(getString(R.string.key_language));
         Preference btnReportBugs = findPreference(getString(R.string.key_report_bugs));
+        Preference btnChangeSection = findPreference(getString(R.string.key_change_section));
         Preference btnChangePassword = findPreference(getString(R.string.key_change_password));
         Preference btnLogoutAll = findPreference(getString(R.string.key_logout_all));
 
@@ -106,6 +107,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         // Buttons
+        if (currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT)){
+            assert btnChangeSection != null;
+            btnChangeSection.setVisible(true);
+            btnChangeSection.setOnPreferenceClickListener(preference -> {
+                // TODO: Change section
+                return true;
+            });
+        }
+
         assert btnReportBugs != null;
         btnReportBugs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @SuppressLint("IntentReset")
