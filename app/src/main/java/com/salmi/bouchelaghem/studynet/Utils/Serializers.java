@@ -7,12 +7,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Models.Admin;
 import com.salmi.bouchelaghem.studynet.Models.Assignment;
+import com.salmi.bouchelaghem.studynet.Models.Homework;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Session;
 import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Serializers {
@@ -186,7 +186,7 @@ public class Serializers {
         JsonObject sessionJson = new JsonObject();
         JsonArray concernedGroupsJson = new JsonArray();
 
-        //Build the concerned groups json array
+        //Build the concerned groups Json array
         for(int i : session.getConcernedGroups())
         {
             concernedGroupsJson.add(i);
@@ -203,5 +203,27 @@ public class Serializers {
         sessionJson.addProperty("assignment",session.getAssignment());
 
         return sessionJson;
+    }
+
+    /** Creates JsonObject from a homework object*/
+    public static JsonObject HomeworkSerializer(@NonNull Homework homework)
+    {
+        JsonObject homeworkJson = new JsonObject();
+        JsonArray concernedGroupsJson = new JsonArray();
+
+        //Build the concerned groups Json array
+        for(int i : homework.getConcernedGroups())
+        {
+            concernedGroupsJson.add(i);
+        }
+        //Build the homework object
+        homeworkJson.add("concerned_groups",concernedGroupsJson);
+        homeworkJson.addProperty("title",homework.getTitle());
+        homeworkJson.addProperty("due_date",homework.getDueDate());
+        homeworkJson.addProperty("due_time",homework.getDueTime());
+        homeworkJson.addProperty("comment",homework.getComment());
+        homeworkJson.addProperty("assignment",homework.getAssignment());
+
+        return homeworkJson;
     }
 }
