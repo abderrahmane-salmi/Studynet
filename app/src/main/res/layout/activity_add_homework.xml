@@ -329,9 +329,9 @@
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/tabularasa_regular"
                 android:hint="@string/notes"
-                android:maxLength="300"
-                android:maxLines="3"
-                android:inputType="textPersonName|textCapSentences"
+                android:maxLength="500"
+                android:maxLines="5"
+                android:inputType="textCapSentences|textMultiLine"
                 android:textSize="15sp" />
 
         </com.google.android.material.textfield.TextInputLayout>

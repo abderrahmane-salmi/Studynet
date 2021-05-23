@@ -346,7 +346,7 @@ public class HomeworksFragment extends Fragment {
     private void initRecView() {
         binding.homeworksRecView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.homeworksRecView.addItemDecoration(new DividerItemDecoration(requireContext(), LinearLayout.VERTICAL));
-        adapter = new HomeworkAdapter(getContext());
+        adapter = new HomeworkAdapter(getContext(), currentUserType);
 
         // Swipe to action in rec view
         if (currentUserType.equals(Utils.TEACHER_ACCOUNT)) {

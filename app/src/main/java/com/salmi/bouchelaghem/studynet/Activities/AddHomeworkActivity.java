@@ -172,7 +172,7 @@ public class AddHomeworkActivity extends AppCompatActivity {
 
                 fillFields(currentHomework);
                 //Fill the concerned groups variable:
-                selectedGroupsInt = (ArrayList<Integer>) currentHomework.getConcernedGroups();
+                selectedGroupsInt = currentHomework.getConcernedGroups();
 
                 // When the user clicks on save we update an existing session
                 binding.btnSave.setOnClickListener(v -> {
