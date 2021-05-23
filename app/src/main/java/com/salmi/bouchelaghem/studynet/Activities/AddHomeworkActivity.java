@@ -182,11 +182,6 @@ public class AddHomeworkActivity extends AppCompatActivity {
                         String title = binding.txtHomeworkTitle.getEditText().getText().toString().trim();
                         String notes = binding.txtHomeworkNotes.getEditText().getText().toString().trim();
 
-                        currentHomework.setTeacherName(currentTeacher.getLastName() + " " + currentTeacher.getFirstName().toUpperCase().charAt(0));
-                        currentHomework.setTeacherEmail(currentTeacher.getEmail());
-                        currentHomework.setModule(module);
-                        currentHomework.setModuleType(moduleType);
-                        currentHomework.setSection(section);
                         currentHomework.setConcernedGroups(selectedGroupsInt);
                         currentHomework.setLocalDateDueDate(dueDate);
                         currentHomework.setLocalTimeDueTime(dueTime);
@@ -195,8 +190,11 @@ public class AddHomeworkActivity extends AppCompatActivity {
                         currentHomework.setAssignment(selectedAssignment.getId());
 
                         if (!ogHomework.equals(currentHomework)){
-                            // TODO: Update the homework in the database
-                            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+                            //Get the jsonObject that will be sent to the api
+                            JsonObject updatedHomeworkJson = Serializers.HomeworkSerializer(currentHomework);
+                            Call<Homework> updateHomeworkCall = api.updateHomework(currentHomework.getId(),updatedHomeworkJson, "Token " + currentUser.getToken());
+                            loadingDialog.show();
+                            updateHomeworkCall.enqueue(new UpdateHomeworkCallback());
                         } else {
                             Toast.makeText(this, getString(R.string.no_changes_msg), Toast.LENGTH_SHORT).show();
                         }
@@ -587,12 +585,34 @@ public class AddHomeworkActivity extends AppCompatActivity {
                 Toast.makeText(AddHomeworkActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
                 loadingDialog.dismiss();
             }
-
-
         }
 
         @Override
         public void onFailure(@NonNull Call<Homework> call, @NonNull Throwable t) {
+            Toast.makeText(AddHomeworkActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            loadingDialog.dismiss();
+        }
+    }
+
+    private class UpdateHomeworkCallback implements Callback<Homework>
+    {
+        @Override
+        public void onResponse(Call<Homework> call, Response<Homework> response) {
+            if(response.code() == Utils.HttpResponses.HTTP_200_OK)
+            {
+                Toast.makeText(AddHomeworkActivity.this, getString(R.string.homework_edited_success), Toast.LENGTH_SHORT).show();
+                loadingDialog.dismiss();
+                finish();
+            }
+            else
+            {
+                Toast.makeText(AddHomeworkActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                loadingDialog.dismiss();
+            }
+        }
+
+        @Override
+        public void onFailure(Call<Homework> call, Throwable t) {
             Toast.makeText(AddHomeworkActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
             loadingDialog.dismiss();
         }

@@ -10,6 +10,7 @@ import org.threeten.bp.LocalTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Homework implements Parcelable {
 
@@ -70,6 +71,30 @@ public class Homework implements Parcelable {
             return new Homework[size];
         }
     };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Homework homework = (Homework) o;
+        return id == homework.id &&
+                assignment == homework.assignment &&
+                Objects.equals(teacherName, homework.teacherName) &&
+                Objects.equals(teacherEmail, homework.teacherEmail) &&
+                Objects.equals(module, homework.module) &&
+                Objects.equals(moduleType, homework.moduleType) &&
+                Objects.equals(section, homework.section) &&
+                Objects.equals(concernedGroups, homework.concernedGroups) &&
+                Objects.equals(title, homework.title) &&
+                this.getLocalDateDueDate().equals(homework.getLocalDateDueDate()) &&
+                this.getLocalTimeDueTime().equals(homework.getLocalTimeDueTime()) &&
+                Objects.equals(comment, homework.comment);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, teacherName, teacherEmail, module, moduleType, section, concernedGroups, title, dueDate, dueTime, comment, assignment);
+    }
 
     public int getId() {
         return id;
