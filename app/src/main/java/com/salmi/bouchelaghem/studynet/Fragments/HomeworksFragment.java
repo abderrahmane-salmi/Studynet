@@ -370,28 +370,41 @@ public class HomeworksFragment extends Fragment {
 
             switch (direction) {
                 case ItemTouchHelper.LEFT: // Swipe left to right <- : Delete item
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setMessage(R.string.are_you_sure);
-                    builder.setPositiveButton(R.string.yes, (dialog, which) -> {
-                        homeworks.remove(currentHomework);
-                        adapter.getHomeworks().remove(currentHomework);
-                        adapter.notifyItemRemoved(position);
-                        Toast.makeText(getContext(), getString(R.string.homework_deleted_msg), Toast.LENGTH_SHORT).show();
-                    });
-                    builder.setNegativeButton(R.string.no, (dialog, which) -> {
-                        // Do Nothing
+                    if (currentHomework.getTeacherEmail().equals(currentUser.getCurrentTeacher().getEmail())) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setMessage(R.string.are_you_sure);
+                        builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+                            homeworks.remove(currentHomework);
+                            adapter.getHomeworks().remove(currentHomework);
+                            adapter.notifyItemRemoved(position);
+                            Toast.makeText(getContext(), getString(R.string.homework_deleted_msg), Toast.LENGTH_SHORT).show();
+                        });
+                        builder.setNegativeButton(R.string.no, (dialog, which) -> {
+                            // Do Nothing
+                            adapter.notifyItemChanged(position); // To reset the item on the screen
+                        });
+                        builder.create().show();
+                        break;
+                    }
+                    else {
+                        Toast.makeText(getContext(), getString(R.string.delete_your_homework_msg), Toast.LENGTH_SHORT).show();
                         adapter.notifyItemChanged(position); // To reset the item on the screen
-                    });
-                    builder.create().show();
-                    break;
+                    }
+
                 case ItemTouchHelper.RIGHT: // Swipe right to left -> : Edit item
-                    Intent intent = new Intent(getContext(), AddHomeworkActivity.class);
-                    intent.putExtra(Utils.ACTION, Utils.ACTION_UPDATE);
-                    intent.putExtra(Utils.HOMEWORK, currentHomework);
-                    startActivity(intent);
-                    adapter.notifyItemChanged(position); // To reset the item on the screen
-                    break;
+                    if (currentHomework.getTeacherEmail().equals(currentUser.getCurrentTeacher().getEmail())) {
+                        Intent intent = new Intent(getContext(), AddHomeworkActivity.class);
+                        intent.putExtra(Utils.ACTION, Utils.ACTION_UPDATE);
+                        intent.putExtra(Utils.HOMEWORK, currentHomework);
+                        startActivity(intent);
+                        adapter.notifyItemChanged(position); // To reset the item on the screen
+                        break;
+                    }
+                    else
+                    {
+                        Toast.makeText(getContext(), getString(R.string.edit_your_homework_msg), Toast.LENGTH_SHORT).show();
+                        adapter.notifyItemChanged(position); // To reset the item on the screen
+                    }
             }
         }
 
