@@ -39,7 +39,7 @@ public class HomeworkDetailsActivity extends AppCompatActivity {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         binding.txtHomeworkDueDate.setText(formatter.format(homework.getLocalDateDueDate()));
-        binding.txtHomeworkDueTime.setText(homework.getDueTime());
+        binding.txtHomeworkDueTime.setText(homework.getLocalTimeDueTime().toString());
 
         binding.txtHomeworkSection.setText(homework.getSection());
         // Homework's groups

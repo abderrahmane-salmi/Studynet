@@ -19,6 +19,8 @@ import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.LayoutHomeworkBinding;
 
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.util.List;
 
 public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHolder> {
@@ -87,7 +89,8 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
 
         holder.binding.homeworkTitle.setText(homework.getTitle());
         holder.binding.homeworkSubject.setText(homework.getModule());
-        holder.binding.homeworkDate.setText(homework.getDueDate());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        holder.binding.homeworkDate.setText(formatter.format(homework.getLocalDateDueDate()));
 
         if (currentUserType.equals(Utils.STUDENT_ACCOUNT)){
             // Read the current homework's check state
