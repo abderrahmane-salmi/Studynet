@@ -59,7 +59,6 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
                     // Play the anim in reverse
                     holder.binding.btnCompleteHomework.setSpeed(-1);
                     holder.binding.btnCompleteHomework.playAnimation();
-//                    TODO: Add strike through text animation here (slowly)
                     // Change the text color
                     holder.binding.homeworkTitle.setPaintFlags(holder.binding.homeworkTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                     holder.binding.homeworkDate.setTextColor(context.getResources().getColor(R.color.secondary_text_color, null));
@@ -82,6 +81,45 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
         return holder;
     }
 
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Homework homework = homeworks.get(position);
+
+        holder.binding.homeworkTitle.setText(homework.getTitle());
+        holder.binding.homeworkSubject.setText(homework.getModule());
+        holder.binding.homeworkDate.setText(homework.getDueDate());
+
+        if (currentUserType.equals(Utils.STUDENT_ACCOUNT)){
+            // Read the current homework's check state
+            boolean isChecked = readCheckState(homework.getId());
+
+            if (isChecked){
+                // Show that the homework is checked
+                // Animation
+                holder.binding.btnCompleteHomework.setProgress((float) 0.9);
+                // Text
+                holder.binding.homeworkTitle.setPaintFlags(holder.binding.homeworkTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                holder.binding.homeworkDate.setTextColor(context.getResources().getColor(R.color.primary_color, null));
+                holder.binding.imageView2.setImageResource(R.drawable.ic_checked);
+                DrawableCompat.setTint(DrawableCompat.wrap(holder.binding.imageView2.getDrawable()), ContextCompat.getColor(context, R.color.primary_color));
+            }
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return homeworks.size();
+    }
+
+    public void setHomeworks(List<Homework> homeworks) {
+        this.homeworks = homeworks;
+        notifyDataSetChanged();
+    }
+
+    public List<Homework> getHomeworks() {
+        return homeworks;
+    }
+
     // Checkmark methods
     private void saveCheckState(boolean isChecked, int homeworkId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Utils.HOMEWORK, Context.MODE_PRIVATE);
@@ -99,44 +137,6 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
     private boolean readCheckState(int homeworkId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Utils.HOMEWORK, Context.MODE_PRIVATE);
         return sharedPreferences.contains(String.valueOf(homeworkId));
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Homework homework = homeworks.get(position);
-
-        holder.binding.homeworkTitle.setText(homework.getTitle());
-        holder.binding.homeworkSubject.setText(homework.getModule());
-        // TODO: Why did we remove the formatter?
-        holder.binding.homeworkDate.setText(homework.getDueDate());
-
-        // Read the current homework's check state
-        boolean isChecked = readCheckState(homework.getId());
-
-        if (isChecked){
-            // Show that the homework is checked
-            // Animation
-            holder.binding.btnCompleteHomework.setProgress((float) 0.9);
-            // Text
-            holder.binding.homeworkTitle.setPaintFlags(holder.binding.homeworkTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.binding.homeworkDate.setTextColor(context.getResources().getColor(R.color.primary_color, null));
-            holder.binding.imageView2.setImageResource(R.drawable.ic_checked);
-            DrawableCompat.setTint(DrawableCompat.wrap(holder.binding.imageView2.getDrawable()), ContextCompat.getColor(context, R.color.primary_color));
-        }
-    }
-
-    @Override
-    public int getItemCount() {
-        return homeworks.size();
-    }
-
-    public void setHomeworks(List<Homework> homeworks) {
-        this.homeworks = homeworks;
-        notifyDataSetChanged();
-    }
-
-    public List<Homework> getHomeworks() {
-        return homeworks;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder{
