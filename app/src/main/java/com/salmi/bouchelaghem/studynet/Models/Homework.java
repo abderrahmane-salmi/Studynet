@@ -140,8 +140,7 @@ public class Homework implements Parcelable {
     }
 
     public void setLocalDateDueDate(LocalDate dueDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        this.dueDate = formatter.format(dueDate);
+        this.dueDate = dueDate.toString();
     }
 
     public String getDueDate() {
