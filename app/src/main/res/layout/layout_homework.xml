@@ -84,7 +84,7 @@
         android:layout_height="34dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -95,7 +95,8 @@
             android:layout_height="64dp"
             android:layout_centerInParent="true"
             android:padding="5dp"
-            android:src="@drawable/circle"/>
+            android:src="@drawable/circle"
+            tools:ignore="ContentDescription" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/btnCompleteHomework"
