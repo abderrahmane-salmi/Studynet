@@ -59,9 +59,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class TimetableFragment extends Fragment {
 
     private FragmentTimetableBinding binding;
-    private final CurrentUser currentUser = CurrentUser.getInstance();
-
-    private Dialog dialog;
 
     // Days
     private boolean firstTime = true;
@@ -73,6 +70,7 @@ public class TimetableFragment extends Fragment {
     private SessionsAdapter adapter;
 
     // Filter
+    private Dialog dialog;
     private boolean sectionSelected = false;
     private String selectedSection;
     private boolean filterApplied = false;
@@ -80,7 +78,10 @@ public class TimetableFragment extends Fragment {
 
     // Test api
     TestAPI testAPI;
-    private String currentUserType;
+
+    // Current user
+    private final CurrentUser currentUser = CurrentUser.getInstance();
+    private final String currentUserType = currentUser.getUserType();
 
     // Studynet Api
     private StudynetAPI api;
@@ -91,12 +92,9 @@ public class TimetableFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         binding = FragmentTimetableBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        // Get current user type
-        currentUserType = currentUser.getUserType();
         initRecView();
 
         // Init retrofit
@@ -136,7 +134,7 @@ public class TimetableFragment extends Fragment {
                 context.btnFilter.setVisibility(View.VISIBLE);
                 context.btnFilter.setOnClickListener(v -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    View view1 = View.inflate(context, R.layout.popup_teacher_timetable_filter, null);
+                    View view1 = View.inflate(context, R.layout.popup_sections_filter, null);
                     // Init Views
                     ImageView btnCloseFilter = view1.findViewById(R.id.btnCloseFilter);
                     AutoCompleteTextView filterTimetableSection = view1.findViewById(R.id.filterTimetableSection);
@@ -198,7 +196,7 @@ public class TimetableFragment extends Fragment {
                 context.btnFilter.setOnClickListener(v -> {
                     if (allSections != null) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        View view12 = View.inflate(context, R.layout.popup_teacher_timetable_filter, null);
+                        View view12 = View.inflate(context, R.layout.popup_sections_filter, null);
                         // Init Views
                         ImageView btnCloseFilter = view12.findViewById(R.id.btnCloseFilter);
                         AutoCompleteTextView filterTimetableSection = view12.findViewById(R.id.filterTimetableSection);

@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.datepicker.CalendarConstraints;
@@ -14,6 +15,7 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
+import com.google.gson.JsonObject;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.salmi.bouchelaghem.studynet.Models.Assignment;
 import com.salmi.bouchelaghem.studynet.Models.Homework;
@@ -21,6 +23,7 @@ import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
+import com.salmi.bouchelaghem.studynet.Utils.Serializers;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityAddHomeworkBinding;
@@ -35,6 +38,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -118,11 +124,7 @@ public class AddHomeworkActivity extends AppCompatActivity {
 
                         Homework homework = new Homework();
                         homework.setId(-1);
-                        homework.setTeacherName(currentTeacher.getLastName() + " " + currentTeacher.getFirstName().toUpperCase().charAt(0));
-                        homework.setTeacherEmail(currentTeacher.getEmail());
-                        homework.setModule(module);
-                        homework.setModuleType(moduleType);
-                        homework.setSection(section);
+
                         homework.setConcernedGroups(selectedGroupsInt);
                         homework.setLocalDateDueDate(dueDate);
                         homework.setLocalTimeDueTime(dueTime);
@@ -130,8 +132,13 @@ public class AddHomeworkActivity extends AppCompatActivity {
                         homework.setComment(notes);
                         homework.setAssignment(selectedAssignment.getId());
 
-                        // TODO: Save homework to database
-                        Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+                        //Get the jsonObject that will be sent to the api
+                        JsonObject homeworkJson = Serializers.HomeworkSerializer(homework);
+
+                        Call<Homework> createHomeworkCall = api.createHomework(homeworkJson,"Token " + currentUser.getToken());
+
+                        loadingDialog.show();
+                        createHomeworkCall.enqueue(new CreateHomeworkCallback());
 
                     } else {
                         if (!sectionSelected){
@@ -562,6 +569,32 @@ public class AddHomeworkActivity extends AppCompatActivity {
         } else {
             binding.txtHomeworkTitle.setError(null);
             return true;
+        }
+    }
+
+    private class CreateHomeworkCallback implements Callback<Homework>
+    {
+        @Override
+        public void onResponse(@NonNull Call<Homework> call, Response<Homework> response) {
+            if(response.code() == Utils.HttpResponses.HTTP_201_CREATED)
+            {
+                Toast.makeText(AddHomeworkActivity.this, getString(R.string.homework_created_success), Toast.LENGTH_SHORT).show();
+                loadingDialog.dismiss();
+                finish();
+            }
+            else
+            {
+                Toast.makeText(AddHomeworkActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                loadingDialog.dismiss();
+            }
+
+
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<Homework> call, @NonNull Throwable t) {
+            Toast.makeText(AddHomeworkActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            loadingDialog.dismiss();
         }
     }
 }

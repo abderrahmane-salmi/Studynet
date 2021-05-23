@@ -45,7 +45,7 @@
 
         <!--        Fields-->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout1"
+            android:id="@+id/filterHomeworksSectionLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -62,31 +62,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/section"
-                android:inputType="none"
-                android:fontFamily="@font/tabularasa_regular"
-                android:textSize="14sp"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/filterHomeworksSubjectLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:textColorHint="@color/secondary_text_color"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textInputLayout1">
-
-            <AutoCompleteTextView
-                android:id="@+id/filterHomeworksSubject"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/module"
                 android:inputType="none"
                 android:fontFamily="@font/tabularasa_regular"
                 android:textSize="14sp"/>
@@ -113,7 +88,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/filterHomeworksSubjectLayout"
+            app:layout_constraintTop_toBottomOf="@id/filterHomeworksSectionLayout"
             app:strokeColor="@color/my_purple"
             app:strokeWidth="0.7dp" />
 

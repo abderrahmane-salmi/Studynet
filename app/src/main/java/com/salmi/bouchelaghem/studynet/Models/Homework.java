@@ -19,7 +19,7 @@ public class Homework implements Parcelable {
     private String module;
     @SerializedName("module_type") private String moduleType;
     private String section;
-    private ArrayList<Integer> concernedGroups;
+    @SerializedName("concerned_groups") private ArrayList<Integer> concernedGroups;
     private String title;
     @SerializedName("due_date") private String dueDate;
     @SerializedName("due_time") private String dueTime;
@@ -140,8 +140,7 @@ public class Homework implements Parcelable {
     }
 
     public void setLocalDateDueDate(LocalDate dueDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        this.dueDate = formatter.format(dueDate);
+        this.dueDate = dueDate.toString();
     }
 
     public String getDueDate() {

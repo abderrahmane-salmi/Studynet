@@ -27,7 +27,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.gson.JsonArray;
 import com.salmi.bouchelaghem.studynet.Activities.AddTeacherActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
-import com.salmi.bouchelaghem.studynet.Activities.SignUpActivity;
 import com.salmi.bouchelaghem.studynet.Adapters.TeachersAdapter;
 import com.salmi.bouchelaghem.studynet.Models.Department;
 import com.salmi.bouchelaghem.studynet.Models.Student;
@@ -41,7 +40,6 @@ import com.salmi.bouchelaghem.studynet.databinding.FragmentTeachersBinding;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -273,12 +271,7 @@ public class TeachersFragment extends Fragment {
                         }
                         if (!teachers.isEmpty()) {
                             //Sort the teacher list by their names.
-                            Collections.sort(teachers, new Comparator<Teacher>() {
-                                @Override
-                                public int compare(Teacher o1, Teacher o2) {
-                                    return o1.getLastName().compareToIgnoreCase(o2.getLastName());
-                                }
-                            });
+                            Collections.sort(teachers, (o1, o2) -> o1.getLastName().compareToIgnoreCase(o2.getLastName()));
                             //Display the teachers list.
                             adapter.setTeachers(teachers);
                             binding.teachersRecView.setAdapter(adapter);
