@@ -136,10 +136,9 @@ public class AddHomeworkActivity extends AppCompatActivity {
                         JsonObject homeworkJson = Serializers.HomeworkSerializer(homework);
 
                         Call<Homework> createHomeworkCall = api.createHomework(homeworkJson,"Token " + currentUser.getToken());
-                        createHomeworkCall.enqueue(new CreateHomeworkCallback());
 
-                        // TODO: Save homework to database
-                        Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+                        loadingDialog.show();
+                        createHomeworkCall.enqueue(new CreateHomeworkCallback());
 
                     } else {
                         if (!sectionSelected){
@@ -580,17 +579,22 @@ public class AddHomeworkActivity extends AppCompatActivity {
             if(response.code() == Utils.HttpResponses.HTTP_201_CREATED)
             {
                 Toast.makeText(AddHomeworkActivity.this, getString(R.string.homework_created_success), Toast.LENGTH_SHORT).show();
+                loadingDialog.dismiss();
+                finish();
             }
             else
             {
                 Toast.makeText(AddHomeworkActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                loadingDialog.dismiss();
             }
+
 
         }
 
         @Override
         public void onFailure(@NonNull Call<Homework> call, @NonNull Throwable t) {
             Toast.makeText(AddHomeworkActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            loadingDialog.dismiss();
         }
     }
 }
