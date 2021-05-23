@@ -218,4 +218,5 @@
     <string name="already_have_a_code">Already have a code?</string>
     <string name="session_updated">Session updated</string>
     <string name="logout_all_sucess">Logged out from all sessions successfully</string>
+    <string name="homework_created_success">Homework created successfully</string>
 </resources>
