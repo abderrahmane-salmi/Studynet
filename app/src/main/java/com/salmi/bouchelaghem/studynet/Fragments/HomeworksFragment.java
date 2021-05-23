@@ -35,6 +35,7 @@ import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
+import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.FragmentHomeworksBinding;
@@ -44,6 +45,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,6 +78,9 @@ public class HomeworksFragment extends Fragment {
     // Studynet Api
     private StudynetAPI api;
 
+    //Loading dialog
+    private CustomLoadingDialog loadingDialog;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -93,6 +98,8 @@ public class HomeworksFragment extends Fragment {
 
         initRecView();
 
+        //Init loading dialog
+        loadingDialog = new CustomLoadingDialog(getActivity());
         // Show the filter button
         NavigationActivity context = (NavigationActivity) getActivity();
         assert context != null;
@@ -374,10 +381,37 @@ public class HomeworksFragment extends Fragment {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setMessage(R.string.are_you_sure);
                         builder.setPositiveButton(R.string.yes, (dialog, which) -> {
-                            homeworks.remove(currentHomework);
-                            adapter.getHomeworks().remove(currentHomework);
-                            adapter.notifyItemRemoved(position);
-                            Toast.makeText(getContext(), getString(R.string.homework_deleted_msg), Toast.LENGTH_SHORT).show();
+                            //Delete the homework
+                            Call<ResponseBody> deleteHomeworkCall = api.deleteHomework(currentHomework.getId(),"Token " + currentUser.getToken());
+                            loadingDialog.show();
+                            deleteHomeworkCall.enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                    if(response.code() == Utils.HttpResponses.HTTP_204_NO_CONTENT)
+                                    {
+                                        //Homework successfully deleted
+                                        Toast.makeText(getActivity(), getString(R.string.homework_deleted_msg), Toast.LENGTH_SHORT).show();
+                                        homeworks.remove(currentHomework);
+                                        adapter.getHomeworks().remove(currentHomework);
+                                        adapter.notifyItemRemoved(position);
+                                        Toast.makeText(getContext(), getString(R.string.homework_deleted_msg), Toast.LENGTH_SHORT).show();
+                                    }
+                                    else
+                                    {
+                                        Toast.makeText(getActivity(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                                        adapter.notifyItemRemoved(position);
+                                    }
+                                    loadingDialog.dismiss();
+                                }
+
+                                @Override
+                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                    Toast.makeText(getActivity(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+                                    adapter.notifyItemRemoved(position);
+                                    loadingDialog.dismiss();
+                                }
+                            });
+
                         });
                         builder.setNegativeButton(R.string.no, (dialog, which) -> {
                             // Do Nothing
