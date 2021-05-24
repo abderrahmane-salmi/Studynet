@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
+import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityNavigationBinding;
@@ -36,6 +38,8 @@ public class NavigationActivity extends AppCompatActivity {
     public ImageView btnFilter;
     private SharedPreferences sharedPreferences;
 
+    //Loading dialog
+    private CustomLoadingDialog loadingDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +58,8 @@ public class NavigationActivity extends AppCompatActivity {
         // Init our api, this will implement the code of all the methods in the interface
         api = retrofit.create(StudynetAPI.class);
 
+        //Init loading dialog
+        loadingDialog = new CustomLoadingDialog(this);
         btnFilter = binding.btnFilter;
 
         if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT)){
@@ -79,6 +85,7 @@ public class NavigationActivity extends AppCompatActivity {
         btnLogout.setOnMenuItemClickListener(item -> {
 
             Call<ResponseBody> logout = api.logout("Token " + currentUser.getToken());
+            loadingDialog.show();
             logout.enqueue(new logoutCallback());
             return true;
         });
@@ -103,10 +110,12 @@ public class NavigationActivity extends AppCompatActivity {
                     //Take the user to the login page.
                     Toast.makeText(NavigationActivity.this, getString(R.string.logout_msg), Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(NavigationActivity.this, LoginActivity.class));
+                    loadingDialog.dismiss();
                     finish();
                     break;
                 default:
                     Toast.makeText(NavigationActivity.this, getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
+                    loadingDialog.dismiss();
                     break;
             }
         }
@@ -114,6 +123,7 @@ public class NavigationActivity extends AppCompatActivity {
         @Override
         public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
             Toast.makeText(NavigationActivity.this, getString(R.string.could_not_logout), Toast.LENGTH_LONG).show();
+            loadingDialog.dismiss();
 
         }
     }
