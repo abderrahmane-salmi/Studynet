@@ -60,7 +60,7 @@ public class HomeworksFragment extends Fragment {
 
     // Recycler View
     private List<Homework> homeworks = new ArrayList<>();
-    private List<Homework> filteredHomeworks = new ArrayList<>();
+    private final List<Homework> filteredHomeworks = new ArrayList<>();
     private HomeworkAdapter adapter;
 
     // Filter
@@ -101,7 +101,7 @@ public class HomeworksFragment extends Fragment {
         initRecView();
 
         //Init loading dialog
-        loadingDialog = new CustomLoadingDialog(getActivity());
+        loadingDialog = new CustomLoadingDialog(requireContext());
         // Show the filter button
         NavigationActivity context = (NavigationActivity) getActivity();
         assert context != null;

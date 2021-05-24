@@ -30,7 +30,6 @@ import com.google.android.material.button.MaterialButton;
 import com.salmi.bouchelaghem.studynet.Activities.AddClassActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
 import com.salmi.bouchelaghem.studynet.Adapters.SessionsAdapter;
-import com.salmi.bouchelaghem.studynet.Models.Admin;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.Models.Session;
 import com.salmi.bouchelaghem.studynet.Models.Student;
@@ -117,7 +116,7 @@ public class TimetableFragment extends Fragment {
         switch (currentUserType) {
             case Utils.TEACHER_ACCOUNT:  // If the user is a teacher
 
-                if (firstTime){
+                if (!filterApplied){
                     binding.selectSectionMsg.setVisibility(View.VISIBLE);
                 } else {
                     binding.selectSectionMsg.setVisibility(View.GONE);
@@ -188,7 +187,7 @@ public class TimetableFragment extends Fragment {
                 break;
             case Utils.ADMIN_ACCOUNT:  // If the user is an admin
 
-                if (firstTime){
+                if (!filterApplied){
                     binding.selectSectionMsg.setVisibility(View.VISIBLE);
                 } else {
                     binding.selectSectionMsg.setVisibility(View.GONE);
