@@ -107,13 +107,22 @@ public interface StudynetAPI {
     Call<JsonArray> getDepartmentTeachers(@Header("Authorization") String token, @Query("department") String department);
     // teachers/?department=INFO
 
+    /** Create a teacher with all of his data including his assignments (requires admin token)*/
+    @POST("teachers/")
+    Call<JsonObject> createTeacher(@Body JsonObject teacherJson, @Header("Authorization") String token);
+    /** Update a teacher with all of his data including his assignments (requires admin token)*/
+    @PUT("teachers/{id}/")
+    Call<JsonObject> updateTeacher(@Body JsonObject teacherJson,@Path("id") int id,@Header("Authorization") String token);
+    // *** Students ***
+    /**Register a student */
+    @POST("students/")
+    Call<JsonObject> registerStudent(@Body JsonObject student);
+
+    // *** User data ***
     /** Get the user data using the token */
     @GET("user_data")
     Call<JsonObject> getUserData(@Header("Authorization") String token);
 
-    /**Register a student */
-    @POST("students/")
-    Call<JsonObject> registerStudent(@Body JsonObject student);
     /** Login using email and password */
     @POST("login/")
     Call<JsonObject> login(@Body JsonObject credentials);
@@ -130,11 +139,15 @@ public interface StudynetAPI {
     @POST("check_email/")
     Call<ResponseBody> checkEmail(@Body JsonObject email, @Header("Authorization") String token);
 
-    /** Create a teacher with all of his data including his assignments (requires admin token)*/
-    @POST("teachers/")
-    Call<JsonObject> createTeacher(@Body JsonObject teacherJson, @Header("Authorization") String token);
+    /** Change password using old and new password + token*/
+    @POST("change_password/")
+    Call<ResponseBody> change_password(@Body JsonObject oldNewPasswords, @Header("Authorization") String token);
 
-    @PUT("teachers/{id}/")
-    Call<JsonObject> updateTeacher(@Body JsonObject teacherJson,@Path("id") int id,@Header("Authorization") String token);
+    /** Request a password change through email*/
+    @POST("change_password_email/")
+    Call<ResponseBody> change_password_email(@Body JsonObject email);
+
+    @POST("change_password_email/confirm/")
+    Call<ResponseBody> confirm_change_password_email(@Body JsonObject codeAndNewPassword);
 
 }
