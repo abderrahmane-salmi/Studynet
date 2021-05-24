@@ -5,7 +5,6 @@
     android:id="@+id/classMainLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="20dp"
     android:paddingBottom="20dp">
 
 <!--    Group + Start and end hour-->
@@ -17,6 +16,7 @@
         android:textColor="@color/secondary_text_color"
         android:textSize="15sp"
         android:id="@+id/textView1"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -123,6 +123,17 @@
         app:layout_constraintStart_toEndOf="@id/textView4"
         app:layout_constraintTop_toTopOf="@id/textView4" />
 
-    <!--        TODO: Idea: Add class status: (finished, didn't start ...ect)-->
+<!--    Teacher's class-->
+    <ImageView
+        android:id="@+id/imgBookmark"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_bookmark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription"
+        app:tint="@color/primary_color" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
