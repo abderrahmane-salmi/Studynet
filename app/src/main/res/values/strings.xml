@@ -229,4 +229,6 @@
     <string name="password_changed_successfully">Your password has been changed successfully</string>
     <string name="invalid_old_password">The old password is invalid</string>
     <string name="old_new_password_same">The old and the new passwords are the same</string>
+    <string name="email_does_not_exist">No account is registered with this email</string>
+    <string name="password_reset_email_sent">An email has been sent containing a password reset code</string>
 </resources>

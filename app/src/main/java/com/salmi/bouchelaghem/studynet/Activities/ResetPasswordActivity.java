@@ -7,13 +7,28 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Fragments.ResetPasswordConfirmationFragment;
 import com.salmi.bouchelaghem.studynet.R;
+import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
+import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
+import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityResetPasswordBinding;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ResetPasswordActivity extends AppCompatActivity {
 
     private ActivityResetPasswordBinding binding;
+    // Studynet Api
+    private StudynetAPI api;
+    //Loading dialog
+    private CustomLoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,15 +37,49 @@ public class ResetPasswordActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+        // Init retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Utils.API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // Init our api
+        api = retrofit.create(StudynetAPI.class);
+
+        //Init loading dialog
+        loadingDialog = new CustomLoadingDialog(ResetPasswordActivity.this);
         binding.btnGoBackFromReset.setOnClickListener(v -> finish());
 
         binding.btnResetPassword.setOnClickListener(v -> {
             if (validateEmail()){
                 String email = binding.txtEmail.getEditText().getText().toString().trim();
-                // TODO: Send reset password email
-                // Show the confirmation fragment after you send the email
-                // use: showConfirmationFragment() to show the fragment
-                Toast.makeText(ResetPasswordActivity.this, "Done", Toast.LENGTH_SHORT).show();
+                //Create the json object to send to the api
+                JsonObject emailJson = new JsonObject();
+                emailJson.addProperty("email",email);
+                Call<ResponseBody> changePasswordEmailCall = api.change_password_email(emailJson);
+                loadingDialog.show();
+                changePasswordEmailCall.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if(response.code() == Utils.HttpResponses.HTTP_200_OK)
+                        {
+                            Toast.makeText(ResetPasswordActivity.this, getString(R.string.password_reset_email_sent), Toast.LENGTH_LONG).show();
+                            showConfirmationFragment();
+                        }
+                        else
+                        {
+                            binding.txtEmail.setError(getString(R.string.email_does_not_exist));
+                        }
+                        loadingDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(ResetPasswordActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+                        loadingDialog.dismiss();
+                    }
+                });
+
             }
         });
 
