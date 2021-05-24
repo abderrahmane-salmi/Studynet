@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
@@ -117,7 +118,7 @@ public class SplashActivity extends AppCompatActivity {
         Call<JsonObject> call = api.getUserData("Token " + token);
         call.enqueue(new Callback<JsonObject>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+            public void onResponse(@NonNull Call<JsonObject> call,@NonNull Response<JsonObject> response) {
                 switch(response.code())
                 {
                     case Utils.HttpResponses.HTTP_200_OK:
@@ -169,7 +170,7 @@ public class SplashActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(@NonNull Call<JsonObject> call,@NonNull Throwable t) {
                 Toast.makeText(SplashActivity.this, getString(R.string.connection_failed), Toast.LENGTH_LONG).show();
                 binding.mainLayout.setBackgroundColor(getColor(R.color.white));
                 binding.noInternetMsg.setVisibility(View.VISIBLE);
@@ -178,33 +179,7 @@ public class SplashActivity extends AppCompatActivity {
         });
         return false;
     }
-//        switch(userType)
-//        {
-//            case Utils.STUDENT_ACCOUNT:
-//                //Load the student data.
-//                Student student = gson.fromJson(userData,Student.class);
-//                currentUser.setCurrentStudent(student);
-//                currentUser.setToken(token);
-//                currentUser.setUserType(Utils.STUDENT_ACCOUNT);
-//                return true;
-//            case Utils.TEACHER_ACCOUNT:
-//                //Load the teacher data.
-//                Teacher teacher = gson.fromJson(userData,Teacher.class);
-//                currentUser.setCurrentTeacher(teacher);
-//                currentUser.setToken(token);
-//                currentUser.setUserType(Utils.TEACHER_ACCOUNT);
-//                return true;
-//            case Utils.ADMIN_ACCOUNT:
-//                //Load the admin data.
-//                Admin admin = gson.fromJson(userData,Admin.class);
-//                currentUser.setCurrentAdmin(admin);
-//                currentUser.setToken(token);
-//                currentUser.setUserType(Utils.ADMIN_ACCOUNT);
-//                return true;
-//            default:
-//                return false;
-//        }
-//  }
+
     // Change the device's language
     public static void setLocale(Activity activity, Locale locale) {
         Locale.setDefault(locale);

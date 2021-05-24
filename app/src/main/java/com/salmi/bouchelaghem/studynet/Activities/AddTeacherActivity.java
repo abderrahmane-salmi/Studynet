@@ -757,7 +757,7 @@ public class AddTeacherActivity extends AppCompatActivity {
     private class TeacherCreationCallback implements Callback<JsonObject> {
 
         @Override
-        public void onResponse(@NonNull Call<JsonObject> call, Response<JsonObject> response) {
+        public void onResponse(@NonNull Call<JsonObject> call,@NonNull Response<JsonObject> response) {
             if (response.code() == Utils.HttpResponses.HTTP_201_CREATED) {
                 String selectedDepartment = TeachersFragment.getSelectedDepartment();
                 if(selectedDepartment != null)
@@ -770,12 +770,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                         Teacher newTeacher = Serializers.TeacherDeserializer(response.body());
                         teachers.add(newTeacher);
                         //Sort the teachers list.
-                        Collections.sort(teachers, new Comparator<Teacher>() {
-                            @Override
-                            public int compare(Teacher o1, Teacher o2) {
-                                return o1.getLastName().compareToIgnoreCase(o2.getLastName());
-                            }
-                        });
+                        Collections.sort(teachers, (o1, o2) -> o1.getLastName().compareToIgnoreCase(o2.getLastName()));
                     }
                 }
                 Toast.makeText(AddTeacherActivity.this, "Teacher successfully created.", Toast.LENGTH_SHORT).show();
@@ -788,7 +783,7 @@ public class AddTeacherActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onFailure(Call<JsonObject> call, Throwable t) {
+        public void onFailure(@NonNull Call<JsonObject> call,@NonNull Throwable t) {
             Toast.makeText(AddTeacherActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
             loadingDialog.dismiss();
         }

@@ -674,7 +674,7 @@ public class AddClassActivity extends AppCompatActivity {
     private class UpdateSessionCallback implements Callback<Session>
     {
         @Override
-        public void onResponse(Call<Session> call, Response<Session> response) {
+        public void onResponse(@NonNull Call<Session> call,@NonNull Response<Session> response) {
             if(response.code() == Utils.HttpResponses.HTTP_200_OK)
             {
                 Toast.makeText(getApplicationContext(), getString(R.string.session_updated), Toast.LENGTH_SHORT).show();
@@ -688,7 +688,7 @@ public class AddClassActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onFailure(Call<Session> call, Throwable t) {
+        public void onFailure(@NonNull Call<Session> call, @NonNull Throwable t) {
             Toast.makeText(getApplicationContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
             loadingDialog.dismiss();
         }

@@ -5,6 +5,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.JsonObject;
@@ -61,7 +62,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 loadingDialog.show();
                 changePasswordEmailCall.enqueue(new Callback<ResponseBody>() {
                     @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                         if(response.code() == Utils.HttpResponses.HTTP_200_OK)
                         {
                             Toast.makeText(ResetPasswordActivity.this, getString(R.string.password_reset_email_sent), Toast.LENGTH_LONG).show();
@@ -75,7 +76,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                         Toast.makeText(ResetPasswordActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
                         loadingDialog.dismiss();
                     }

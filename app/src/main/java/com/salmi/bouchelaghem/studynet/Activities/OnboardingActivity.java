@@ -140,12 +140,6 @@ public class OnboardingActivity extends AppCompatActivity {
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, getString(R.string.click_back_again_msg), Toast.LENGTH_SHORT).show();
 
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        }, 2000);
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce=false, 2000);
     }
 }

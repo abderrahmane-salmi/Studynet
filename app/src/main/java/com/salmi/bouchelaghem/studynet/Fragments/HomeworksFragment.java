@@ -45,7 +45,6 @@ import org.threeten.bp.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 import okhttp3.ResponseBody;
@@ -395,7 +394,7 @@ public class HomeworksFragment extends Fragment {
                             loadingDialog.show();
                             deleteHomeworkCall.enqueue(new Callback<ResponseBody>() {
                                 @Override
-                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                                     if(response.code() == Utils.HttpResponses.HTTP_204_NO_CONTENT)
                                     {
                                         //Homework successfully deleted
@@ -414,7 +413,7 @@ public class HomeworksFragment extends Fragment {
                                 }
 
                                 @Override
-                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                                     Toast.makeText(getActivity(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
                                     adapter.notifyItemRemoved(position);
                                     loadingDialog.dismiss();

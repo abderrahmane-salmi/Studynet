@@ -597,7 +597,7 @@ public class AddHomeworkActivity extends AppCompatActivity {
     private class UpdateHomeworkCallback implements Callback<Homework>
     {
         @Override
-        public void onResponse(Call<Homework> call, Response<Homework> response) {
+        public void onResponse(@NonNull Call<Homework> call,@NonNull Response<Homework> response) {
             if(response.code() == Utils.HttpResponses.HTTP_200_OK)
             {
                 Toast.makeText(AddHomeworkActivity.this, getString(R.string.homework_edited_success), Toast.LENGTH_SHORT).show();
@@ -612,7 +612,7 @@ public class AddHomeworkActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onFailure(Call<Homework> call, Throwable t) {
+        public void onFailure(@NonNull Call<Homework> call,@NonNull Throwable t) {
             Toast.makeText(AddHomeworkActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
             loadingDialog.dismiss();
         }

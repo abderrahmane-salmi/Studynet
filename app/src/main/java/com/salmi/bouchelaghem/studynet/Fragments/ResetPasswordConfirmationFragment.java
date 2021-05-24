@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.gson.JsonObject;
-import com.salmi.bouchelaghem.studynet.Activities.ResetPasswordActivity;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
