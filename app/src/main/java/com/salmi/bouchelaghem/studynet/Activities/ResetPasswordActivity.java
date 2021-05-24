@@ -48,6 +48,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
         //Init loading dialog
         loadingDialog = new CustomLoadingDialog(ResetPasswordActivity.this);
+
         binding.btnGoBackFromReset.setOnClickListener(v -> finish());
 
         binding.btnResetPassword.setOnClickListener(v -> {
