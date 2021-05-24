@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.salmi.bouchelaghem.studynet.Activities.HomeworkDetailsActivity;
 import com.salmi.bouchelaghem.studynet.Models.Homework;
 import com.salmi.bouchelaghem.studynet.R;
+import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.LayoutHomeworkBinding;
 
@@ -27,11 +28,10 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
 
     private List<Homework> homeworks;
     private final Context context;
-    private final String currentUserType;
+    private final CurrentUser currentUser = CurrentUser.getInstance();
 
-    public HomeworkAdapter(Context context, String currentUserType) {
+    public HomeworkAdapter(Context context) {
         this.context = context;
-        this.currentUserType = currentUserType;
     }
 
     @NonNull
@@ -47,7 +47,7 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
             context.startActivity(intent);
         });
 
-        if (currentUserType.equals(Utils.STUDENT_ACCOUNT)){
+        if (currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT)){
             // If its a student then show the check button
             holder.binding.checkMark.setVisibility(View.VISIBLE);
             // Init the check button
@@ -92,7 +92,7 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         holder.binding.homeworkDate.setText(formatter.format(homework.getLocalDateDueDate()));
 
-        if (currentUserType.equals(Utils.STUDENT_ACCOUNT)){
+        if (currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT)){
             // Read the current homework's check state
             boolean isChecked = readCheckState(homework.getId());
 
@@ -105,6 +105,10 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
                 holder.binding.homeworkDate.setTextColor(context.getResources().getColor(R.color.primary_color, null));
                 holder.binding.imageView2.setImageResource(R.drawable.ic_checked);
                 DrawableCompat.setTint(DrawableCompat.wrap(holder.binding.imageView2.getDrawable()), ContextCompat.getColor(context, R.color.primary_color));
+            }
+        } else if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT)){
+            if (homework.getTeacherEmail().equals(currentUser.getCurrentTeacher().getEmail())){
+                holder.binding.imgBookmark.setVisibility(View.VISIBLE);
             }
         }
     }
