@@ -41,7 +41,7 @@ public class AboutUsFragment extends DialogFragment {
                 emailIntent.setData(Uri.parse("mailto:"));
                 emailIntent.setType("text/plain");
                 emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.developer_email1)}); // recipient
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name)+": Client want to contact you");
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name)+": Bug Report or Feature Request");
                 try {
                     startActivity(emailIntent);
                 } catch (ActivityNotFoundException exception){
@@ -59,7 +59,7 @@ public class AboutUsFragment extends DialogFragment {
                 emailIntent.setData(Uri.parse("mailto:"));
                 emailIntent.setType("text/plain");
                 emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.developer_email2)}); // recipient
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name)+": Client want to contact you");
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name)+": Bug Report or Feature Request");
                 try {
                     startActivity(emailIntent);
                 } catch (ActivityNotFoundException exception){
