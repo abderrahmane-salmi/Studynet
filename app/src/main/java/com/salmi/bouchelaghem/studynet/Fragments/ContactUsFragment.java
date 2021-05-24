@@ -1,9 +1,13 @@
 package com.salmi.bouchelaghem.studynet.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -29,25 +33,42 @@ public class ContactUsFragment extends DialogFragment {
         TextView btnCloseContactUs = view.findViewById(R.id.btnCloseContactUs);
 
         btnContactDeveloper1.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("IntentReset")
             @Override
             public void onClick(View v) {
-
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                // The intent does not have a URI, so declare the "text/plain" MIME type
+                emailIntent.setData(Uri.parse("mailto:"));
+                emailIntent.setType("text/plain");
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.developer_email1)}); // recipient
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name)+": Client want to contact you");
+                try {
+                    startActivity(emailIntent);
+                } catch (ActivityNotFoundException exception){
+                    // There is no third app to open our intent, so do nothing
+                }
             }
         });
 
         btnContactDeveloper2.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("IntentReset")
             @Override
             public void onClick(View v) {
-
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                // The intent does not have a URI, so declare the "text/plain" MIME type
+                emailIntent.setData(Uri.parse("mailto:"));
+                emailIntent.setType("text/plain");
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.developer_email1)}); // recipient
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name)+": Client want to contact you");
+                try {
+                    startActivity(emailIntent);
+                } catch (ActivityNotFoundException exception){
+                    // There is no third app to open our intent, so do nothing
+                }
             }
         });
 
-        btnCloseContactUs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        btnCloseContactUs.setOnClickListener(v -> dismiss());
 
         builder.setView(view);
         Dialog dialog = builder.create();
