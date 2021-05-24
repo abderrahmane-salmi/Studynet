@@ -226,4 +226,7 @@
     <string name="key_change_section">CHANGE_SECTION</string>
     <string name="change_section">Change Section</string>
     <string name="change_section_msg">Change your section</string>
+    <string name="password_changed_successfully">Your password has been changed successfully</string>
+    <string name="invalid_old_password">The old password is invalid</string>
+    <string name="old_new_password_same">The old and the new passwords are the same</string>
 </resources>

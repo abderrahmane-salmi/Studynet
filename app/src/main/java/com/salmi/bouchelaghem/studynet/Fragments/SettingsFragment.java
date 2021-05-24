@@ -147,7 +147,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         assert btnLogoutAll != null;
         btnLogoutAll.setOnPreferenceClickListener(preference -> {
-            // TODO: Logout from all sessions
             Call<ResponseBody> logoutAllCall = api.logoutAll(currentUser.getToken());
             loadingDialog.show();
             logoutAllCall.enqueue(new LogoutAllCallback());
