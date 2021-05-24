@@ -3,6 +3,7 @@ package com.salmi.bouchelaghem.studynet.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.salmi.bouchelaghem.studynet.Activities.ClassDetailsActivity;
 import com.salmi.bouchelaghem.studynet.Models.Session;
+import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.LayoutClassBinding;
 
@@ -64,6 +66,13 @@ public class SessionsAdapter extends RecyclerView.Adapter<SessionsAdapter.ViewHo
         // Module
         holder.binding.txtClassSubject.setText(session.getModule());
         holder.binding.txtClassType.setText(session.getModuleType());
+
+        CurrentUser currentUser = CurrentUser.getInstance();
+        if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT)){
+            if (session.getTeacherEmail().equals(currentUser.getCurrentTeacher().getEmail())){
+                holder.binding.imgBookmark.setVisibility(View.VISIBLE);
+            }
+        }
 
     }
 
