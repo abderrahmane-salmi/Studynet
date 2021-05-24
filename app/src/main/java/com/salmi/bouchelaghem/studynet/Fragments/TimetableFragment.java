@@ -117,7 +117,11 @@ public class TimetableFragment extends Fragment {
         switch (currentUserType) {
             case Utils.TEACHER_ACCOUNT:  // If the user is a teacher
 
-                binding.selectSectionMsg.setVisibility(View.VISIBLE);
+                if (firstTime){
+                    binding.selectSectionMsg.setVisibility(View.VISIBLE);
+                } else {
+                    binding.selectSectionMsg.setVisibility(View.GONE);
+                }
 
                 // Get the current teacher from the app API
                 Teacher teacher = currentUser.getCurrentTeacher();
@@ -184,12 +188,11 @@ public class TimetableFragment extends Fragment {
                 break;
             case Utils.ADMIN_ACCOUNT:  // If the user is an admin
 
-                binding.selectSectionMsg.setVisibility(View.VISIBLE);
-
-                // Get the current admin from the app api
-                Admin admin = currentUser.getCurrentAdmin();
-
-                // Show the signal button on the sessions
+                if (firstTime){
+                    binding.selectSectionMsg.setVisibility(View.VISIBLE);
+                } else {
+                    binding.selectSectionMsg.setVisibility(View.GONE);
+                }
 
                 // Show and setup the filter
                 context.btnFilter.setVisibility(View.VISIBLE);
