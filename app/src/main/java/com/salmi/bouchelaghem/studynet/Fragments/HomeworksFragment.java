@@ -40,9 +40,12 @@ import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.FragmentHomeworksBinding;
 
+import org.threeten.bp.LocalDate;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 import okhttp3.ResponseBody;
@@ -248,19 +251,25 @@ public class HomeworksFragment extends Fragment {
                         if (dateSelected){
                             switch (filteredDatePosition){
                                 case 0:
-                                    // TODO: Get all homeworks
+                                    //Get all homeworks
+                                    adapter.setHomeworks(homeworks);
+                                    binding.homeworksRecView.setAdapter(adapter);
                                     break;
                                 case 1:
-                                    // TODO: Get yesterday homeworks
+                                    //Get yesterday's homeworks
+                                    filterHomeworksPlusDays(-1);
                                     break;
                                 case 2:
-                                    // TODO: Get today homeworks
+                                    //Get today's homeworks
+                                    filterHomeworksPlusDays(0);
                                     break;
                                 case 3:
-                                    // TODO: Get tomorrow homeworks
+                                    //Get tomorrow's homeworks
+                                    filterHomeworksPlusDays(1);
                                     break;
                                 case 4:
-                                    // TODO: Get this week homeworks
+                                    //Get this week's homeworks
+                                    filterHomeworksThisWeek();
                                     break;
                             }
                             filterApplied = true;
@@ -496,5 +505,35 @@ public class HomeworksFragment extends Fragment {
                 getHomeworks(selectedSection);
             }
         }
+    }
+
+    private void filterHomeworksPlusDays(int days)
+    {
+        LocalDate today = LocalDate.now();
+        filteredHomeworks.clear();
+        for(Homework homework:homeworks)
+        {
+            if(homework.getLocalDateDueDate().equals(today.plusDays(days)))
+            {
+                filteredHomeworks.add(homework);
+            }
+        }
+        adapter.setHomeworks(filteredHomeworks);
+        binding.homeworksRecView.setAdapter(adapter);
+    }
+
+    private void filterHomeworksThisWeek()
+    {
+        LocalDate today = LocalDate.now();
+        filteredHomeworks.clear();
+        for(Homework homework:homeworks)
+        {
+            if(homework.getLocalDateDueDate().isBefore(today.plusWeeks(1)) && homework.getLocalDateDueDate().isAfter(today.minusDays(1)))
+            {
+                filteredHomeworks.add(homework);
+            }
+        }
+        adapter.setHomeworks(filteredHomeworks);
+        binding.homeworksRecView.setAdapter(adapter);
     }
 }
