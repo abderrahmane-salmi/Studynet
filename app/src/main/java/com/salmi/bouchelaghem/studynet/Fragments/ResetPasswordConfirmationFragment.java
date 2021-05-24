@@ -17,6 +17,8 @@ import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.FragmentResetPasswordConfirmationBinding;
 
+import org.json.JSONObject;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -110,7 +112,16 @@ public class ResetPasswordConfirmationFragment extends BottomSheetDialogFragment
                     binding.txtConfirmationCode.setError(getString(R.string.invalid_confirmation_code));
                     break;
                 default:
-                    Toast.makeText(getContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                    //Parse the error response and check if it is because the password is too common.
+                    try {
+                        assert response.errorBody() != null;
+                        JSONObject errorBody = new JSONObject(response.errorBody().string());
+                        if (errorBody.has("password")) {
+                            Toast.makeText(getContext(), getString(R.string.password_too_common), Toast.LENGTH_LONG).show();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                    }
                     break;
             }
             loadingDialog.dismiss();
