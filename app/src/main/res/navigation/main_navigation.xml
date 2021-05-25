@@ -74,6 +74,9 @@
         <action
             android:id="@+id/action_nav_settings_to_changePasswordFragment"
             app:destination="@id/nav_change_password" />
+        <action
+            android:id="@+id/action_nav_settings_to_changeSectionFragment"
+            app:destination="@id/nav_change_section" />
     </fragment>
     <dialog
         android:id="@+id/nav_change_password"
@@ -82,6 +85,15 @@
         tools:layout="@layout/fragment_change_password">
         <action
             android:id="@+id/action_changePasswordFragment_to_nav_settings2"
+            app:destination="@id/nav_settings" />
+    </dialog>
+    <dialog
+        android:id="@+id/nav_change_section"
+        android:name="com.salmi.bouchelaghem.studynet.Fragments.ChangeSectionFragment"
+        android:label="@string/settings"
+        tools:layout="@layout/fragment_change_section" >
+        <action
+            android:id="@+id/action_changeSectionFragment_to_nav_settings"
             app:destination="@id/nav_settings" />
     </dialog>
 </navigation>

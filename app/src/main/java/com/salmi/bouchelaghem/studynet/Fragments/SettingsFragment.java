@@ -111,7 +111,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             assert btnChangeSection != null;
             btnChangeSection.setVisible(true);
             btnChangeSection.setOnPreferenceClickListener(preference -> {
-                // TODO: Change section
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+                if (Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.nav_change_section){
+                    navController.navigate(R.id.action_nav_settings_to_changeSectionFragment);
+                }
                 return true;
             });
         }
