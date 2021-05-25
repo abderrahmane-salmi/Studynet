@@ -3,7 +3,6 @@ package com.salmi.bouchelaghem.studynet.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -51,15 +50,12 @@ public class OnboardingActivity extends AppCompatActivity {
 
 
 
-        btnGetStarted.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onboardingViewPager.getCurrentItem()+1 < adapter.getItemCount()){ // if we didn't reach the end yet
-                    onboardingViewPager.setCurrentItem(onboardingViewPager.getCurrentItem()+1); // go to next item
-                } else {
-                    startActivity(new Intent(OnboardingActivity.this, LoginActivity.class)); // take the user to another activity
-                    finish();
-                }
+        btnGetStarted.setOnClickListener(v -> {
+            if (onboardingViewPager.getCurrentItem()+1 < adapter.getItemCount()){ // if we didn't reach the end yet
+                onboardingViewPager.setCurrentItem(onboardingViewPager.getCurrentItem()+1); // go to next item
+            } else {
+                startActivity(new Intent(OnboardingActivity.this, LoginActivity.class)); // take the user to another activity
+                finish();
             }
         });
     }

@@ -49,7 +49,7 @@ public class ResetPasswordConfirmationFragment extends BottomSheetDialogFragment
         api = retrofit.create(StudynetAPI.class);
 
         //Init loading dialog
-        loadingDialog = new CustomLoadingDialog(getContext());
+        loadingDialog = new CustomLoadingDialog(requireContext());
 
         binding.btnSave.setOnClickListener(v -> {
             if (validateConfirmationCode() & validateNewPassword()){

@@ -26,12 +26,6 @@ public class ModulesAdapter extends RecyclerView.Adapter<ModulesAdapter.ViewHold
         this.activity = context;
     }
 
-    public ModulesAdapter(List<Module> modules, Activity context) {
-        this.modules = modules;
-        this.activity = context;
-        notifyDataSetChanged();
-    }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

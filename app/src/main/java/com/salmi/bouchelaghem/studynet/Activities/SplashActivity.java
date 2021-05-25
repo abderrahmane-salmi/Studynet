@@ -38,9 +38,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private ActivitySplashBinding binding;
     private SharedPreferences sharedPreferences;
-    private SharedPreferences defaultSharedPreferences;
     private CurrentUser currentUser;
-    private boolean loggedIn;
     private StudynetAPI api;
 
     @Override
@@ -59,20 +57,18 @@ public class SplashActivity extends AppCompatActivity {
         api = retrofit.create(StudynetAPI.class);
         currentUser = CurrentUser.getInstance();
         //Get the shared preferences.
-        sharedPreferences = getApplicationContext().getSharedPreferences(Utils.SHARED_PREFERENCES_USER_DATA,MODE_PRIVATE);
-        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = getApplicationContext().getSharedPreferences(Utils.SHARED_PREFERENCES_USER_DATA, MODE_PRIVATE);
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //Load the language specified in settings if specified.
-        String language = defaultSharedPreferences.getString(getString(R.string.key_language),"");
-        if(!language.isEmpty())
-        {
-            switch(language)
-            {
+        String language = defaultSharedPreferences.getString(getString(R.string.key_language), "");
+        if (!language.isEmpty()) {
+            switch (language) {
                 case "1":
-                    setLocale(this,Locale.ENGLISH);
+                    setLocale(this, Locale.ENGLISH);
                     break;
                 case "2":
                     //TODO: check if this is properly working after adding french translation.
-                    setLocale(this,Locale.FRENCH);
+                    setLocale(this, Locale.FRENCH);
                     break;
             }
         }
@@ -83,8 +79,8 @@ public class SplashActivity extends AppCompatActivity {
         binding.btnTryAgain.setOnClickListener(v -> verifyInternet());
     }
 
-    private void verifyInternet (){
-        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+    private void verifyInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo network = connectivityManager.getActiveNetworkInfo();
         if (network == null) { // No internet
 
@@ -95,20 +91,19 @@ public class SplashActivity extends AppCompatActivity {
         } else {
 
             //Check if the user is already logged in using shared preferences.
-            if (sharedPreferences.getBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,false))
-            {
+            if (sharedPreferences.getBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN, false)) {
                 loadUserData();
-            }
-            else {
+            } else {
                 startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             }
 
         }
     }
 
-    /** Loads the saved data of the user from shared preferences.*/
-    private boolean loadUserData()
-    {
+    /**
+     * Loads the saved data of the user from shared preferences.
+     */
+    private void loadUserData() {
         CurrentUser currentUser = CurrentUser.getInstance();
         //The user is already logged in, we determine which type of user this is.
         //Get the token from shared preferences
@@ -118,45 +113,39 @@ public class SplashActivity extends AppCompatActivity {
         Call<JsonObject> call = api.getUserData("Token " + token);
         call.enqueue(new Callback<JsonObject>() {
             @Override
-            public void onResponse(@NonNull Call<JsonObject> call,@NonNull Response<JsonObject> response) {
-                switch(response.code())
-                {
+            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                switch (response.code()) {
                     case Utils.HttpResponses.HTTP_200_OK:
                         JsonObject responseData = response.body();
-                        if (responseData.has(Utils.STUDENT_ACCOUNT))
-                        {
-                            //It's a student
-                            loadStudent(responseData.getAsJsonObject(Utils.STUDENT_ACCOUNT));
-                        }
-                        else
-                        {
-                            if (responseData.has(Utils.TEACHER_ACCOUNT))
-                            {
-                                //It's a teacher
-                                loadTeacher(responseData.getAsJsonObject(Utils.TEACHER_ACCOUNT));
-                            }
-                            else
-                            {
-                                if (responseData.has(Utils.ADMIN_ACCOUNT))
-                                {
-                                    //It's an administrator
-                                    loadAdmin(responseData.getAsJsonObject(Utils.ADMIN_ACCOUNT));
-                                }
-                                else
-                                {
-                                    //Unexpected response from the server.
-                                    Toast.makeText(SplashActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
-                                    break;
+                        if (responseData != null){
+                            if (responseData.has(Utils.STUDENT_ACCOUNT)) {
+                                //It's a student
+                                loadStudent(responseData.getAsJsonObject(Utils.STUDENT_ACCOUNT));
+                            } else {
+                                if (responseData.has(Utils.TEACHER_ACCOUNT)) {
+                                    //It's a teacher
+                                    loadTeacher(responseData.getAsJsonObject(Utils.TEACHER_ACCOUNT));
+                                } else {
+                                    if (responseData.has(Utils.ADMIN_ACCOUNT)) {
+                                        //It's an administrator
+                                        loadAdmin(responseData.getAsJsonObject(Utils.ADMIN_ACCOUNT));
+                                    } else {
+                                        //Unexpected response from the server.
+                                        Toast.makeText(SplashActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                                        break;
+                                    }
                                 }
                             }
+                            startActivity(new Intent(SplashActivity.this, NavigationActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(SplashActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
                         }
-                        startActivity(new Intent(SplashActivity.this, NavigationActivity.class));
-                        finish();
                         break;
                     case Utils.HttpResponses.HTTP_401_UNAUTHORIZED:
                         //Token is invalid, disconnect the user.
                         SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
-                        prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,false);
+                        prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN, false);
                         prefsEditor.apply();
                         Toast.makeText(SplashActivity.this, getString(R.string.session_expired), Toast.LENGTH_LONG).show();
                         startActivity(new Intent(SplashActivity.this, LoginActivity.class));
@@ -170,14 +159,13 @@ public class SplashActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<JsonObject> call,@NonNull Throwable t) {
+            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
                 Toast.makeText(SplashActivity.this, getString(R.string.connection_failed), Toast.LENGTH_LONG).show();
                 binding.mainLayout.setBackgroundColor(getColor(R.color.white));
                 binding.noInternetMsg.setVisibility(View.VISIBLE);
 
             }
         });
-        return false;
     }
 
     // Change the device's language
@@ -193,10 +181,12 @@ public class SplashActivity extends AppCompatActivity {
         currentUser.setUserType(Utils.STUDENT_ACCOUNT);
         currentUser.setCurrentStudent(Serializers.StudentDeserializer(student));
     }
+
     private void loadTeacher(JsonObject teacher) {
         currentUser.setUserType(Utils.TEACHER_ACCOUNT);
         currentUser.setCurrentTeacher(Serializers.TeacherDeserializer(teacher));
     }
+
     private void loadAdmin(JsonObject admin) {
         currentUser.setUserType(Utils.ADMIN_ACCOUNT);
         currentUser.setCurrentAdmin(Serializers.AdminDeserializer(admin));

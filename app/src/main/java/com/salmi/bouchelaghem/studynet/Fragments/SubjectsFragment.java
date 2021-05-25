@@ -17,7 +17,6 @@ import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
-import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.FragmentSubjectsBinding;
 
@@ -130,8 +129,5 @@ public class SubjectsFragment extends Fragment {
                 Toast.makeText(getContext(), getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-        modules = TestAPI.getInstance().getModules();
-
     }
 }

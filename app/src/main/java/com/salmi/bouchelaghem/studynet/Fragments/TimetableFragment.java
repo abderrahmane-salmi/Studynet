@@ -38,7 +38,6 @@ import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
-import com.salmi.bouchelaghem.studynet.Utils.TestAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.FragmentTimetableBinding;
 
@@ -75,9 +74,6 @@ public class TimetableFragment extends Fragment {
     private boolean filterApplied = false;
     private List<String> allSections;
 
-    // Test api
-    TestAPI testAPI;
-
     // Current user
     private final CurrentUser currentUser = CurrentUser.getInstance();
     private final String currentUserType = currentUser.getUserType();
@@ -104,9 +100,6 @@ public class TimetableFragment extends Fragment {
 
         // Init our api
         api = retrofit.create(StudynetAPI.class);
-
-        // Test api
-        testAPI = TestAPI.getInstance();
 
         NavigationActivity context = (NavigationActivity) getActivity();
         assert context != null;

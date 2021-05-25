@@ -1,6 +1,5 @@
 package com.salmi.bouchelaghem.studynet.Adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -15,10 +14,8 @@ import java.util.List;
 public class AssignmentsAdapter extends RecyclerView.Adapter<AssignmentsAdapter.ViewHolder> {
 
     private List<Assignment> assignments;
-    private Context context;
 
-    public AssignmentsAdapter(Context context) {
-        this.context = context;
+    public AssignmentsAdapter() {
     }
 
     @NonNull

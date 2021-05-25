@@ -29,7 +29,7 @@ public class ChangePasswordFragment extends BottomSheetDialogFragment {
     private FragmentChangePasswordBinding binding;
     // Studynet Api
     private StudynetAPI api;
-    private CurrentUser currentUser = CurrentUser.getInstance();
+    private final CurrentUser currentUser = CurrentUser.getInstance();
     //Loading dialog
     private CustomLoadingDialog loadingDialog;
 
@@ -49,7 +49,7 @@ public class ChangePasswordFragment extends BottomSheetDialogFragment {
         api = retrofit.create(StudynetAPI.class);
 
         //Init loading dialog
-        loadingDialog = new CustomLoadingDialog(getActivity());
+        loadingDialog = new CustomLoadingDialog(requireContext());
 
         binding.btnSave.setOnClickListener(v -> {
             if (validateOldPassword() & validateNewPassword()){

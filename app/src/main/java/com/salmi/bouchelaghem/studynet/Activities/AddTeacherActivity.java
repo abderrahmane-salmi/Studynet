@@ -37,7 +37,6 @@ import com.salmi.bouchelaghem.studynet.databinding.ActivityAddTeacherBinding;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -112,17 +111,17 @@ public class AddTeacherActivity extends AppCompatActivity {
                 binding.btnNext.setOnClickListener(v -> {
                     switch (step) {
                         case 1: // Step1: Fill the teacher's basic info
-                            if (validateFirstName() & validateLastName() & validateEmail() & validatePassword() & grade != null & department != null & sectionsSelected){
+                            if (validateFirstName() & validateLastName() & validateEmail() & validatePassword() & grade != null & department != null & sectionsSelected) {
 
                                 String email = binding.txtEmail.getEditText().getText().toString().trim();
                                 // Check if the email is used
                                 JsonObject emailJson = new JsonObject();
-                                emailJson.addProperty("email",email);
-                                Call<ResponseBody> call = api.checkEmail(emailJson,"Token " + currentUser.getToken());
+                                emailJson.addProperty("email", email);
+                                Call<ResponseBody> call = api.checkEmail(emailJson, "Token " + currentUser.getToken());
                                 call.enqueue(new Callback<ResponseBody>() {
                                     @Override
                                     public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                                        if (response.code() == Utils.HttpResponses.HTTP_302_FOUND){
+                                        if (response.code() == Utils.HttpResponses.HTTP_302_FOUND) {
                                             // The email is already used
                                             binding.txtEmail.setError(getString(R.string.email_taken));
                                         } else if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
@@ -131,10 +130,10 @@ public class AddTeacherActivity extends AppCompatActivity {
                                             String lastName = binding.txtLastName.getEditText().getText().toString().trim();
                                             String email = binding.txtEmail.getEditText().getText().toString().trim();
 
-                                            if (teacher != null){
+                                            if (teacher != null) {
                                                 // This means that the user already clicked next at least once
                                                 // Check if the user changed the teacher's sections
-                                                if (!teacher.getSections().equals(selectedSections)){
+                                                if (!teacher.getSections().equals(selectedSections)) {
                                                     // This means that the user changed the sections
                                                     deleteUnusedAssignments(selectedSections);
                                                 }
@@ -162,17 +161,17 @@ public class AddTeacherActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                                        Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(AddTeacherActivity.this, getString(R.string.error) + t.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             } else {
-                                if (grade == null){
+                                if (grade == null) {
                                     binding.txtGradeLayout.setError(getString(R.string.empty_grade_msg));
                                 }
-                                if (department == null){
+                                if (department == null) {
                                     binding.txtDepartmentLayout.setError(getString(R.string.empty_department_msg));
                                 }
-                                if (!sectionsSelected){
+                                if (!sectionsSelected) {
                                     binding.txtSectionsList.setError("");
                                 }
                             }
@@ -181,9 +180,9 @@ public class AddTeacherActivity extends AppCompatActivity {
                             // Save the teacher's info in the api
                             String password = binding.txtPassword.getEditText().getText().toString().trim();
                             //Build the teacher json.
-                            JsonObject teacherJson = Serializers.TeacherSerializer(teacher,password);
+                            JsonObject teacherJson = Serializers.TeacherSerializer(teacher, password);
                             //Make the call to the api.
-                            Call<JsonObject> createTeacherCall = api.createTeacher(teacherJson,"Token " + currentUser.getToken());
+                            Call<JsonObject> createTeacherCall = api.createTeacher(teacherJson, "Token " + currentUser.getToken());
                             loadingDialog.show();
                             createTeacherCall.enqueue(new TeacherCreationCallback());
                             break;
@@ -211,31 +210,31 @@ public class AddTeacherActivity extends AppCompatActivity {
                 binding.btnNext.setOnClickListener(v -> {
                     switch (step) {
                         case 1: // Step1: Fill the teacher's basic info
-                            if (validateFirstName() & validateLastName() & validateEmail() & grade != null & department != null & sectionsSelected){
+                            if (validateFirstName() & validateLastName() & validateEmail() & grade != null & department != null & sectionsSelected) {
 
                                 String firstName = binding.txtFirstName.getEditText().getText().toString().trim();
                                 String lastName = binding.txtLastName.getEditText().getText().toString().trim();
                                 String email = binding.txtEmail.getEditText().getText().toString().trim();
 
                                 /* Check if the user changed the teacher's email */
-                                if (!ogTeacher.getEmail().equals(email)){
+                                if (!ogTeacher.getEmail().equals(email)) {
                                     // The user did change the email
 
                                     // Check if the new email is used
                                     JsonObject emailJson = new JsonObject();
-                                    emailJson.addProperty("email",email);
-                                    Call<ResponseBody> call = api.checkEmail(emailJson,"Token " + currentUser.getToken());
+                                    emailJson.addProperty("email", email);
+                                    Call<ResponseBody> call = api.checkEmail(emailJson, "Token " + currentUser.getToken());
                                     call.enqueue(new Callback<ResponseBody>() {
                                         @Override
                                         public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                                            if (response.code() == Utils.HttpResponses.HTTP_302_FOUND){
+                                            if (response.code() == Utils.HttpResponses.HTTP_302_FOUND) {
                                                 // The email is already used
                                                 binding.txtEmail.setError(getString(R.string.email_taken));
                                             } else if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
                                                 // The email is available
 
                                                 /* Check if the user changed the teacher's sections */
-                                                if (!ogTeacher.getSections().equals(selectedSections)){
+                                                if (!ogTeacher.getSections().equals(selectedSections)) {
                                                     // This means that the user changed the sections
                                                     deleteUnusedAssignments(selectedSections);
                                                 }
@@ -262,16 +261,15 @@ public class AddTeacherActivity extends AppCompatActivity {
 
                                         @Override
                                         public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                                            Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(AddTeacherActivity.this, getString(R.string.error) + t.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     });
-                                }
-                                else {
+                                } else {
                                     // The user didn't change the teacher's email
                                     // In this case we will update everything but the email
 
                                     /* Check if the user changed the teacher's sections */
-                                    if (!ogTeacher.getSections().equals(selectedSections)){
+                                    if (!ogTeacher.getSections().equals(selectedSections)) {
                                         // This means that the user changed the sections
                                         deleteUnusedAssignments(selectedSections);
                                     }
@@ -291,24 +289,24 @@ public class AddTeacherActivity extends AppCompatActivity {
                                     goToStep2();
                                 }
                             } else {
-                                if (grade == null){
+                                if (grade == null) {
                                     binding.txtGradeLayout.setError(getString(R.string.empty_grade_msg));
                                 }
-                                if (department == null){
+                                if (department == null) {
                                     binding.txtDepartmentLayout.setError(getString(R.string.empty_department_msg));
                                 }
-                                if (!sectionsSelected){
+                                if (!sectionsSelected) {
                                     binding.txtSectionsList.setError("");
                                 }
                             }
                             break;
                         case 2: // Step 2: Add assignments
                             /* Check if the user changed anything */
-                            if (!ogTeacher.equals(teacher)){
+                            if (!ogTeacher.equals(teacher)) {
                                 // Update the user in the database
 
                                 //Build the teacher json.
-                                JsonObject teacherJson = Serializers.TeacherSerializer(teacher,null);
+                                JsonObject teacherJson = Serializers.TeacherSerializer(teacher, null);
                                 //Make the call to the api.
                                 Call<JsonObject> updateTeacherCall = api.updateTeacher(teacherJson, teacher.getId(), "Token " + currentUser.getToken());
                                 loadingDialog.show();
@@ -348,7 +346,7 @@ public class AddTeacherActivity extends AppCompatActivity {
         });
 
         binding.txtSectionsList.setOnClickListener(v -> {
-            if (sectionsArray != null && sectionsArray.length != 0){
+            if (sectionsArray != null && sectionsArray.length != 0) {
                 binding.txtSectionsList.setError(null);
                 // Init builder
                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(AddTeacherActivity.this, R.style.MyAlertDialogTheme);
@@ -394,7 +392,8 @@ public class AddTeacherActivity extends AppCompatActivity {
                     selectedSections.clear();
                     selectedSections.addAll(tmpSections);
                     sectionsStates = tmpStates;
-                    dialog.dismiss();});
+                    dialog.dismiss();
+                });
 
                 builder.show();
             } else {
@@ -423,8 +422,8 @@ public class AddTeacherActivity extends AppCompatActivity {
     private void deleteUnusedAssignments(ArrayList<String> selectedSections) {
         // Used this list to prevent having ConcurrentModificationException
         List<Assignment> unusedAssignments = new ArrayList<>();
-        for (Assignment assignment:assignments){
-            if (!selectedSections.contains(assignment.getSectionCode())){
+        for (Assignment assignment : assignments) {
+            if (!selectedSections.contains(assignment.getSectionCode())) {
                 unusedAssignments.add(assignment);
             }
         }
@@ -434,12 +433,12 @@ public class AddTeacherActivity extends AppCompatActivity {
     private void initRecView() {
         binding.assignmentsRecView.setLayoutManager(new LinearLayoutManager(AddTeacherActivity.this));
         binding.assignmentsRecView.addItemDecoration(new DividerItemDecoration(AddTeacherActivity.this, LinearLayout.VERTICAL));
-        adapter = new AssignmentsAdapter(AddTeacherActivity.this);
+        adapter = new AssignmentsAdapter();
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(adminCallBack);
         itemTouchHelper.attachToRecyclerView(binding.assignmentsRecView);
     }
 
-    private void goToStep2(){
+    private void goToStep2() {
         // Go to the next step
         step = 2;
         binding.teacherInfoLayout.setVisibility(View.GONE);
@@ -451,7 +450,7 @@ public class AddTeacherActivity extends AppCompatActivity {
     }
 
     private void getAssignments() {
-        if (teacher != null){
+        if (teacher != null) {
             assignments = teacher.getAssignments();
             if (assignments != null) {
                 if (!assignments.isEmpty()) {
@@ -477,9 +476,9 @@ public class AddTeacherActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (teacher != null){
+        if (teacher != null) {
             assignments = teacher.getAssignments();
-            if(step==2) {
+            if (step == 2) {
                 if (assignments != null) {
                     if (!assignments.isEmpty()) {
                         adapter.setAssignments(assignments);
@@ -501,7 +500,7 @@ public class AddTeacherActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Section>>() {
             @Override
             public void onResponse(@NonNull Call<List<Section>> call, @NonNull Response<List<Section>> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     // Get sections
                     List<Section> sectionList = response.body();
 
@@ -516,13 +515,13 @@ public class AddTeacherActivity extends AppCompatActivity {
                         sectionsArray[i] = sectionList.get(i).getCode();
                     }
                 } else {
-                    Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+response.code(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddTeacherActivity.this, getString(R.string.error) + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Section>> call, @NonNull Throwable t) {
-                Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddTeacherActivity.this, getString(R.string.error) + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -533,13 +532,13 @@ public class AddTeacherActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Department>>() {
             @Override
             public void onResponse(@NonNull Call<List<Department>> call, @NonNull Response<List<Department>> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     List<Department> departmentsList = response.body();
 
                     // Get the names of the departments
                     departments.clear();
                     assert departmentsList != null;
-                    for (Department department:departmentsList){
+                    for (Department department : departmentsList) {
                         departments.add(department.getCode());
                     }
 
@@ -547,13 +546,13 @@ public class AddTeacherActivity extends AppCompatActivity {
                     ArrayAdapter<String> departmentsAdapter = new ArrayAdapter<>(AddTeacherActivity.this, R.layout.dropdown_item, departments);
                     binding.txtDepartmentSpinner.setAdapter(departmentsAdapter);
                 } else {
-                    Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+response.code(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddTeacherActivity.this, getString(R.string.error) + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Department>> call, @NonNull Throwable t) {
-                Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddTeacherActivity.this, getString(R.string.error) + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -584,7 +583,7 @@ public class AddTeacherActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Section>>() {
             @Override
             public void onResponse(@NonNull Call<List<Section>> call, @NonNull Response<List<Section>> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     // Get sections
                     List<Section> sectionList = response.body();
 
@@ -619,7 +618,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                         binding.txtSectionsList.append(selectedSections.get(nbSections - 1));
                     }
                 } else {
-                    Toast.makeText(AddTeacherActivity.this, getString(R.string.error)+response.code(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddTeacherActivity.this, getString(R.string.error) + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -706,31 +705,31 @@ public class AddTeacherActivity extends AppCompatActivity {
             int position = viewHolder.getAdapterPosition();
             Assignment currentAssignment = adapter.getAssignments().get(position);
 
-            if (direction == ItemTouchHelper.LEFT){
+            if (direction == ItemTouchHelper.LEFT) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddTeacherActivity.this);
-                    builder.setMessage(R.string.are_you_sure);
-                    builder.setPositiveButton(R.string.yes, (dialog, which) -> {
-                        assignments.remove(currentAssignment);
-                        adapter.getAssignments().remove(currentAssignment);
-                        adapter.notifyItemRemoved(position);
-                        Toast.makeText(AddTeacherActivity.this, getString(R.string.assignment_deleted_msg), Toast.LENGTH_SHORT).show();
+                builder.setMessage(R.string.are_you_sure);
+                builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+                    assignments.remove(currentAssignment);
+                    adapter.getAssignments().remove(currentAssignment);
+                    adapter.notifyItemRemoved(position);
+                    Toast.makeText(AddTeacherActivity.this, getString(R.string.assignment_deleted_msg), Toast.LENGTH_SHORT).show();
 
-                        teacher.setAssignments(assignments);
-                        if (!assignments.isEmpty()){
-                            adapter.setAssignments(assignments);
-                            binding.assignmentsRecView.setAdapter(adapter);
-                            binding.assignmentsRecView.setVisibility(View.VISIBLE);
-                            binding.emptyMsg.setVisibility(View.GONE);
-                        } else {
-                            binding.assignmentsRecView.setVisibility(View.GONE);
-                            binding.emptyMsg.setVisibility(View.VISIBLE);
-                        }
-                    });
-                    builder.setNegativeButton(R.string.no, (dialog, which) -> {
-                        // Do Nothing
-                        adapter.notifyItemChanged(position); // To reset the item on the screen
-                    });
-                    builder.create().show();
+                    teacher.setAssignments(assignments);
+                    if (!assignments.isEmpty()) {
+                        adapter.setAssignments(assignments);
+                        binding.assignmentsRecView.setAdapter(adapter);
+                        binding.assignmentsRecView.setVisibility(View.VISIBLE);
+                        binding.emptyMsg.setVisibility(View.GONE);
+                    } else {
+                        binding.assignmentsRecView.setVisibility(View.GONE);
+                        binding.emptyMsg.setVisibility(View.VISIBLE);
+                    }
+                });
+                builder.setNegativeButton(R.string.no, (dialog, which) -> {
+                    // Do Nothing
+                    adapter.notifyItemChanged(position); // To reset the item on the screen
+                });
+                builder.create().show();
             }
         }
 
@@ -753,17 +752,17 @@ public class AddTeacherActivity extends AppCompatActivity {
         return teacher;
     }
 
-    /** Callback logic for teacher creation api call.*/
+    /**
+     * Callback logic for teacher creation api call.
+     */
     private class TeacherCreationCallback implements Callback<JsonObject> {
 
         @Override
-        public void onResponse(@NonNull Call<JsonObject> call,@NonNull Response<JsonObject> response) {
+        public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
             if (response.code() == Utils.HttpResponses.HTTP_201_CREATED) {
                 String selectedDepartment = TeachersFragment.getSelectedDepartment();
-                if(selectedDepartment != null)
-                {
-                    if(selectedDepartment.equals(department))
-                    {
+                if (selectedDepartment != null) {
+                    if (selectedDepartment.equals(department)) {
                         //Add the teacher in the teachers fragment.
                         List<Teacher> teachers = TeachersFragment.getTeachers();
                         assert teachers != null;
@@ -783,13 +782,15 @@ public class AddTeacherActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onFailure(@NonNull Call<JsonObject> call,@NonNull Throwable t) {
+        public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
             Toast.makeText(AddTeacherActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
             loadingDialog.dismiss();
         }
     }
 
-    /** Callback logic for teacher update api call.*/
+    /**
+     * Callback logic for teacher update api call.
+     */
     private class TeacherUpdateCallback implements Callback<JsonObject> {
 
         @Override

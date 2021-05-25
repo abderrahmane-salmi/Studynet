@@ -182,7 +182,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                     Toast.makeText(getActivity(), getString(R.string.logout_all_sucess), Toast.LENGTH_SHORT).show();
                     loadingDialog.dismiss();
-                    getActivity().finish();
+                    requireActivity().finish();
                     break;
                 default:
                     Toast.makeText(getActivity(), getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
