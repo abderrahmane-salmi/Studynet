@@ -4,11 +4,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
@@ -19,6 +21,9 @@ import com.salmi.bouchelaghem.studynet.databinding.FragmentChangeSectionBinding;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -31,7 +36,7 @@ public class ChangeSectionFragment extends BottomSheetDialogFragment {
     //Loading dialog
     private CustomLoadingDialog loadingDialog;
     // Section
-    private final List<String> sections = new ArrayList<>();
+    private List<String> sections = new ArrayList<>();
     private String section;
     private boolean sectionSelected = false;
 
@@ -83,6 +88,34 @@ public class ChangeSectionFragment extends BottomSheetDialogFragment {
     }
 
     private void getAllSections() {
-        // TODO: Get all sections
+
+        Call<List<Section>> getAllSectionsCall = api.getAllSections();
+        getAllSectionsCall.enqueue(new Callback<List<Section>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Section>> call,@NonNull  Response<List<Section>> response) {
+                if(response.code()==Utils.HttpResponses.HTTP_200_OK)
+                {
+                    List<Section> sectionsList = response.body();
+                    sections = new ArrayList<>();
+                    if (sectionsList != null) {
+                        // Get names
+                        for (Section sec : sectionsList) {
+                            sections.add(sec.getCode());
+                        }
+                    }
+                    // TODO: Show the sections in the spinner
+                }
+                else
+                {
+                    Toast.makeText(requireContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Section>> call,@NonNull  Throwable t) {
+                Toast.makeText(requireContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

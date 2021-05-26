@@ -42,7 +42,7 @@ public interface StudynetAPI {
 
     // *** Sections ***
 
-    /** Get sections based on specialty*/
+    /** Get all sections*/
     @GET("sections")
     Call<List<Section>> getAllSections();
     // sections

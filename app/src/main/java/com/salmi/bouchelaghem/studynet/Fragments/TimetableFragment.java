@@ -702,7 +702,7 @@ public class TimetableFragment extends Fragment {
                             }
                         }
                     } else {
-                        Toast.makeText(getContext(), getString(R.string.error) + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
                     }
                 }
 
