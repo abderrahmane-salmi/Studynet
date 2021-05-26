@@ -19,6 +19,7 @@ import androidx.navigation.Navigation;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 import com.salmi.bouchelaghem.studynet.Activities.LoginActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
@@ -77,30 +78,25 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         // Init our api, this will implement the code of all the methods in the interface.
         api = retrofit.create(StudynetAPI.class);
-        // TODO: Get the selected language from shared prefs (if the user already chosen a language) and set it in the languages list
 
         // Language List
         assert languageList != null;
         languageList.setOnPreferenceChangeListener((preference, newValue) -> {
             String selectedLanguage = (String) newValue;
             if (preference.getKey().equals(getString(R.string.key_language))){
+                //Use the default prefs to save the language:
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(requireContext());
+                SharedPreferences.Editor editor = sp.edit();
                 switch (selectedLanguage){
                     case "1":
-                        // TODO: Remove this toast in production
-                        Toast.makeText(requireContext(), "EN", Toast.LENGTH_SHORT).show();
-                        setLocale(requireActivity(), Locale.ENGLISH);
+                        editor.putString(getString(R.string.key_language),"1");
                         break;
                     case "2":
-                        Toast.makeText(requireContext(), "FR", Toast.LENGTH_SHORT).show();
-                        // TODO: uncomment this when we add french language to the app
-                        setLocale(requireActivity(), Locale.FRENCH);
+                        editor.putString(getString(R.string.key_language),"2");
                         break;
                 }
-                // TODO: Save the selected language to shared prefs and then read it from the splash screen every time
-                /*
-                Use the default prefs to save the language:
-                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(requireContext());
-                 */
+                editor.apply();
+                Toast.makeText(requireContext(), getString(R.string.language_preference_saved), Toast.LENGTH_LONG).show();
             }
 
             return true;

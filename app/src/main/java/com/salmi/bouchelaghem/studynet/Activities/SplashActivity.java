@@ -67,7 +67,6 @@ public class SplashActivity extends AppCompatActivity {
                     setLocale(this, Locale.ENGLISH);
                     break;
                 case "2":
-                    //TODO: check if this is properly working after adding french translation.
                     setLocale(this, Locale.FRENCH);
                     break;
             }
