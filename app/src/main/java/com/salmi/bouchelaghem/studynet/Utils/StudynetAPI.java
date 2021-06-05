@@ -62,6 +62,9 @@ public interface StudynetAPI {
     Call<Section> getSection(@Path("code") String code);
     // sections/L3 ACAD A
 
+    @POST("change_section/")
+    Call<Section> changeSection(@Body JsonObject section, @Header("Authorization") String token);
+
     // *** Modules ***
 
     /** Get modules based on section*/

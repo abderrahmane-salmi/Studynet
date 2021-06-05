@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
@@ -21,6 +22,7 @@ import com.salmi.bouchelaghem.studynet.databinding.FragmentChangeSectionBinding;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,7 +67,31 @@ public class ChangeSectionFragment extends BottomSheetDialogFragment {
         binding.btnSave.setOnClickListener(v -> {
             if (sectionSelected){
                 // TODO: Change section (using section variable)
-                Toast.makeText(requireContext(), "Saved", Toast.LENGTH_SHORT).show();
+                JsonObject sectionJson = new JsonObject();
+                sectionJson.addProperty("section",section);
+                Call<Section> changeSectionCall = api.changeSection(sectionJson,"Token " + currentUser.getToken());
+                loadingDialog.show();
+                changeSectionCall.enqueue(new Callback<Section>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Section> call, @NonNull Response<Section> response) {
+                        if(response.code() == Utils.HttpResponses.HTTP_200_OK)
+                        {
+                            currentUser.getCurrentStudent().setSection(response.body());
+                            Toast.makeText(requireContext(),getString(R.string.section_changed_successfully),Toast.LENGTH_SHORT).show();
+                            loadingDialog.dismiss();
+                            dismiss();
+                        }
+                        else
+                        {
+                            Toast.makeText(requireContext(),getString(R.string.unknown_error),Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Section> call, @NonNull Throwable t) {
+                        Toast.makeText(requireContext(),getString(R.string.connection_failed),Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else {
                 binding.txtSectionLayout.setError(getString(R.string.empty_section_msg));
             }

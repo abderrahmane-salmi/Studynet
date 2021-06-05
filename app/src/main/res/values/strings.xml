@@ -234,4 +234,5 @@
     <string name="invalid_confirmation_code">Invalid confirmation code</string>
     <string name="password_too_common">The password is too common</string>
     <string name="language_preference_saved">Language preference saved, restart the application to apply the changes.</string>
+    <string name="section_changed_successfully">Section changed successfully</string>
 </resources>
