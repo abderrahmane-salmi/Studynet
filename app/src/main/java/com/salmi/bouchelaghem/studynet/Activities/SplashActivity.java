@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
@@ -93,7 +94,10 @@ public class SplashActivity extends AppCompatActivity {
             if (sharedPreferences.getBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN, false)) {
                 loadUserData();
             } else {
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                new Handler().postDelayed(()->{
+                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                    finish();
+                },1000);
             }
 
         }

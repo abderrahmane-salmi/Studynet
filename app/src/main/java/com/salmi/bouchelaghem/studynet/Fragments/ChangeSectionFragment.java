@@ -64,7 +64,7 @@ public class ChangeSectionFragment extends BottomSheetDialogFragment {
         // Save button
         binding.btnSave.setOnClickListener(v -> {
             if (sectionSelected){
-                // TODO: Change section
+                // TODO: Change section (using section variable)
                 Toast.makeText(requireContext(), "Saved", Toast.LENGTH_SHORT).show();
             } else {
                 binding.txtSectionLayout.setError(getString(R.string.empty_section_msg));
@@ -96,14 +96,16 @@ public class ChangeSectionFragment extends BottomSheetDialogFragment {
                 if(response.code()==Utils.HttpResponses.HTTP_200_OK)
                 {
                     List<Section> sectionsList = response.body();
-                    sections = new ArrayList<>();
+                    sections.clear();
                     if (sectionsList != null) {
                         // Get names
                         for (Section sec : sectionsList) {
                             sections.add(sec.getCode());
                         }
                     }
-                    // TODO: Show the sections in the spinner
+                    // Set up spinner
+                    ArrayAdapter<String> sectionsAdapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, sections);
+                    binding.txtSectionSpinner.setAdapter(sectionsAdapter);
                 }
                 else
                 {
