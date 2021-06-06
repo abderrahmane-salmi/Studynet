@@ -55,6 +55,8 @@ public class Utils {
     public static final String ACTION_ADD = "Add";
     public static final String ACTION_UPDATE = "Update";
     public static final String ACTION_DELETE = "Delete";
+    public static final String NOTIFICATION_CHANNEL_ID = "1";
+    public static final CharSequence NOTIFICATION_CHANNEL_NAME = "1";
 
     /**
      * Logs in the student given in the student data. (takes care of the token too)
