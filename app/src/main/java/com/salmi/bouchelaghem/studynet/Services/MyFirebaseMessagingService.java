@@ -53,7 +53,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setSmallIcon(R.drawable.app_logo)
                 .setContentTitle(title)
                 .setContentText(body)
-                .setContentInfo("Info");
+                .setContentInfo("Info")
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(body));
 
         manager.notify(new Random().nextInt(), builder.build());
     }

@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
@@ -53,6 +54,8 @@ public class SplashActivity extends AppCompatActivity {
                 .baseUrl(Utils.API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+
+        FirebaseMessaging.getInstance().subscribeToTopic("ISIL_B_L3");
 
         // Init our api, this will implement the code of all the methods in the interface.
         api = retrofit.create(StudynetAPI.class);
