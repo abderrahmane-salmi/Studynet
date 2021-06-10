@@ -21,6 +21,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.salmi.bouchelaghem.studynet.Activities.LoginActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
 import com.salmi.bouchelaghem.studynet.R;
@@ -172,6 +173,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
                 case Utils.HttpResponses.HTTP_204_NO_CONTENT: //Logout successful.
                 case Utils.HttpResponses.HTTP_401_UNAUTHORIZED: //Expired token, logout anyway since this token cannot be used.
+                    if(currentUser.getUserType() == Utils.STUDENT_ACCOUNT)
+                    {
+                        //This user is a student, unsubscribe this device from his section's notifications.
+                        String section = currentUser.getCurrentStudent().getSection().getCode();
+                        FirebaseMessaging.getInstance().unsubscribeFromTopic(section.replace(' ', '_'));
+                    }
                     currentUser.logout();
                     //Save that the user is no longer logged in locally.
                     SharedPreferences.Editor prefsEditor = sharedPreferences.edit();

@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Models.Section;
 import com.salmi.bouchelaghem.studynet.R;
@@ -66,7 +67,6 @@ public class ChangeSectionFragment extends BottomSheetDialogFragment {
         // Save button
         binding.btnSave.setOnClickListener(v -> {
             if (sectionSelected){
-                // TODO: Change section (using section variable)
                 JsonObject sectionJson = new JsonObject();
                 sectionJson.addProperty("section",section);
                 Call<Section> changeSectionCall = api.changeSection(sectionJson,"Token " + currentUser.getToken());
@@ -76,6 +76,12 @@ public class ChangeSectionFragment extends BottomSheetDialogFragment {
                     public void onResponse(@NonNull Call<Section> call, @NonNull Response<Section> response) {
                         if(response.code() == Utils.HttpResponses.HTTP_200_OK)
                         {
+                            //Unsubscribe this device from the old section's notifications.
+                            String currentSection =  currentUser.getCurrentStudent().getSection().getCode();
+                            FirebaseMessaging.getInstance().unsubscribeFromTopic(currentSection.replace(' ', '_'));
+                            //Subscribe this device to the new section's notifications.
+                            FirebaseMessaging.getInstance().subscribeToTopic(response.body().getCode().replace(' ','_'));
+                            //Update the data in memory.
                             currentUser.getCurrentStudent().setSection(response.body());
                             Toast.makeText(requireContext(),getString(R.string.section_changed_successfully),Toast.LENGTH_SHORT).show();
                             loadingDialog.dismiss();
