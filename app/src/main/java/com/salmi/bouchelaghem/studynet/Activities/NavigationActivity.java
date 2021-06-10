@@ -15,6 +15,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
@@ -101,6 +102,13 @@ public class NavigationActivity extends AppCompatActivity {
 
                 case Utils.HttpResponses.HTTP_204_NO_CONTENT: //Logout successful.
                 case Utils.HttpResponses.HTTP_401_UNAUTHORIZED: //Expired token, logout anyway since this token cannot be used.
+                    if(currentUser.getUserType() == Utils.STUDENT_ACCOUNT)
+                    {
+                        //This user is a student, unsubscribe this device from his section's notifications.
+                        String section = currentUser.getCurrentStudent().getSection().getCode();
+                        FirebaseMessaging.getInstance().unsubscribeFromTopic(section.replace(' ', '_'));
+                    }
+                    //Log this user out.
                     currentUser.logout();
                     //Save that the user is no longer logged in locally.
                     SharedPreferences.Editor prefsEditor = sharedPreferences.edit();

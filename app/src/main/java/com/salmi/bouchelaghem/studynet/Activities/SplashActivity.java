@@ -55,7 +55,6 @@ public class SplashActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        FirebaseMessaging.getInstance().subscribeToTopic("ISIL_B_L3");
 
         // Init our api, this will implement the code of all the methods in the interface.
         api = retrofit.create(StudynetAPI.class);

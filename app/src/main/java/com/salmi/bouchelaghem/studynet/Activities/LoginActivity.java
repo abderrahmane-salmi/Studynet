@@ -11,7 +11,9 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonObject;
+import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
@@ -141,8 +143,11 @@ public class LoginActivity extends AppCompatActivity {
                     //Determine the type of the user
                     assert responseData != null; //The response is not supposed to be null.
                     if (responseData.has(Utils.STUDENT_ACCOUNT)) {
-                        //It's a student
+                        //It's a student, log him in
                         Utils.loginStudent(responseData.getAsJsonObject(Utils.STUDENT_ACCOUNT));
+                        //Subscribe this device to this student's section's push notifications.
+                        String sectionCode = currentUser.getCurrentStudent().getSection().getCode();
+                        FirebaseMessaging.getInstance().subscribeToTopic(sectionCode.replace(' ','_'));
                     } else {
                         if (responseData.has(Utils.TEACHER_ACCOUNT)) {
                             //It's a teacher
