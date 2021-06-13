@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragments.ChangeSectionFragment"
-    android:paddingBottom="36dp">
+    android:paddingBottom="36dp"
+    tools:context=".Fragments.ChangeSectionFragment">
 
     <TextView
         android:id="@+id/textView4"
@@ -23,19 +23,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!--    Section-->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/txtSectionLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="36dp"
         android:textColorHint="@color/secondary_text_color"
         app:errorEnabled="true"
-        android:layout_marginStart="36dp"
-        android:layout_marginEnd="36dp"
-        android:layout_marginTop="36dp"
-        app:layout_constraintTop_toBottomOf="@id/textView4"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/textView4">
 
         <AutoCompleteTextView
             android:id="@+id/txtSectionSpinner"
@@ -43,6 +44,32 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/tabularasa_regular"
             android:hint="@string/section"
+            android:inputType="none"
+            android:textSize="15sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--    Group-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtGroupLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginEnd="36dp"
+        android:enabled="false"
+        android:textColorHint="@color/secondary_text_color"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtSectionLayout">
+
+        <AutoCompleteTextView
+            android:id="@+id/txtGroupSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/tabularasa_regular"
+            android:hint="@string/group"
             android:inputType="none"
             android:textSize="15sp" />
 
@@ -62,6 +89,6 @@
         android:text="@string/save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtSectionLayout" />
+        app:layout_constraintTop_toBottomOf="@id/txtGroupLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

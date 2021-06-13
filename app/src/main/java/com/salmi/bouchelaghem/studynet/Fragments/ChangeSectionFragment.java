@@ -23,7 +23,6 @@ import com.salmi.bouchelaghem.studynet.databinding.FragmentChangeSectionBinding;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,15 +32,24 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ChangeSectionFragment extends BottomSheetDialogFragment {
 
     private FragmentChangeSectionBinding binding;
+
     // Studynet Api
     private StudynetAPI api;
     private final CurrentUser currentUser = CurrentUser.getInstance();
+
     //Loading dialog
     private CustomLoadingDialog loadingDialog;
+
     // Section
-    private List<String> sections = new ArrayList<>();
+    private final List<Section> sectionObjects = new ArrayList<>();
+    private final List<String> sections = new ArrayList<>();
     private String section;
     private boolean sectionSelected = false;
+
+    // Groups
+    private final List<String> groups = new ArrayList<>();
+    private String group;
+    private boolean groupSelected = false;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -66,88 +74,123 @@ public class ChangeSectionFragment extends BottomSheetDialogFragment {
 
         // Save button
         binding.btnSave.setOnClickListener(v -> {
-            if (sectionSelected){
+            if (sectionSelected && groupSelected) {
+
+                // TODO: Update the group too, (you'll find it in the 'group' variable
+
                 JsonObject sectionJson = new JsonObject();
-                sectionJson.addProperty("section",section);
-                Call<Section> changeSectionCall = api.changeSection(sectionJson,"Token " + currentUser.getToken());
+                sectionJson.addProperty("section", section);
+                Call<Section> changeSectionCall = api.changeSection(sectionJson, "Token " + currentUser.getToken());
                 loadingDialog.show();
                 changeSectionCall.enqueue(new Callback<Section>() {
                     @Override
                     public void onResponse(@NonNull Call<Section> call, @NonNull Response<Section> response) {
-                        if(response.code() == Utils.HttpResponses.HTTP_200_OK)
-                        {
+                        if (response.body() != null && response.code() == Utils.HttpResponses.HTTP_200_OK) {
                             //Unsubscribe this device from the old section's notifications.
-                            String currentSection =  currentUser.getCurrentStudent().getSection().getCode();
+                            String currentSection = currentUser.getCurrentStudent().getSection().getCode();
                             FirebaseMessaging.getInstance().unsubscribeFromTopic(currentSection.replace(' ', '_'));
                             //Subscribe this device to the new section's notifications.
-                            FirebaseMessaging.getInstance().subscribeToTopic(response.body().getCode().replace(' ','_'));
+                            FirebaseMessaging.getInstance().subscribeToTopic(response.body().getCode().replace(' ', '_'));
                             //Update the data in memory.
                             currentUser.getCurrentStudent().setSection(response.body());
-                            Toast.makeText(requireContext(),getString(R.string.section_changed_successfully),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireContext(), getString(R.string.section_changed_successfully), Toast.LENGTH_SHORT).show();
                             loadingDialog.dismiss();
                             dismiss();
-                        }
-                        else
-                        {
-                            Toast.makeText(requireContext(),getString(R.string.unknown_error),Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(requireContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<Section> call, @NonNull Throwable t) {
-                        Toast.makeText(requireContext(),getString(R.string.connection_failed),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
-                binding.txtSectionLayout.setError(getString(R.string.empty_section_msg));
+                if (!sectionSelected) {
+                    binding.txtSectionLayout.setError(getString(R.string.empty_section_msg));
+                }
+                if (!groupSelected) {
+                    binding.txtGroupLayout.setError(getString(R.string.empty_group_msg));
+                }
             }
         });
 
         // Spinner
         binding.txtSectionLayout.setOnClickListener(v -> {
-            if (sections.isEmpty()){
+            if (sections.isEmpty()) {
                 Toast.makeText(requireContext(), getString(R.string.no_sections), Toast.LENGTH_SHORT).show();
             }
         });
 
+        // When the user chooses a section
         binding.txtSectionSpinner.setOnItemClickListener((parent, view1, position, id) -> {
+            // Get the selected item
             binding.txtSectionLayout.setError(null);
             sectionSelected = true;
             section = sections.get(position);
+
+            // Disable other spinners
+            binding.txtGroupSpinner.setText("", false);
+            groupSelected = false;
+
+            // Set up the groups spinner
+            binding.txtGroupLayout.setEnabled(true);
+            setupGroupsSpinner(sectionObjects.get(position).getNbGroups());
+        });
+
+        // Groups spinner
+        binding.txtGroupSpinner.setOnItemClickListener((parent, view12, position, id) -> {
+            binding.txtGroupLayout.setError(null);
+            group = groups.get(position);
+            groupSelected = true;
         });
 
         return view;
     }
 
-    private void getAllSections() {
+    private void setupGroupsSpinner(int nbGroups) {
+        groups.clear();
+        if (nbGroups > 0) {
+            for (int i = 1; i <= nbGroups; i++) {
+                groups.add(String.valueOf(i));
+            }
+        }
+        // Set up the spinner
+        ArrayAdapter<String> groupsAdapter = new ArrayAdapter<>(getContext(), R.layout.dropdown_item, groups);
+        binding.txtGroupSpinner.setAdapter(groupsAdapter);
+    }
 
+    private void getAllSections() {
         Call<List<Section>> getAllSectionsCall = api.getAllSections();
         getAllSectionsCall.enqueue(new Callback<List<Section>>() {
             @Override
-            public void onResponse(@NonNull Call<List<Section>> call,@NonNull  Response<List<Section>> response) {
-                if(response.code()==Utils.HttpResponses.HTTP_200_OK)
-                {
-                    List<Section> sectionsList = response.body();
-                    sections.clear();
-                    if (sectionsList != null) {
-                        // Get names
-                        for (Section sec : sectionsList) {
-                            sections.add(sec.getCode());
+            public void onResponse(@NonNull Call<List<Section>> call, @NonNull Response<List<Section>> response) {
+                if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
+                    if (response.body() != null) {
+                        // Get the sections objects
+                        sectionObjects.clear();
+                        sectionObjects.addAll(response.body());
+                        sections.clear();
+                        if (!sectionObjects.isEmpty()) {
+                            // Get names
+                            for (Section sec : sectionObjects) {
+                                sections.add(sec.getCode());
+                            }
                         }
+                        // Set up spinner
+                        ArrayAdapter<String> sectionsAdapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, sections);
+                        binding.txtSectionSpinner.setAdapter(sectionsAdapter);
+                    } else {
+                        Toast.makeText(getContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
                     }
-                    // Set up spinner
-                    ArrayAdapter<String> sectionsAdapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, sections);
-                    binding.txtSectionSpinner.setAdapter(sectionsAdapter);
-                }
-                else
-                {
+                } else {
                     Toast.makeText(requireContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
                 }
-
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<Section>> call,@NonNull  Throwable t) {
+            public void onFailure(@NonNull Call<List<Section>> call, @NonNull Throwable t) {
                 Toast.makeText(requireContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
             }
         });
