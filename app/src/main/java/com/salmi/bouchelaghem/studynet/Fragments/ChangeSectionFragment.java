@@ -181,6 +181,7 @@ public class ChangeSectionFragment extends BottomSheetDialogFragment {
                         // Set up spinner
                         ArrayAdapter<String> sectionsAdapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, sections);
                         binding.txtSectionSpinner.setAdapter(sectionsAdapter);
+                        binding.txtSectionSpinner.setText(currentUser.getCurrentStudent().getSection().getCode(),false);
                     } else {
                         Toast.makeText(getContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
                     }

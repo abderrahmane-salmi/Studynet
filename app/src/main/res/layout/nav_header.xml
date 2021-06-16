@@ -21,31 +21,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
-
-    <LinearLayout
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:text="@string/welcome"
+        android:textColor="@color/primary_text_color"
+        android:fontFamily="@font/tabularasa_medium"
+        android:textSize="18sp"
         android:layout_marginStart="12dp"
-        android:layout_gravity="center_vertical">
+        android:layout_gravity="center_vertical"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Username"
-            android:textColor="@color/primary_text_color"
-            android:fontFamily="@font/tabularasa_medium"
-            android:textSize="18sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="user1@me.com"
-            android:layout_marginTop="-5dp"
-            android:textColor="@color/secondary_text_color"
-            android:fontFamily="@font/tabularasa_medium"
-            android:textSize="16sp" />
-
-    </LinearLayout>
 
 </LinearLayout>
