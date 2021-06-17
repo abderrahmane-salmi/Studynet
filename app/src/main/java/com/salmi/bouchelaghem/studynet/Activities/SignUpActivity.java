@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Models.Department;
 import com.salmi.bouchelaghem.studynet.Models.Section;
@@ -337,6 +338,9 @@ public class SignUpActivity extends AppCompatActivity {
                             Utils.loginStudent(response.body());
                             //We save his data locally.
                             saveCurrentUser();
+                            String sectionCode = CurrentUser.getInstance().getCurrentStudent().getSection().getCode();
+                            //Subscribe this device to this student's section notifications
+                            FirebaseMessaging.getInstance().subscribeToTopic(sectionCode.replace(' ','_'));
                             //Take him to the navigation activity.
                             Toast.makeText(SignUpActivity.this, getString(R.string.signed_up_msg), Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(SignUpActivity.this, NavigationActivity.class));
