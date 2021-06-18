@@ -76,10 +76,9 @@ public class ChangeSectionFragment extends BottomSheetDialogFragment {
         binding.btnSave.setOnClickListener(v -> {
             if (sectionSelected && groupSelected) {
 
-                // TODO: Update the group too, (you'll find it in the 'group' variable
-
                 JsonObject sectionJson = new JsonObject();
                 sectionJson.addProperty("section", section);
+                sectionJson.addProperty("group",group);
                 Call<Section> changeSectionCall = api.changeSection(sectionJson, "Token " + currentUser.getToken());
                 loadingDialog.show();
                 changeSectionCall.enqueue(new Callback<Section>() {
