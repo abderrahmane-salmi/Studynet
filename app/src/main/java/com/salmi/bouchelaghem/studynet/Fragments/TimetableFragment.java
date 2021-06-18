@@ -610,6 +610,7 @@ public class TimetableFragment extends Fragment {
                 // Init Views
                 TextInputLayout txtReportComment = view1.findViewById(R.id.txtReportComment);
                 MaterialButton btnConfirmReport = view1.findViewById(R.id.btnConfirmReport);
+                MaterialButton btnCancel = view1.findViewById(R.id.btnCancel);
 
                 // Confirm button
                 btnConfirmReport.setOnClickListener(v -> {
@@ -629,9 +630,19 @@ public class TimetableFragment extends Fragment {
                     }
                 });
 
+                // Cancel button
+                btnCancel.setOnClickListener(v -> {
+                    // Hide the popup
+                    adapter.notifyItemChanged(position); // To reset the item on the screen
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                });
+
                 builder.setView(view1);
                 dialog = builder.create(); // creating our dialog
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.setCancelable(false);
                 dialog.show();
                 // Show rounded corners
                 WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
