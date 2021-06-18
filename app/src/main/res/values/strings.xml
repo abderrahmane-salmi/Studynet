@@ -235,4 +235,8 @@
     <string name="password_too_common">The password is too common</string>
     <string name="language_preference_saved">Language preference saved, restart the application to apply the changes.</string>
     <string name="section_changed_successfully">Section changed successfully</string>
+    <string name="comment">Comment</string>
+    <string name="report">Report</string>
+    <string name="confirm">Confirm</string>
+    <string name="comment_empty_msg">Comment can\'t be empty</string>
 </resources>
