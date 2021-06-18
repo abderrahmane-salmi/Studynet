@@ -12,6 +12,7 @@ import com.salmi.bouchelaghem.studynet.Models.Teacher;
 
 import java.util.List;
 
+import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -86,6 +87,9 @@ public interface StudynetAPI {
     @DELETE("sessions/{id}/")
     Call<ResponseBody> deleteSession(@Path("id") int id, @Header("Authorization") String token);
 
+    @POST("/sessions/report/")
+    Call<ResponseBody> reportSession(@Body JsonObject report, @Header("Authorization") String token);
+
     // *** Homeworks ***
     @GET("homeworks/")
     Call<List<Homework>> getSectionHomeworks(@Query("section") String section, @Header("Authorization") String token);
@@ -120,6 +124,13 @@ public interface StudynetAPI {
     /**Register a student */
     @POST("students/")
     Call<JsonObject> registerStudent(@Body JsonObject student);
+
+    // *** Notifications ***
+    @POST("registerFCM/")
+    Call<ResponseBody> registerFCM(@Body JsonObject fcmToken, @Header("Authorization") String token);
+
+    @POST("unregisterFCM/")
+    Call<ResponseBody> unregisterFCM(@Body JsonObject fcmToken, @Header("Authorization") String token);
 
     // *** User data ***
     /** Get the user data using the token */

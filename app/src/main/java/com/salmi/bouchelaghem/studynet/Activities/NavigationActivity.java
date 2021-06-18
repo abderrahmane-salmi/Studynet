@@ -16,6 +16,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
@@ -84,9 +85,24 @@ public class NavigationActivity extends AppCompatActivity {
         MenuItem btnLogout = binding.navigationView.getMenu().findItem(R.id.nav_logout);
         btnLogout.setOnMenuItemClickListener(item -> {
 
-            Call<ResponseBody> logout = api.logout("Token " + currentUser.getToken());
             loadingDialog.show();
-            logout.enqueue(new logoutCallback());
+            if(currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT))
+            {
+                //This user is a teacher, unregister this device from the backend.
+                //Get the FCM token for this device
+                FirebaseMessaging.getInstance().getToken().addOnSuccessListener(FCMToken -> {
+                    //Send the FCMToken to the backend to enable targeted notifications for this teacher.
+                    JsonObject fcmTokenJson = new JsonObject();
+                    fcmTokenJson.addProperty("FCM_token",FCMToken);
+                    Call<ResponseBody> unregisterFcmCall = api.unregisterFCM(fcmTokenJson,"Token " + currentUser.getToken());
+                    unregisterFcmCall.enqueue(new FCMTokenUnregisterCallback());
+                });
+            }
+            else
+            {
+                Call<ResponseBody> logout = api.logout("Token " + currentUser.getToken());
+                logout.enqueue(new logoutCallback());
+            }
             return true;
         });
     }
@@ -102,7 +118,7 @@ public class NavigationActivity extends AppCompatActivity {
 
                 case Utils.HttpResponses.HTTP_204_NO_CONTENT: //Logout successful.
                 case Utils.HttpResponses.HTTP_401_UNAUTHORIZED: //Expired token, logout anyway since this token cannot be used.
-                    if(currentUser.getUserType() == Utils.STUDENT_ACCOUNT)
+                    if(currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT))
                     {
                         //This user is a student, unsubscribe this device from his section's notifications.
                         String section = currentUser.getCurrentStudent().getSection().getCode();
@@ -114,6 +130,7 @@ public class NavigationActivity extends AppCompatActivity {
                     SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
                     prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,false);
                     prefsEditor.apply();
+
                     //Take the user to the login page.
                     Toast.makeText(NavigationActivity.this, getString(R.string.logout_msg), Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(NavigationActivity.this, LoginActivity.class));
@@ -132,6 +149,22 @@ public class NavigationActivity extends AppCompatActivity {
             Toast.makeText(NavigationActivity.this, getString(R.string.could_not_logout), Toast.LENGTH_LONG).show();
             loadingDialog.dismiss();
 
+        }
+    }
+    public class FCMTokenUnregisterCallback<T> implements Callback<T>
+    {
+
+        @Override
+        public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
+            //Unregistered teacher's FCM token, we can disconnect him.
+            Call<ResponseBody> logout = api.logout("Token " + currentUser.getToken());
+            logout.enqueue(new logoutCallback());
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
+            Toast.makeText(NavigationActivity.this, getString(R.string.could_not_logout), Toast.LENGTH_LONG).show();
+            loadingDialog.dismiss();
         }
     }
 }

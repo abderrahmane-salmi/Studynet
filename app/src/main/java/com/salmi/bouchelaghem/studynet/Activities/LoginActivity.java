@@ -11,6 +11,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Models.Student;
@@ -22,6 +23,7 @@ import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 import com.salmi.bouchelaghem.studynet.databinding.ActivityLoginBinding;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -152,6 +154,14 @@ public class LoginActivity extends AppCompatActivity {
                         if (responseData.has(Utils.TEACHER_ACCOUNT)) {
                             //It's a teacher
                             loginTeacher(responseData.getAsJsonObject(Utils.TEACHER_ACCOUNT));
+                            //Get the FCM token for this device
+                            FirebaseMessaging.getInstance().getToken().addOnSuccessListener(FCMToken -> {
+                                //Send the FCMToken to the backend to enable targeted notifications for this teacher.
+                                JsonObject fcmTokenJson = new JsonObject();
+                                fcmTokenJson.addProperty("FCM_token",FCMToken);
+                                Call<ResponseBody> registerFcmCall = api.registerFCM(fcmTokenJson,"Token " + currentUser.getToken());
+                                registerFcmCall.enqueue(new FCMTokenRegisterCallback<>());
+                            });
                         } else {
                             if (responseData.has(Utils.ADMIN_ACCOUNT)) {
                                 //It's an administrator
@@ -196,5 +206,19 @@ public class LoginActivity extends AppCompatActivity {
         prefsEditor.putString(Utils.SHARED_PREFERENCES_TOKEN, currentUser.getToken());
         prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN, true);
         prefsEditor.apply();
+    }
+
+    public class FCMTokenRegisterCallback<T> implements Callback<T>
+    {
+
+        @Override
+        public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
+            //Do nothing
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
+            //Do nothing, not a critical error
+        }
     }
 }
