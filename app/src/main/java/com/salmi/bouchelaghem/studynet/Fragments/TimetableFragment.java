@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputLayout;
 import com.salmi.bouchelaghem.studynet.Activities.AddClassActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
 import com.salmi.bouchelaghem.studynet.Adapters.SessionsAdapter;
@@ -109,7 +110,7 @@ public class TimetableFragment extends Fragment {
         switch (currentUserType) {
             case Utils.TEACHER_ACCOUNT:  // If the user is a teacher
 
-                if (!filterApplied){
+                if (!filterApplied) {
                     binding.selectSectionMsg.setVisibility(View.VISIBLE);
                 } else {
                     binding.selectSectionMsg.setVisibility(View.GONE);
@@ -180,7 +181,7 @@ public class TimetableFragment extends Fragment {
                 break;
             case Utils.ADMIN_ACCOUNT:  // If the user is an admin
 
-                if (!filterApplied){
+                if (!filterApplied) {
                     binding.selectSectionMsg.setVisibility(View.VISIBLE);
                 } else {
                     binding.selectSectionMsg.setVisibility(View.GONE);
@@ -513,13 +514,12 @@ public class TimetableFragment extends Fragment {
                         builder.setMessage(R.string.are_you_sure);
                         builder.setPositiveButton(R.string.yes, (dialog, which) -> {
                             //Delete the session from the api
-                            Call<ResponseBody> deleteSessionCall = api.deleteSession(currentSession.getId(),"Token " + currentUser.getToken());
+                            Call<ResponseBody> deleteSessionCall = api.deleteSession(currentSession.getId(), "Token " + currentUser.getToken());
                             loadingDialog.show();
                             deleteSessionCall.enqueue(new Callback<ResponseBody>() {
                                 @Override
                                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                                    if(response.code() == Utils.HttpResponses.HTTP_204_NO_CONTENT)
-                                    {
+                                    if (response.code() == Utils.HttpResponses.HTTP_204_NO_CONTENT) {
                                         //The session has been removed from the api, remove it locally
                                         sessions.remove(currentSession);
                                         adapter.getSessions().remove(position);
@@ -533,14 +533,11 @@ public class TimetableFragment extends Fragment {
                                         } else {
                                             binding.textView4.setText(getString(R.string.classes));
                                         }
-                                        if(sessionsCount == 0)
-                                        {
+                                        if (sessionsCount == 0) {
                                             binding.emptyMsg.setVisibility(View.VISIBLE);
                                         }
                                         Toast.makeText(getContext(), getString(R.string.session_deleted_msg), Toast.LENGTH_SHORT).show();
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         Toast.makeText(getContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
                                     }
                                     loadingDialog.dismiss();
@@ -607,8 +604,38 @@ public class TimetableFragment extends Fragment {
             Session currentSession = adapter.getSessions().get(position);
 
             if (direction == ItemTouchHelper.LEFT) { // Swipe left to right <- : Report session
-                Toast.makeText(getContext(), "Report", Toast.LENGTH_SHORT).show();
-                adapter.notifyItemChanged(position); // To reset the item on the screen
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                View view1 = View.inflate(getContext(), R.layout.popup_report_session, null);
+
+                // Init Views
+                TextInputLayout txtReportComment = view1.findViewById(R.id.txtReportComment);
+                MaterialButton btnConfirmReport = view1.findViewById(R.id.btnConfirmReport);
+
+                // Confirm button
+                btnConfirmReport.setOnClickListener(v -> {
+                    @SuppressWarnings("ConstantConditions")
+                    String comment = txtReportComment.getEditText().getText().toString().trim();
+                    if (!comment.isEmpty()) {
+                        // TODO: Send the report notification
+                        // You'll find the session's id in : "currentSession" object
+
+                        // Hide the popup
+                        adapter.notifyItemChanged(position); // To reset the item on the screen
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
+                    } else {
+                        txtReportComment.setError(getString(R.string.comment_empty_msg));
+                    }
+                });
+
+                builder.setView(view1);
+                dialog = builder.create(); // creating our dialog
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+                // Show rounded corners
+                WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                dialog.getWindow().setAttributes(params);
             }
         }
 
@@ -632,18 +659,18 @@ public class TimetableFragment extends Fragment {
             if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
                 sessions = response.body();
 
-                if (firstTime){
+                if (firstTime) {
                     // If its the first time we launch the fragment and its a student then show him today's classes
                     if (currentUserType.equals(Utils.STUDENT_ACCOUNT)) {
                         goToToday();
-                    } else if (currentUserType.equals(Utils.ADMIN_ACCOUNT) || currentUserType.equals(Utils.TEACHER_ACCOUNT)){
+                    } else if (currentUserType.equals(Utils.ADMIN_ACCOUNT) || currentUserType.equals(Utils.TEACHER_ACCOUNT)) {
                         // If its the first time we launch the fragment and its a teacher or an admin then show him first day's classes
                         goToDay1();
                     }
                     firstTime = false;
                 } else {
                     // Show the user the classes he last checked
-                    switch (currentDay){
+                    switch (currentDay) {
                         case 1:
                         case 7: // If its the weekend then show him the classes of the first day of next week
                             goToDay1();
@@ -713,12 +740,12 @@ public class TimetableFragment extends Fragment {
             });
         }
 
-        if (currentUserType.equals(Utils.STUDENT_ACCOUNT)){
+        if (currentUserType.equals(Utils.STUDENT_ACCOUNT)) {
             Student student = currentUser.getCurrentStudent();
             // Get the student's sessions
             getSessions(student.getSection().getCode());
-        } else if (currentUserType.equals(Utils.TEACHER_ACCOUNT) || currentUserType.equals(Utils.ADMIN_ACCOUNT)){
-            if (filterApplied){
+        } else if (currentUserType.equals(Utils.TEACHER_ACCOUNT) || currentUserType.equals(Utils.ADMIN_ACCOUNT)) {
+            if (filterApplied) {
                 getSessions(selectedSection);
             }
         }

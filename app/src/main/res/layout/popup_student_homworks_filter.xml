@@ -2,11 +2,11 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="12dp"
-    app:cardCornerRadius="8dp"
+    android:orientation="vertical"
+    app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,9 +20,9 @@
             android:layout_height="22dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_arrow_down"
             android:layout_marginStart="16dp"
             android:padding="4dp"
+            android:src="@drawable/ic_arrow_down"
             app:layout_constraintBottom_toBottomOf="@id/textView1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/textView1"
@@ -34,41 +34,41 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
             android:fontFamily="@font/tabularasa_regular"
             android:text="@string/filter"
             android:textColor="@color/primary_text_color"
             android:textSize="22sp"
-            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-<!--        Fields-->
+        <!--        Fields-->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout1"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
             android:textColorHint="@color/secondary_text_color"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btnCloseFilter">
 
             <AutoCompleteTextView
                 android:id="@+id/filterHomeworksDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/tabularasa_regular"
                 android:hint="@string/date"
                 android:inputType="none"
-                android:fontFamily="@font/tabularasa_regular"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-<!--        Button-->
+        <!--        Button-->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnApplyFilter"
             android:layout_width="match_parent"
