@@ -80,6 +80,7 @@ public class ChangeSectionFragment extends BottomSheetDialogFragment {
 
                 JsonObject sectionJson = new JsonObject();
                 sectionJson.addProperty("section", section);
+                sectionJson.addProperty("group",group);
                 Call<Section> changeSectionCall = api.changeSection(sectionJson, "Token " + currentUser.getToken());
                 loadingDialog.show();
                 changeSectionCall.enqueue(new Callback<Section>() {
