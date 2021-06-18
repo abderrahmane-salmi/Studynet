@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.Activities.AddClassActivity;
 import com.salmi.bouchelaghem.studynet.Activities.NavigationActivity;
 import com.salmi.bouchelaghem.studynet.Adapters.SessionsAdapter;
@@ -604,6 +605,7 @@ public class TimetableFragment extends Fragment {
             Session currentSession = adapter.getSessions().get(position);
 
             if (direction == ItemTouchHelper.LEFT) { // Swipe left to right <- : Report session
+                adapter.notifyItemChanged(position); // To reset the item on the screen
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 View view1 = View.inflate(getContext(), R.layout.popup_report_session, null);
 
@@ -619,12 +621,13 @@ public class TimetableFragment extends Fragment {
                     if (!comment.isEmpty()) {
                         // TODO: Send the report notification
                         // You'll find the session's id in : "currentSession" object
+                        JsonObject reportJson = new JsonObject();
+                        reportJson.addProperty("id",currentSession.getId());
+                        reportJson.addProperty("comment",comment);
+                        Call<ResponseBody> reportSessionCall = api.reportSession(reportJson,"Token " + currentUser.getToken());
+                        reportSessionCall.enqueue(new ReportSessionCallback<>());
+                        loadingDialog.show();
 
-                        // Hide the popup
-                        adapter.notifyItemChanged(position); // To reset the item on the screen
-                        if (dialog != null) {
-                            dialog.dismiss();
-                        }
                     } else {
                         txtReportComment.setError(getString(R.string.comment_empty_msg));
                     }
@@ -759,6 +762,33 @@ public class TimetableFragment extends Fragment {
             if (filterApplied) {
                 getSessions(selectedSection);
             }
+        }
+    }
+
+    public class ReportSessionCallback<T> implements Callback<T>
+    {
+
+        @Override
+        public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
+            if(response.code() == Utils.HttpResponses.HTTP_200_OK)
+            {
+                // Hide the popup
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+                Toast.makeText(getContext(), getString(R.string.session_reported_successfully), Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Toast.makeText(getContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+            }
+            loadingDialog.dismiss();
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
+            Toast.makeText(getContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            loadingDialog.dismiss();
         }
     }
 }

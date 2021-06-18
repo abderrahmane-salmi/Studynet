@@ -239,4 +239,5 @@
     <string name="report">Report</string>
     <string name="confirm">Confirm</string>
     <string name="comment_empty_msg">Comment can\'t be empty</string>
+    <string name="session_reported_successfully">The session has been reported successfully, the teacher has been notified.</string>
 </resources>

@@ -87,7 +87,7 @@ public interface StudynetAPI {
     @DELETE("sessions/{id}/")
     Call<ResponseBody> deleteSession(@Path("id") int id, @Header("Authorization") String token);
 
-    @POST("/sessions/report/")
+    @POST("sessions/report/")
     Call<ResponseBody> reportSession(@Body JsonObject report, @Header("Authorization") String token);
 
     // *** Homeworks ***
