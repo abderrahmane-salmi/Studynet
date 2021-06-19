@@ -19,7 +19,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonObject;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
@@ -55,7 +54,6 @@ public class SplashActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-
         // Init our api, this will implement the code of all the methods in the interface.
         api = retrofit.create(StudynetAPI.class);
         currentUser = CurrentUser.getInstance();
@@ -85,23 +83,18 @@ public class SplashActivity extends AppCompatActivity {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo network = connectivityManager.getActiveNetworkInfo();
         if (network == null) { // No internet
-
             binding.mainLayout.setBackgroundColor(getColor(R.color.white));
-
             binding.noInternetMsg.setVisibility(View.VISIBLE);
-
         } else {
-
             //Check if the user is already logged in using shared preferences.
             if (sharedPreferences.getBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN, false)) {
                 loadUserData();
             } else {
-                new Handler().postDelayed(()->{
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                new Handler().postDelayed(() -> {
+                    startActivity(new Intent(SplashActivity.this, OnboardingActivity.class));
                     finish();
-                },1000);
+                }, 1000);
             }
-
         }
     }
 
@@ -122,7 +115,7 @@ public class SplashActivity extends AppCompatActivity {
                 switch (response.code()) {
                     case Utils.HttpResponses.HTTP_200_OK:
                         JsonObject responseData = response.body();
-                        if (responseData != null){
+                        if (responseData != null) {
                             if (responseData.has(Utils.STUDENT_ACCOUNT)) {
                                 //It's a student
                                 loadStudent(responseData.getAsJsonObject(Utils.STUDENT_ACCOUNT));
