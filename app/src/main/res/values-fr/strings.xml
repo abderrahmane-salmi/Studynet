@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="days">
+        <item>Samedi</item>
+        <item>Dimanche</item>
+        <item>Lundi</item>
+        <item>Mardi</item>
+        <item>Mercredi</item>
+        <item>Jeudi</item>
+    </string-array>
+
+    <string-array name="homework_filter_values">
+        <item>Tout</item>
+        <item>Hier</item>
+        <item>Aujourd\'hui</item>
+        <item>Demain</item>
+        <item>Cette semaine</item>
+    </string-array>
+
     <string name="app_name">Studynet</string>
     <string name="meeting_link">Lien de la réunion</string>
     <string name="meeting_number">Identifiant de la réunion</string>
@@ -131,4 +148,71 @@
     <string name="no_sections_selected_msg">Aucune section n\'est choisie</string>
     <string name="module2">Module:</string>
     <string name="no_assignments_msg">Aucune affectation</string>
+
+    <string name="new_assignment">Nouvelle affectation</string>
+    <string name="module_type">Type du module</string>
+    <string name="groups">Groupes</string>
+    <string name="assignment_deleted_msg">Affectation supprimé avec succès</string>
+    <string name="session_expired">Votre session a expiré, veuillez vous reconnecter</string>
+    <string name="no_sections_in_department">Aucune section pour ce département</string>
+    <string name="email_msg3">Veuillez utiliser un autre email</string>
+    <string name="loading">Chargement …</string>
+    <string name="logged_in_msg">Connexion réussie</string>
+    <string name="assignment_already_exists">Cette affectation existe déja</string>
+    <string name="email_password_incorrect">Email ou mot de passe incorrecte</string>
+    <string name="select_department_teacher_msg">Veuillez selectionner un département pour voir les enseignants</string>
+    <string name="assignment_added">Affectation ajouté avec succès</string>
+    <string name="no_sections">Aucune section n\'as été trouvé</string>
+    <string name="no_groups">Aucun groupe n\'as été trouvé</string>
+    <string name="endtime_after_starttime">L\'heure de fin doit être après l\'heure de début</string>
+    <string name="time_not_allowed">Une session ne peut pas être crée avant 8h et après 18h</string>
+    <string name="overlapping_sessions">Cette session chevauche une autre session déja existante</string>
+    <string name="session_created">La session a été crée avec succès</string>
+    <string name="edit_your_session_msg">Vous pouvez seulement modifier vos propres sessions</string>
+    <string name="delete_your_session_msg">Vous pouvez seulement supprimer vos propres sessions</string>
+    <string name="signed_up_msg">Compte crée avec succès</string>
+    <string name="general">Generale</string>
+    <string name="about">À propos</string>
+    <string name="change_app_language">Changer le langage de l\'application</string>
+    <string name="key_language">LANGUAGE</string>
+    <string name="report_bugs">Signaler des bugs</string>
+    <string name="report_bugs_msg">Signaler tout bug ou problème que vous avez rencontrer</string>
+    <string name="key_report_bugs">REPORT_BUGS</string>
+    <string name="account">Compte</string>
+    <string name="change_password">Changer le mot de passe</string>
+    <string name="change_password_msg">Changer le mot de passe de votre compte</string>
+    <string name="key_change_password">CHANGE_PASSWORD</string>
+    <string name="logout_all">Déconnecter tout</string>
+    <string name="logout_all_msg">Déconnecter votre compte de toutes les sessions</string>
+    <string name="key_logout_all">LOGOUT_ALL</string>
+    <string name="Homeworks">Devoir</string>
+    <string name="old_password">Ancien mot de passe</string>
+    <string name="new_password">Nouveau mot de passe</string>
+    <string name="confirmation_code">Code de confirmation</string>
+    <string name="empty_code_msg">Le code de confirmation ne doit pas être vide</string>
+    <string name="already_have_a_code">Vous avez dèja un code?</string>
+    <string name="session_updated">Session mise à jour</string>
+    <string name="logout_all_sucess">Déconnexion de toutes les sessions avec succès</string>
+    <string name="homework_created_success">Devoir crée avec succès</string>
+    <string name="delete_your_homework_msg">Vous pouvez seulement supprimer vos propres devoirs</string>
+    <string name="edit_your_homework_msg">Vous pouvez seulement modifier vos propres devoirs</string>
+    <string name="homework_edited_success">Devoir modifié avec succès</string>
+    <string name="saturday">Samedi</string>
+    <string name="key_change_section">CHANGE_SECTION</string>
+    <string name="change_section">Changer de section et de groupe</string>
+    <string name="change_section_msg">Changer votre section et votre groupe</string>
+    <string name="password_changed_successfully">Votre mot de passe à été modifié avec succès</string>
+    <string name="invalid_old_password">L\'ancien mot de passe n\'est pas correcte</string>
+    <string name="old_new_password_same">L\'ancien et le nouveau mot de passes sont identiques</string>
+    <string name="email_does_not_exist">Aucun compte n\'est inscrit avec cet email</string>
+    <string name="password_reset_email_sent">Un email contenant un code de confirmation à été envoyé a votre adresse</string>
+    <string name="invalid_confirmation_code">Code de confirmation incorrecte</string>
+    <string name="password_too_common">Le mot de passe est trop commun</string>
+    <string name="language_preference_saved">Préférence de langage sauvegardé, veuillez relancer l\'application pour appliquer les changements</string>
+    <string name="section_changed_successfully">Votre section à été changé avec succès</string>
+    <string name="comment">Commentaire</string>
+    <string name="report">Signaler</string>
+    <string name="confirm">Confirmer</string>
+    <string name="comment_empty_msg">Le commentaire ne peut pas être vide</string>
+    <string name="session_reported_successfully">La session a été signalé avec succès, l\'enseignant a été notifié</string>
 </resources>
