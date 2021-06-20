@@ -81,8 +81,8 @@
                         android:backgroundTint="@color/white"
                         android:fontFamily="@font/tabularasa_regular"
                         android:hint="@string/first_name"
-                        android:maxLength="30"
                         android:inputType="textPersonName|textCapSentences"
+                        android:maxLength="30"
                         android:textSize="15sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -100,8 +100,8 @@
                         android:backgroundTint="@color/white"
                         android:fontFamily="@font/tabularasa_regular"
                         android:hint="@string/last_name"
-                        android:maxLength="30"
                         android:inputType="textPersonName|textCapCharacters"
+                        android:maxLength="30"
                         android:textSize="15sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -119,8 +119,8 @@
                         android:backgroundTint="@color/white"
                         android:fontFamily="@font/tabularasa_regular"
                         android:hint="@string/email"
-                        android:maxLength="254"
                         android:inputType="textEmailAddress"
+                        android:maxLength="254"
                         android:textSize="15sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -139,8 +139,8 @@
                         android:backgroundTint="@color/white"
                         android:fontFamily="@font/tabularasa_regular"
                         android:hint="@string/password"
-                        android:maxLength="30"
                         android:inputType="textPassword"
+                        android:maxLength="30"
                         android:textSize="15sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -255,18 +255,13 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!--        Buttons-->
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNext"
-            android:layout_width="140dp"
+            android:layout_width="0dp"
             android:layout_height="60dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="36dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginBottom="12dp"
             android:elevation="0dp"
             android:fontFamily="@font/tabularasa_medium"
@@ -276,15 +271,18 @@
             app:cornerRadius="14dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/btnStepBack"
             app:layout_constraintTop_toBottomOf="@id/fieldsLayout"
             app:layout_constraintVertical_bias="1.0" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnStepBack"
-            android:layout_width="140dp"
+            android:layout_width="0dp"
             android:layout_height="60dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="36dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="12dp"
             android:backgroundTint="@color/background_color"
             android:elevation="0dp"
@@ -296,7 +294,8 @@
             android:visibility="invisible"
             app:cornerRadius="14dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintEnd_toStartOf="@+id/btnNext"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/fieldsLayout"
             app:layout_constraintVertical_bias="1.0"
@@ -305,17 +304,17 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnAdd"
-            android:layout_marginBottom="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:stateListAnimator="@null"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="16dp"
             android:elevation="0dp"
             android:src="@drawable/ic_add"
+            android:stateListAnimator="@null"
             android:visibility="gone"
             app:backgroundTint="@color/primary_color"
             app:layout_constraintBottom_toTopOf="@id/btnNext"
-            app:layout_constraintStart_toStartOf="@id/guideline"
-            app:layout_constraintEnd_toEndOf="@id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
             app:tint="@color/white"
             tools:ignore="ContentDescription" />
 
