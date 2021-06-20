@@ -41,6 +41,7 @@ public class NavigationActivity extends AppCompatActivity {
 
     //Loading dialog
     private CustomLoadingDialog loadingDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +50,7 @@ public class NavigationActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
         //Get the shared preferences.
-        sharedPreferences = getApplicationContext().getSharedPreferences(Utils.SHARED_PREFERENCES_USER_DATA,MODE_PRIVATE);
+        sharedPreferences = getApplicationContext().getSharedPreferences(Utils.SHARED_PREFERENCES_USER_DATA, MODE_PRIVATE);
         // Init retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Utils.API_BASE_URL)
@@ -63,17 +64,23 @@ public class NavigationActivity extends AppCompatActivity {
         loadingDialog = new CustomLoadingDialog(this);
         btnFilter = binding.btnFilter;
 
-        if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT)){
-            // If its a teacher then show the teacher's drawer menu
-            binding.navigationView.getMenu().clear();
-            binding.navigationView.inflateMenu(R.menu.drawer_teacher_menu);
-        } else if (currentUser.getUserType().equals(Utils.ADMIN_ACCOUNT)){
-            // If its a admin then show the admin's drawer menu
-            binding.navigationView.getMenu().clear();
-            binding.navigationView.inflateMenu(R.menu.drawer_admin_menu);
+        if (currentUser != null && currentUser.getUserType() != null) {
+            if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT)) {
+                // If its a teacher then show the teacher's drawer menu
+                binding.navigationView.getMenu().clear();
+                binding.navigationView.inflateMenu(R.menu.drawer_teacher_menu);
+            } else if (currentUser.getUserType().equals(Utils.ADMIN_ACCOUNT)) {
+                // If its a admin then show the admin drawer menu
+                binding.navigationView.getMenu().clear();
+                binding.navigationView.inflateMenu(R.menu.drawer_admin_menu);
+            }
+        } else {
+            Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+            // Close the app
+            finishAffinity();
         }
-        // If its a student then the default drawer menu will do
 
+        // If its a student then the default drawer menu will do
         binding.btnOpenDrawer.setOnClickListener(v -> binding.drawerLayout.openDrawer(GravityCompat.START));
 
         NavController navController = Navigation.findNavController(this, R.id.fragment);
@@ -84,42 +91,42 @@ public class NavigationActivity extends AppCompatActivity {
 
         MenuItem btnLogout = binding.navigationView.getMenu().findItem(R.id.nav_logout);
         btnLogout.setOnMenuItemClickListener(item -> {
-
-            loadingDialog.show();
-            if(currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT))
-            {
-                //This user is a teacher, unregister this device from the backend.
-                //Get the FCM token for this device
-                FirebaseMessaging.getInstance().getToken().addOnSuccessListener(FCMToken -> {
-                    //Send the FCMToken to the backend to enable targeted notifications for this teacher.
-                    JsonObject fcmTokenJson = new JsonObject();
-                    fcmTokenJson.addProperty("FCM_token",FCMToken);
-                    Call<ResponseBody> unregisterFcmCall = api.unregisterFCM(fcmTokenJson,"Token " + currentUser.getToken());
-                    unregisterFcmCall.enqueue(new FCMTokenUnregisterCallback());
-                });
-            }
-            else
-            {
-                Call<ResponseBody> logout = api.logout("Token " + currentUser.getToken());
-                logout.enqueue(new logoutCallback());
+            if (currentUser != null && currentUser.getUserType() != null){
+                loadingDialog.show();
+                if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT)) {
+                    //This user is a teacher, unregister this device from the backend.
+                    //Get the FCM token for this device
+                    FirebaseMessaging.getInstance().getToken().addOnSuccessListener(FCMToken -> {
+                        //Send the FCMToken to the backend to enable targeted notifications for this teacher.
+                        JsonObject fcmTokenJson = new JsonObject();
+                        fcmTokenJson.addProperty("FCM_token", FCMToken);
+                        Call<ResponseBody> unregisterFcmCall = api.unregisterFCM(fcmTokenJson, "Token " + currentUser.getToken());
+                        unregisterFcmCall.enqueue(new FCMTokenUnregisterCallback());
+                    });
+                } else {
+                    Call<ResponseBody> logout = api.logout("Token " + currentUser.getToken());
+                    logout.enqueue(new logoutCallback());
+                }
+            } else {
+                // Take the user to the login page.
+                Toast.makeText(NavigationActivity.this, getString(R.string.logout_msg), Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(NavigationActivity.this, LoginActivity.class));
+                finish();
             }
             return true;
         });
     }
 
-    /** Callback logic for the logout process.*/
-    private class logoutCallback implements Callback<ResponseBody>
-    {
-
+    /**
+     * Callback logic for the logout process.
+     */
+    private class logoutCallback implements Callback<ResponseBody> {
         @Override
         public void onResponse(@NonNull Call<ResponseBody> call, Response<ResponseBody> response) {
-            switch(response.code())
-            {
-
+            switch (response.code()) {
                 case Utils.HttpResponses.HTTP_204_NO_CONTENT: //Logout successful.
                 case Utils.HttpResponses.HTTP_401_UNAUTHORIZED: //Expired token, logout anyway since this token cannot be used.
-                    if(currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT))
-                    {
+                    if (currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT)) {
                         //This user is a student, unsubscribe this device from his section's notifications.
                         String section = currentUser.getCurrentStudent().getSection().getCode();
                         FirebaseMessaging.getInstance().unsubscribeFromTopic(section.replace(' ', '_'));
@@ -128,7 +135,7 @@ public class NavigationActivity extends AppCompatActivity {
                     currentUser.logout();
                     //Save that the user is no longer logged in locally.
                     SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
-                    prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,false);
+                    prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN, false);
                     prefsEditor.apply();
 
                     //Take the user to the login page.
@@ -146,14 +153,13 @@ public class NavigationActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-            Toast.makeText(NavigationActivity.this, getString(R.string.could_not_logout), Toast.LENGTH_LONG).show();
+            Toast.makeText(NavigationActivity.this, getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
             loadingDialog.dismiss();
 
         }
     }
-    public class FCMTokenUnregisterCallback<T> implements Callback<T>
-    {
 
+    public class FCMTokenUnregisterCallback<T> implements Callback<T> {
         @Override
         public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
             //Unregistered teacher's FCM token, we can disconnect him.
@@ -163,7 +169,7 @@ public class NavigationActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
-            Toast.makeText(NavigationActivity.this, getString(R.string.could_not_logout), Toast.LENGTH_LONG).show();
+            Toast.makeText(NavigationActivity.this, getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
             loadingDialog.dismiss();
         }
     }

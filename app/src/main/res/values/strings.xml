@@ -151,7 +151,7 @@
     <string name="no_internet_connection">No internet connection</string>
     <string name="try_again">Try again</string>
     <string name="email_taken">This email is already taken</string>
-    <string name="unknown_error">An unknown error occurred</string>
+    <string name="unknown_error">An unknown error occurred, Please try again later.</string>
     <string name="new_teacher">New Teacher</string>
     <string name="grade">Grade</string>
     <string name="update_teacher">Update teacher</string>

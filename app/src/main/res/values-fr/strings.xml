@@ -134,7 +134,7 @@
     <string name="no_internet_connection">Pas de connexion internet</string>
     <string name="try_again">Réessayer</string>
     <string name="email_taken">Cet email est déja utilisé</string>
-    <string name="unknown_error">Une érreur inconnue est survenue</string>
+    <string name="unknown_error">Une érreur inconnue est survenue, Veuillez réessayer plus tard.</string>
     <string name="new_teacher">Nouvel enseignant</string>
     <string name="grade">Grade</string>
     <string name="update_teacher">Mettre à jour l\'enseignant</string>
