@@ -111,6 +111,7 @@ public class TimetableFragment extends Fragment {
         switch (currentUserType) {
             case Utils.TEACHER_ACCOUNT:  // If the user is a teacher
 
+                // If the user didn't choose a section yet then tell him to do so
                 if (!filterApplied) {
                     binding.selectSectionMsg.setVisibility(View.VISIBLE);
                 } else {
@@ -120,7 +121,7 @@ public class TimetableFragment extends Fragment {
                 // Get the current teacher from the app API
                 Teacher teacher = currentUser.getCurrentTeacher();
 
-                // Show the add button
+                // Show the add session button
                 binding.btnAdd.setVisibility(View.VISIBLE);
                 binding.btnAdd.setOnClickListener(v -> {
                     Intent intent = new Intent(context, AddClassActivity.class);
@@ -131,106 +132,49 @@ public class TimetableFragment extends Fragment {
                 // Show and setup the filter
                 context.btnFilter.setVisibility(View.VISIBLE);
                 context.btnFilter.setOnClickListener(v -> {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    View view1 = View.inflate(context, R.layout.popup_sections_filter, null);
-                    // Init Views
-                    ImageView btnCloseFilter = view1.findViewById(R.id.btnCloseFilter);
-                    AutoCompleteTextView filterTimetableSection = view1.findViewById(R.id.filterTimetableSection);
-                    MaterialButton btnApplyFilter = view1.findViewById(R.id.btnApplyFilter);
-
-                    // Init sections list
-                    // Get all the sections
-                    List<String> sections = new ArrayList<>(teacher.getSections());
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sections);
-                    filterTimetableSection.setAdapter(arrayAdapter);
-
-                    if (filterApplied) {
-                        restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
-                    }
-
-                    // Init Buttons
-                    btnApplyFilter.setOnClickListener(v1 -> {
-
-                        if (sectionSelected) {
-
-                            filterApplied = true;
-                            getSessions(selectedSection);
-                            binding.selectSectionMsg.setVisibility(View.GONE);
-                            dialog.dismiss();
-
-                        } else {
-                            Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                    btnCloseFilter.setOnClickListener(v12 -> dialog.dismiss());
-
-                    filterTimetableSection.setOnItemClickListener((parent, view11, position, id) -> {
-                        sectionSelected = true;
-                        selectedSection = sections.get(position);
-                    });
-
-                    builder.setView(view1);
-                    dialog = builder.create(); // creating our dialog
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    dialog.show();
-                    // Show rounded corners
-                    WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-                    dialog.getWindow().setAttributes(params);
-                });
-
-                break;
-            case Utils.ADMIN_ACCOUNT:  // If the user is an admin
-
-                if (!filterApplied) {
-                    binding.selectSectionMsg.setVisibility(View.VISIBLE);
-                } else {
-                    binding.selectSectionMsg.setVisibility(View.GONE);
-                }
-
-                // Show and setup the filter
-                context.btnFilter.setVisibility(View.VISIBLE);
-                context.btnFilter.setOnClickListener(v -> {
-                    if (allSections != null) {
+                    // Show the dialog only once
+                    if (dialog == null || !dialog.isShowing()) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        View view12 = View.inflate(context, R.layout.popup_sections_filter, null);
+                        View view1 = View.inflate(context, R.layout.popup_sections_filter, null);
                         // Init Views
-                        ImageView btnCloseFilter = view12.findViewById(R.id.btnCloseFilter);
-                        AutoCompleteTextView filterTimetableSection = view12.findViewById(R.id.filterTimetableSection);
-                        MaterialButton btnApplyFilter = view12.findViewById(R.id.btnApplyFilter);
+                        ImageView btnCloseFilter = view1.findViewById(R.id.btnCloseFilter);
+                        AutoCompleteTextView filterTimetableSection = view1.findViewById(R.id.filterTimetableSection);
+                        MaterialButton btnApplyFilter = view1.findViewById(R.id.btnApplyFilter);
 
-                        // Init sections spinner
-                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, allSections);
+                        // Init sections list
+                        // Get all the sections
+                        List<String> sections = new ArrayList<>(teacher.getSections());
+                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sections);
                         filterTimetableSection.setAdapter(arrayAdapter);
 
+                        // set the filter values to the last filter applied
                         if (filterApplied) {
-                            restoreFilterState(filterTimetableSection); // set the filter values to the last filter applied
+                            restoreFilterState(filterTimetableSection);
                         }
 
-                        // Init Buttons
-                        btnApplyFilter.setOnClickListener(v13 -> {
-
+                        // Apply button
+                        btnApplyFilter.setOnClickListener(v1 -> {
                             if (sectionSelected) {
-
+                                filterApplied = true;
                                 getSessions(selectedSection);
                                 binding.selectSectionMsg.setVisibility(View.GONE);
                                 dialog.dismiss();
-                                filterApplied = true;
-
                             } else {
                                 Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
                             }
-
                         });
 
-                        btnCloseFilter.setOnClickListener(v14 -> dialog.dismiss());
+                        // Close button
+                        btnCloseFilter.setOnClickListener(v12 -> dialog.dismiss());
 
-                        filterTimetableSection.setOnItemClickListener((parent, view121, position, id) -> {
+                        // Sections spinner
+                        filterTimetableSection.setOnItemClickListener((parent, view11, position, id) -> {
                             sectionSelected = true;
-                            selectedSection = allSections.get(position);
+                            selectedSection = sections.get(position);
                         });
 
-                        builder.setView(view12);
+                        // Show the filter dialog
+                        builder.setView(view1);
                         dialog = builder.create(); // creating our dialog
                         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                         dialog.show();
@@ -241,11 +185,74 @@ public class TimetableFragment extends Fragment {
                 });
 
                 break;
-            case Utils.STUDENT_ACCOUNT: // If the user is a student
+            case Utils.ADMIN_ACCOUNT:  // If the user is an admin
 
+                // If the user didn't choose a section yet then tell him to do so
+                if (!filterApplied) {
+                    binding.selectSectionMsg.setVisibility(View.VISIBLE);
+                } else {
+                    binding.selectSectionMsg.setVisibility(View.GONE);
+                }
+
+                // Show and setup the filter
+                context.btnFilter.setVisibility(View.VISIBLE);
+                context.btnFilter.setOnClickListener(v -> {
+                    if (allSections != null) {
+                        // Show the dialog only once
+                        if (dialog == null || !dialog.isShowing()) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            View view12 = View.inflate(context, R.layout.popup_sections_filter, null);
+                            // Init Views
+                            ImageView btnCloseFilter = view12.findViewById(R.id.btnCloseFilter);
+                            AutoCompleteTextView filterTimetableSection = view12.findViewById(R.id.filterTimetableSection);
+                            MaterialButton btnApplyFilter = view12.findViewById(R.id.btnApplyFilter);
+
+                            // Init sections spinner
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, allSections);
+                            filterTimetableSection.setAdapter(arrayAdapter);
+
+                            // set the filter values to the last filter applied
+                            if (filterApplied) {
+                                restoreFilterState(filterTimetableSection);
+                            }
+
+                            // Apply button
+                            btnApplyFilter.setOnClickListener(v13 -> {
+                                if (sectionSelected) {
+                                    getSessions(selectedSection);
+                                    binding.selectSectionMsg.setVisibility(View.GONE);
+                                    dialog.dismiss();
+                                    filterApplied = true;
+                                } else {
+                                    Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            // Close button
+                            btnCloseFilter.setOnClickListener(v14 -> dialog.dismiss());
+
+                            // Sections spinner
+                            filterTimetableSection.setOnItemClickListener((parent, view121, position, id) -> {
+                                sectionSelected = true;
+                                selectedSection = allSections.get(position);
+                            });
+
+                            // Show the dialog
+                            builder.setView(view12);
+                            dialog = builder.create(); // creating our dialog
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            dialog.show();
+                            // Show rounded corners
+                            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                            dialog.getWindow().setAttributes(params);
+                        }
+                    }
+                });
+
+                break;
+            case Utils.STUDENT_ACCOUNT: // If the user is a student
                 // Hide the filter button
                 context.btnFilter.setVisibility(View.GONE);
-
                 break;
         }
 
@@ -268,17 +275,45 @@ public class TimetableFragment extends Fragment {
         return view;
     }
 
-    private void restoreFilterState(AutoCompleteTextView filter) {
-        filter.setText(selectedSection, false);
-    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        // If its an admin then get all sections to setup the filter
+        if (currentUserType.equals(Utils.ADMIN_ACCOUNT) && firstTime) {
+            Call<List<Section>> call = api.getAllSections();
+            call.enqueue(new Callback<List<Section>>() {
+                @Override
+                public void onResponse(@NonNull Call<List<Section>> call, @NonNull Response<List<Section>> response) {
+                    if (response.isSuccessful()) {
+                        List<Section> sectionsList = response.body();
+                        allSections = new ArrayList<>();
+                        if (sectionsList != null) {
+                            // Get names
+                            for (Section sec : sectionsList) {
+                                allSections.add(sec.getCode());
+                            }
+                        }
+                    } else {
+                        Toast.makeText(getContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-    private void getSessions(String sectionCode) {
-        // Start loading animation
-        binding.loadingAnimation.setVisibility(View.VISIBLE);
-        binding.loadingAnimation.playAnimation();
-        // Get all the sessions for this section
-        Call<List<Session>> getSectionSessionsCall = api.getSectionSessions(sectionCode, "Token " + currentUser.getToken());
-        getSectionSessionsCall.enqueue(new getSectionSessionsCallback());
+                @Override
+                public void onFailure(@NonNull Call<List<Section>> call, @NonNull Throwable t) {
+                    Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        if (currentUserType.equals(Utils.STUDENT_ACCOUNT)) {
+            Student student = currentUser.getCurrentStudent();
+            // Get the student's sessions
+            getSessions(student.getSection().getCode());
+        } else if (currentUserType.equals(Utils.TEACHER_ACCOUNT) || currentUserType.equals(Utils.ADMIN_ACCOUNT)) {
+            if (filterApplied) {
+                getSessions(selectedSection);
+            }
+        }
     }
 
     private void initRecView() {
@@ -299,42 +334,12 @@ public class TimetableFragment extends Fragment {
         }
     }
 
-    private void showTodaySessions(int today) {
-        List<Session> todaySessions = new ArrayList<>();
-        int sessionsCount = 0;
-        if (!sessions.isEmpty()) {
-            for (Session session : sessions) {
-                // Get only today's sessions
-                if (session.getDay() == today) {
-                    todaySessions.add(session);
-                    sessionsCount++;
-                }
-            }
-
-            if (!todaySessions.isEmpty()) {
-                // Show the sessions in the rec view
-                adapter.setSessions(todaySessions);
-                binding.classesRecView.setAdapter(adapter);
-                binding.classesRecView.setVisibility(View.VISIBLE);
-                binding.emptyMsg.setVisibility(View.GONE);
-            } else {
-                binding.classesRecView.setVisibility(View.GONE);
-                binding.emptyMsg.setVisibility(View.VISIBLE);
-            }
-        } else {
-            binding.classesRecView.setVisibility(View.GONE);
-            binding.emptyMsg.setVisibility(View.VISIBLE);
-        }
-
-        // Show the sessions counter
-        if (sessionsCount == 1) { // if its 1 then show the word "class" not "classes"
-            binding.textView4.setText(getString(R.string.class_1));
-        } else {
-            binding.textView4.setText(getString(R.string.classes));
-        }
-        binding.txtClassesCount.setText(String.valueOf(sessionsCount));
+    // Filter methods
+    private void restoreFilterState(AutoCompleteTextView filter) {
+        filter.setText(selectedSection, false);
     }
 
+    /* Go to day X methods */
     private void goToToday() {
         // Used ViewTreeObserver to wait for the UI to be sized and then we can get the the view's width
         binding.day2.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -495,7 +500,133 @@ public class TimetableFragment extends Fragment {
         }
     }
 
-    // Swipe to delete and edit in the recycler view
+    /* Sessions methods */
+    private void getSessions(String sectionCode) {
+        // Start loading animation
+        binding.loadingAnimation.setVisibility(View.VISIBLE);
+        binding.loadingAnimation.playAnimation();
+        // Get all the sessions for this section
+        Call<List<Session>> getSectionSessionsCall = api.getSectionSessions(sectionCode, "Token " + currentUser.getToken());
+        getSectionSessionsCall.enqueue(new getSectionSessionsCallback());
+    }
+
+    private void showTodaySessions(int today) {
+        List<Session> todaySessions = new ArrayList<>();
+        int sessionsCount = 0;
+        if (!sessions.isEmpty()) {
+            for (Session session : sessions) {
+                // Get only today's sessions
+                if (session.getDay() == today) {
+                    todaySessions.add(session);
+                    sessionsCount++;
+                }
+            }
+
+            if (!todaySessions.isEmpty()) {
+                // Show the sessions in the rec view
+                adapter.setSessions(todaySessions);
+                binding.classesRecView.setAdapter(adapter);
+                binding.classesRecView.setVisibility(View.VISIBLE);
+                binding.emptyMsg.setVisibility(View.GONE);
+            } else {
+                binding.classesRecView.setVisibility(View.GONE);
+                binding.emptyMsg.setVisibility(View.VISIBLE);
+            }
+        } else {
+            binding.classesRecView.setVisibility(View.GONE);
+            binding.emptyMsg.setVisibility(View.VISIBLE);
+        }
+
+        // Show the sessions counter
+        if (sessionsCount == 1) { // if its 1 then show the word "class" not "classes"
+            binding.textView4.setText(getString(R.string.class_1));
+        } else {
+            binding.textView4.setText(getString(R.string.classes));
+        }
+        binding.txtClassesCount.setText(String.valueOf(sessionsCount));
+    }
+
+    private class getSectionSessionsCallback implements Callback<List<Session>> {
+        @Override
+        public void onResponse(@NonNull Call<List<Session>> call, Response<List<Session>> response) {
+            if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
+                sessions = response.body();
+
+                if (firstTime) {
+                    // If its the first time we launch the fragment and its a student then show him today's classes
+                    if (currentUserType.equals(Utils.STUDENT_ACCOUNT)) {
+                        goToToday();
+                    } else if (currentUserType.equals(Utils.ADMIN_ACCOUNT) || currentUserType.equals(Utils.TEACHER_ACCOUNT)) {
+                        // If its the first time we launch the fragment and its a teacher or an admin then show him first day's classes
+                        goToDay1();
+                    }
+                    firstTime = false;
+                } else {
+                    // Show the user the classes he last checked
+                    switch (currentDay) {
+                        case 1:
+                        case 7: // If its the weekend then show him the classes of the first day of next week
+                            goToDay1();
+                            break;
+                        case 2:
+                            goToDay2();
+                            break;
+                        case 3:
+                            goToDay3();
+                            break;
+                        case 4:
+                            goToDay4();
+                            break;
+                        case 5:
+                            goToDay5();
+                            break;
+                        case 6:
+                            goToDay6();
+                            break;
+                    }
+                }
+
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+            }
+            // Stop loading animation
+            binding.loadingAnimation.setVisibility(View.GONE);
+            binding.loadingAnimation.cancelAnimation();
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<List<Session>> call, @NonNull Throwable t) {
+            // Stop loading animation
+            binding.loadingAnimation.setVisibility(View.GONE);
+            binding.loadingAnimation.cancelAnimation();
+            Toast.makeText(getContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public class ReportSessionCallback<T> implements Callback<T> {
+
+        @Override
+        public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
+            if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
+                // Hide the popup
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+                Toast.makeText(getContext(), getString(R.string.session_reported_successfully), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+            }
+            loadingDialog.dismiss();
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
+            Toast.makeText(getContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
+            loadingDialog.dismiss();
+        }
+    }
+
+    /* Swipe to delete and edit in the recycler view call backs */
     ItemTouchHelper.SimpleCallback teacherCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -504,7 +635,6 @@ public class TimetableFragment extends Fragment {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
             int position = viewHolder.getAdapterPosition();
             Session currentSession = adapter.getSessions().get(position);
 
@@ -579,7 +709,6 @@ public class TimetableFragment extends Fragment {
 
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
             new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                     .addSwipeLeftBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red))
                     .addSwipeLeftActionIcon(R.drawable.ic_delete)
@@ -587,7 +716,6 @@ public class TimetableFragment extends Fragment {
                     .addSwipeRightActionIcon(R.drawable.ic_modify)
                     .create()
                     .decorate();
-
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     };
@@ -600,7 +728,6 @@ public class TimetableFragment extends Fragment {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
             int position = viewHolder.getAdapterPosition();
             Session currentSession = adapter.getSessions().get(position);
 
@@ -622,9 +749,9 @@ public class TimetableFragment extends Fragment {
                         // TODO: Send the report notification
                         // You'll find the session's id in : "currentSession" object
                         JsonObject reportJson = new JsonObject();
-                        reportJson.addProperty("id",currentSession.getId());
-                        reportJson.addProperty("comment",comment);
-                        Call<ResponseBody> reportSessionCall = api.reportSession(reportJson,"Token " + currentUser.getToken());
+                        reportJson.addProperty("id", currentSession.getId());
+                        reportJson.addProperty("comment", comment);
+                        Call<ResponseBody> reportSessionCall = api.reportSession(reportJson, "Token " + currentUser.getToken());
                         reportSessionCall.enqueue(new ReportSessionCallback<>());
                         loadingDialog.show();
 
@@ -655,7 +782,6 @@ public class TimetableFragment extends Fragment {
 
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
             new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                     .addSwipeLeftBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red))
                     .addSwipeLeftActionIcon(R.drawable.ic_report)
@@ -665,130 +791,4 @@ public class TimetableFragment extends Fragment {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     };
-
-    private class getSectionSessionsCallback implements Callback<List<Session>> {
-
-        @Override
-        public void onResponse(@NonNull Call<List<Session>> call, Response<List<Session>> response) {
-            if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
-                sessions = response.body();
-
-                if (firstTime) {
-                    // If its the first time we launch the fragment and its a student then show him today's classes
-                    if (currentUserType.equals(Utils.STUDENT_ACCOUNT)) {
-                        goToToday();
-                    } else if (currentUserType.equals(Utils.ADMIN_ACCOUNT) || currentUserType.equals(Utils.TEACHER_ACCOUNT)) {
-                        // If its the first time we launch the fragment and its a teacher or an admin then show him first day's classes
-                        goToDay1();
-                    }
-                    firstTime = false;
-                } else {
-                    // Show the user the classes he last checked
-                    switch (currentDay) {
-                        case 1:
-                        case 7: // If its the weekend then show him the classes of the first day of next week
-                            goToDay1();
-                            break;
-                        case 2:
-                            goToDay2();
-                            break;
-                        case 3:
-                            goToDay3();
-                            break;
-                        case 4:
-                            goToDay4();
-                            break;
-                        case 5:
-                            goToDay5();
-                            break;
-                        case 6:
-                            goToDay6();
-                            break;
-                    }
-                }
-
-            } else {
-                Toast.makeText(getActivity(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
-            }
-            // Stop loading animation
-            binding.loadingAnimation.setVisibility(View.GONE);
-            binding.loadingAnimation.cancelAnimation();
-        }
-
-        @Override
-        public void onFailure(@NonNull Call<List<Session>> call, @NonNull Throwable t) {
-            // Stop loading animation
-            binding.loadingAnimation.setVisibility(View.GONE);
-            binding.loadingAnimation.cancelAnimation();
-            Toast.makeText(getContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // If its an admin then get all sections to setup the filter
-        if (currentUserType.equals(Utils.ADMIN_ACCOUNT) && firstTime) {
-            Call<List<Section>> call = api.getAllSections();
-            call.enqueue(new Callback<List<Section>>() {
-                @Override
-                public void onResponse(@NonNull Call<List<Section>> call, @NonNull Response<List<Section>> response) {
-                    if (response.isSuccessful()) {
-                        List<Section> sectionsList = response.body();
-                        allSections = new ArrayList<>();
-                        if (sectionsList != null) {
-                            // Get names
-                            for (Section sec : sectionsList) {
-                                allSections.add(sec.getCode());
-                            }
-                        }
-                    } else {
-                        Toast.makeText(getContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<List<Section>> call, @NonNull Throwable t) {
-                    Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-        if (currentUserType.equals(Utils.STUDENT_ACCOUNT)) {
-            Student student = currentUser.getCurrentStudent();
-            // Get the student's sessions
-            getSessions(student.getSection().getCode());
-        } else if (currentUserType.equals(Utils.TEACHER_ACCOUNT) || currentUserType.equals(Utils.ADMIN_ACCOUNT)) {
-            if (filterApplied) {
-                getSessions(selectedSection);
-            }
-        }
-    }
-
-    public class ReportSessionCallback<T> implements Callback<T>
-    {
-
-        @Override
-        public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
-            if(response.code() == Utils.HttpResponses.HTTP_200_OK)
-            {
-                // Hide the popup
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-                Toast.makeText(getContext(), getString(R.string.session_reported_successfully), Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                Toast.makeText(getContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
-            }
-            loadingDialog.dismiss();
-        }
-
-        @Override
-        public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
-            Toast.makeText(getContext(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
-            loadingDialog.dismiss();
-        }
-    }
 }
