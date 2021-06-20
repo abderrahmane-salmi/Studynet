@@ -252,12 +252,19 @@ public class HomeworksFragment extends Fragment {
 
                     // Init Buttons
                     btnApplyFilter.setOnClickListener(v15 -> {
-                        if (dateSelected){
-                            switch (filteredDatePosition){
+                        if (dateSelected) {
+                            switch (filteredDatePosition) {
                                 case 0:
                                     //Get all homeworks
                                     adapter.setHomeworks(homeworks);
                                     binding.homeworksRecView.setAdapter(adapter);
+                                    if (!homeworks.isEmpty()) {
+                                        binding.homeworksRecView.setVisibility(View.VISIBLE);
+                                        binding.emptyMsg.setVisibility(View.GONE);
+                                    } else {
+                                        binding.homeworksRecView.setVisibility(View.GONE);
+                                        binding.emptyMsg.setVisibility(View.VISIBLE);
+                                    }
                                     break;
                                 case 1:
                                     //Get yesterday's homeworks
@@ -393,27 +400,25 @@ public class HomeworksFragment extends Fragment {
                         builder.setMessage(R.string.are_you_sure);
                         builder.setPositiveButton(R.string.yes, (dialog, which) -> {
                             //Delete the homework
-                            Call<ResponseBody> deleteHomeworkCall = api.deleteHomework(currentHomework.getId(),"Token " + currentUser.getToken());
+                            Call<ResponseBody> deleteHomeworkCall = api.deleteHomework(currentHomework.getId(), "Token " + currentUser.getToken());
                             loadingDialog.show();
                             deleteHomeworkCall.enqueue(new Callback<ResponseBody>() {
                                 @Override
                                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                                    if(response.code() == Utils.HttpResponses.HTTP_204_NO_CONTENT)
-                                    {
+                                    if (response.code() == Utils.HttpResponses.HTTP_204_NO_CONTENT) {
                                         //Homework successfully deleted
                                         Toast.makeText(getActivity(), getString(R.string.homework_deleted_msg), Toast.LENGTH_SHORT).show();
                                         homeworks.remove(currentHomework);
                                         adapter.getHomeworks().remove(currentHomework);
                                         adapter.notifyItemRemoved(position);
                                         Toast.makeText(getContext(), getString(R.string.homework_deleted_msg), Toast.LENGTH_SHORT).show();
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         Toast.makeText(getActivity(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
                                         adapter.notifyItemRemoved(position);
                                     }
                                     loadingDialog.dismiss();
                                 }
+
                                 @Override
                                 public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                                     Toast.makeText(getActivity(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
@@ -429,8 +434,7 @@ public class HomeworksFragment extends Fragment {
                         });
                         builder.create().show();
                         break;
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getContext(), getString(R.string.delete_your_homework_msg), Toast.LENGTH_SHORT).show();
                         adapter.notifyItemChanged(position); // To reset the item on the screen
                     }
@@ -443,9 +447,7 @@ public class HomeworksFragment extends Fragment {
                         startActivity(intent);
                         adapter.notifyItemChanged(position); // To reset the item on the screen
                         break;
-                    }
-                    else
-                    {
+                    } else {
                         Toast.makeText(getContext(), getString(R.string.edit_your_homework_msg), Toast.LENGTH_SHORT).show();
                         adapter.notifyItemChanged(position); // To reset the item on the screen
                     }
@@ -508,33 +510,42 @@ public class HomeworksFragment extends Fragment {
         }
     }
 
-    private void filterHomeworksPlusDays(int days)
-    {
+    /* Filter homeworks by date methods */
+    private void filterHomeworksPlusDays(int days) {
         LocalDate today = LocalDate.now();
         filteredHomeworks.clear();
-        for(Homework homework:homeworks)
-        {
-            if(homework.getLocalDateDueDate().equals(today.plusDays(days)))
-            {
+        for (Homework homework : homeworks) {
+            if (homework.getLocalDateDueDate().equals(today.plusDays(days))) {
                 filteredHomeworks.add(homework);
             }
         }
         adapter.setHomeworks(filteredHomeworks);
         binding.homeworksRecView.setAdapter(adapter);
+        if (!filteredHomeworks.isEmpty()) {
+            binding.homeworksRecView.setVisibility(View.VISIBLE);
+            binding.emptyMsg.setVisibility(View.GONE);
+        } else {
+            binding.homeworksRecView.setVisibility(View.GONE);
+            binding.emptyMsg.setVisibility(View.VISIBLE);
+        }
     }
 
-    private void filterHomeworksThisWeek()
-    {
+    private void filterHomeworksThisWeek() {
         LocalDate today = LocalDate.now();
         filteredHomeworks.clear();
-        for(Homework homework:homeworks)
-        {
-            if(homework.getLocalDateDueDate().isBefore(today.plusWeeks(1)) && homework.getLocalDateDueDate().isAfter(today.minusDays(1)))
-            {
+        for (Homework homework : homeworks) {
+            if (homework.getLocalDateDueDate().isBefore(today.plusWeeks(1)) && homework.getLocalDateDueDate().isAfter(today.minusDays(1))) {
                 filteredHomeworks.add(homework);
             }
         }
         adapter.setHomeworks(filteredHomeworks);
         binding.homeworksRecView.setAdapter(adapter);
+        if (!filteredHomeworks.isEmpty()) {
+            binding.homeworksRecView.setVisibility(View.VISIBLE);
+            binding.emptyMsg.setVisibility(View.GONE);
+        } else {
+            binding.homeworksRecView.setVisibility(View.GONE);
+            binding.emptyMsg.setVisibility(View.VISIBLE);
+        }
     }
 }
