@@ -42,10 +42,15 @@ public class SubjectDetailsFragment extends BottomSheetDialogFragment {
         if (module.getTeachers().size() > 1){
             binding.textView1.setText(getString(R.string.teachers));
         }
-        binding.txtSubjectTeacher.setText("");
-        for (int i=0; i<module.getTeachers().size()-1; i++){
-            binding.txtSubjectTeacher.append(module.getTeachers().get(i) + ", ");
+        if(module.getTeachers().size() > 0) {
+            binding.txtSubjectTeacher.setText("");
+            for (int i = 0; i < module.getTeachers().size() - 1; i++) {
+                binding.txtSubjectTeacher.append(module.getTeachers().get(i) + '\n');
+            }
+            binding.txtSubjectTeacher.append(module.getTeachers().get(module.getTeachers().size() - 1));
         }
-        binding.txtSubjectTeacher.append(module.getTeachers().get(module.getTeachers().size()-1));
+        else {
+            binding.txtSubjectTeacher.setText(getString(R.string.no_teachers_msg));
+        }
     }
 }

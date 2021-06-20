@@ -17,7 +17,6 @@
         <item>Cette semaine</item>
     </string-array>
 
-    <string name="app_name">Studynet</string>
     <string name="meeting_link">Lien de la réunion</string>
     <string name="meeting_number">Identifiant de la réunion</string>
     <string name="meeting_password">Mot de passe de la réunion</string>
@@ -56,7 +55,6 @@
     <string name="due_date">Date limite</string>
     <string name="due_time">Heure limite</string>
     <string name="notes">Notes</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="no_subjects_msg">Pas de modules</string>
     <string name="subject_details">Détails du module</string>
     <string name="no_teachers_msg">Pas d\'enseignants</string>
@@ -65,9 +63,7 @@
     <string name="teacher_details">Détails de l\'enseignant</string>
     <string name="close">FERMER</string>
     <string name="contact1">Contact:</string>
-    <string name="developer_email1">abderrahmane.salmi.pro@gmail.com</string>
     <string name="developer_2">Développeur 2:</string>
-    <string name="developer_email2">bouchlaghem@gmail.com</string>
     <string name="developer_1">Développeur 1:</string>
     <string name="logout_msg">Déconnexion réussie</string>
     <string name="time_table">Calendrier</string>
@@ -174,17 +170,13 @@
     <string name="general">Generale</string>
     <string name="about">À propos</string>
     <string name="change_app_language">Changer le langage de l\'application</string>
-    <string name="key_language">LANGUAGE</string>
     <string name="report_bugs">Signaler des bugs</string>
     <string name="report_bugs_msg">Signaler tout bug ou problème que vous avez rencontrer</string>
-    <string name="key_report_bugs">REPORT_BUGS</string>
     <string name="account">Compte</string>
     <string name="change_password">Changer le mot de passe</string>
     <string name="change_password_msg">Changer le mot de passe de votre compte</string>
-    <string name="key_change_password">CHANGE_PASSWORD</string>
     <string name="logout_all">Déconnecter tout</string>
     <string name="logout_all_msg">Déconnecter votre compte de toutes les sessions</string>
-    <string name="key_logout_all">LOGOUT_ALL</string>
     <string name="Homeworks">Devoir</string>
     <string name="old_password">Ancien mot de passe</string>
     <string name="new_password">Nouveau mot de passe</string>
@@ -198,7 +190,6 @@
     <string name="edit_your_homework_msg">Vous pouvez seulement modifier vos propres devoirs</string>
     <string name="homework_edited_success">Devoir modifié avec succès</string>
     <string name="saturday">Samedi</string>
-    <string name="key_change_section">CHANGE_SECTION</string>
     <string name="change_section">Changer de section et de groupe</string>
     <string name="change_section_msg">Changer votre section et votre groupe</string>
     <string name="password_changed_successfully">Votre mot de passe à été modifié avec succès</string>

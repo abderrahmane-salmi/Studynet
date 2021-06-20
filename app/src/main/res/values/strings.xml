@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Studynet</string>
+    <string name="app_name" translatable="false">Studynet</string>
 
     <string-array name="days">
         <item>Saturday</item>
@@ -74,7 +74,6 @@
     <string name="due_date">Due Date</string>
     <string name="due_time">Due Time</string>
     <string name="notes">Notes</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="no_subjects_msg">No Subjects</string>
     <string name="subject_details">Subject Details</string>
     <string name="no_teachers_msg">No Teachers</string>
@@ -83,9 +82,9 @@
     <string name="teacher_details">Teacher Details</string>
     <string name="close">CLOSE</string>
     <string name="contact1">Contact:</string>
-    <string name="developer_email1">abderrahmane.salmi.pro@gmail.com</string>
+    <string name="developer_email1" translatable="false">abderrahmane.salmi.pro@gmail.com</string>
     <string name="developer_2">Developer 2:</string>
-    <string name="developer_email2">bouchlaghem@gmail.com</string>
+    <string name="developer_email2" translatable="false">bouchlaghemyanis7@gmail.com</string>
     <string name="developer_1">Developer 1:</string>
     <string name="logout_msg">You have logged out successfully</string>
     <string name="time_table">Time Table</string>
@@ -191,17 +190,17 @@
     <string name="general">General</string>
     <string name="about">About</string>
     <string name="change_app_language">Change the app\'s language</string>
-    <string name="key_language">LANGUAGE</string>
+    <string name="key_language" translatable="false">LANGUAGE</string>
     <string name="report_bugs">Report bugs</string>
     <string name="report_bugs_msg">Report any bugs or issues you\'ve encountered</string>
-    <string name="key_report_bugs">REPORT_BUGS</string>
+    <string name="key_report_bugs" translatable="false">REPORT_BUGS</string>
     <string name="account">Account</string>
     <string name="change_password">Change password</string>
     <string name="change_password_msg">Change your account\'s password</string>
-    <string name="key_change_password">CHANGE_PASSWORD</string>
+    <string name="key_change_password" translatable="false">CHANGE_PASSWORD</string>
     <string name="logout_all">Logout all</string>
     <string name="logout_all_msg">Logout from all your logged in sessions</string>
-    <string name="key_logout_all">LOGOUT_ALL</string>
+    <string name="key_logout_all" translatable="false">LOGOUT_ALL</string>
     <string name="Homeworks">Homeworks</string>
     <string name="old_password">Old password</string>
     <string name="new_password">New password</string>
@@ -215,7 +214,7 @@
     <string name="edit_your_homework_msg">You can only edit your own homeworks.</string>
     <string name="homework_edited_success">Homework updated successfully</string>
     <string name="saturday">Saturday</string>
-    <string name="key_change_section">CHANGE_SECTION</string>
+    <string name="key_change_section" translatable="false">CHANGE_SECTION</string>
     <string name="change_section">Change section and group</string>
     <string name="change_section_msg">Change your section and your group</string>
     <string name="password_changed_successfully">Your password has been changed successfully</string>
