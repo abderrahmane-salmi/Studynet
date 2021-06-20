@@ -152,7 +152,7 @@
     <string name="session_expired">Votre session a expiré, veuillez vous reconnecter</string>
     <string name="no_sections_in_department">Aucune section pour ce département</string>
     <string name="email_msg3">Veuillez utiliser un autre email</string>
-    <string name="loading">Chargement …</string>
+    <string name="loading">Chargement…</string>
     <string name="logged_in_msg">Connexion réussie</string>
     <string name="assignment_already_exists">Cette affectation existe déja</string>
     <string name="email_password_incorrect">Email ou mot de passe incorrecte</string>
