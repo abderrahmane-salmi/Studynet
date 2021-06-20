@@ -57,7 +57,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="36dp"
         android:layout_marginEnd="36dp"
-        android:enabled="false"
         android:textColorHint="@color/secondary_text_color"
         app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
