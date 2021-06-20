@@ -109,7 +109,7 @@ public class TeachersFragment extends Fragment {
             context.btnFilter.setOnClickListener(v -> {
                 if (departments != null) {
                     // Show the filter just once
-                    if (dialog != null && !dialog.isShowing()){
+                    if (dialog == null || !dialog.isShowing()) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                         View view12 = View.inflate(context, R.layout.popup_admin_teachers_filter, null);
                         // Init Views
