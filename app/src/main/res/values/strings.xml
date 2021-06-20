@@ -24,7 +24,7 @@
         <item>MCB</item>
         <item>MCA</item>
         <item>PR</item>
-        <item>Doc</item>
+        <item>DOC</item>
     </string-array>
 
     <string-array name="languages">
