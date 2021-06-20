@@ -125,52 +125,55 @@ public class HomeworksFragment extends Fragment {
 
                 // setup the filter
                 context.btnFilter.setOnClickListener(v -> {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    View view1 = View.inflate(context, R.layout.popup_sections_filter, null);
-                    // Init Views
-                    ImageView btnCloseFilter = view1.findViewById(R.id.btnCloseFilter);
-                    AutoCompleteTextView filterTimetableSection = view1.findViewById(R.id.filterTimetableSection);
-                    MaterialButton btnApplyFilter = view1.findViewById(R.id.btnApplyFilter);
+                    // Show the dialog only once
+                    if (dialog == null || !dialog.isShowing()) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        View view1 = View.inflate(context, R.layout.popup_sections_filter, null);
+                        // Init Views
+                        ImageView btnCloseFilter = view1.findViewById(R.id.btnCloseFilter);
+                        AutoCompleteTextView filterTimetableSection = view1.findViewById(R.id.filterTimetableSection);
+                        MaterialButton btnApplyFilter = view1.findViewById(R.id.btnApplyFilter);
 
-                    // Init sections list
-                    // Get all the sections
-                    List<String> sections = new ArrayList<>(teacher.getSections());
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sections);
-                    filterTimetableSection.setAdapter(arrayAdapter);
+                        // Init sections list
+                        // Get all the sections
+                        List<String> sections = new ArrayList<>(teacher.getSections());
+                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, sections);
+                        filterTimetableSection.setAdapter(arrayAdapter);
 
-                    if (filterApplied) {
-                        restoreSectionsFilterState(filterTimetableSection); // set the filter values to the last filter applied
-                    }
-
-                    // Init Buttons
-                    btnApplyFilter.setOnClickListener(v1 -> {
-
-                        if (sectionSelected) {
-
-                            filterApplied = true;
-                            getHomeworks(selectedSection);
-                            binding.selectSectionMsg.setVisibility(View.GONE);
-                            dialog.dismiss();
-
-                        } else {
-                            Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
+                        // set the filter values to the last filter applied
+                        if (filterApplied) {
+                            restoreSectionsFilterState(filterTimetableSection);
                         }
-                    });
 
-                    btnCloseFilter.setOnClickListener(v12 -> dialog.dismiss());
+                        // Apply button
+                        btnApplyFilter.setOnClickListener(v1 -> {
+                            if (sectionSelected) {
+                                filterApplied = true;
+                                getHomeworks(selectedSection);
+                                binding.selectSectionMsg.setVisibility(View.GONE);
+                                dialog.dismiss();
+                            } else {
+                                Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
-                    filterTimetableSection.setOnItemClickListener((parent, view11, position, id) -> {
-                        sectionSelected = true;
-                        selectedSection = sections.get(position);
-                    });
+                        // Close
+                        btnCloseFilter.setOnClickListener(v12 -> dialog.dismiss());
 
-                    builder.setView(view1);
-                    dialog = builder.create(); // creating our dialog
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    dialog.show();
-                    // Show rounded corners
-                    WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-                    dialog.getWindow().setAttributes(params);
+                        // Sections spinner
+                        filterTimetableSection.setOnItemClickListener((parent, view11, position, id) -> {
+                            sectionSelected = true;
+                            selectedSection = sections.get(position);
+                        });
+
+                        builder.setView(view1);
+                        dialog = builder.create(); // creating our dialog
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialog.show();
+                        // Show rounded corners
+                        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                        dialog.getWindow().setAttributes(params);
+                    }
                 });
                 break;
             case Utils.ADMIN_ACCOUNT:
@@ -180,51 +183,53 @@ public class HomeworksFragment extends Fragment {
                 // Setup filter
                 context.btnFilter.setOnClickListener(v -> {
                     if (allSections != null) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        View view12 = View.inflate(context, R.layout.popup_sections_filter, null);
-                        // Init Views
-                        ImageView btnCloseFilter = view12.findViewById(R.id.btnCloseFilter);
-                        AutoCompleteTextView filterTimetableSection = view12.findViewById(R.id.filterTimetableSection);
-                        MaterialButton btnApplyFilter = view12.findViewById(R.id.btnApplyFilter);
+                        if (dialog == null || !dialog.isShowing()) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            View view12 = View.inflate(context, R.layout.popup_sections_filter, null);
+                            // Init Views
+                            ImageView btnCloseFilter = view12.findViewById(R.id.btnCloseFilter);
+                            AutoCompleteTextView filterTimetableSection = view12.findViewById(R.id.filterTimetableSection);
+                            MaterialButton btnApplyFilter = view12.findViewById(R.id.btnApplyFilter);
 
-                        // Init sections spinner
-                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, allSections);
-                        filterTimetableSection.setAdapter(arrayAdapter);
+                            // Init sections spinner
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, allSections);
+                            filterTimetableSection.setAdapter(arrayAdapter);
 
-                        if (filterApplied) {
-                            restoreSectionsFilterState(filterTimetableSection); // set the filter values to the last filter applied
-                        }
-
-                        // Init Buttons
-                        btnApplyFilter.setOnClickListener(v13 -> {
-
-                            if (sectionSelected) {
-
-                                getHomeworks(selectedSection);
-                                binding.selectSectionMsg.setVisibility(View.GONE);
-                                dialog.dismiss();
-                                filterApplied = true;
-
-                            } else {
-                                Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
+                            // set the filter values to the last filter applied
+                            if (filterApplied) {
+                                restoreSectionsFilterState(filterTimetableSection);
                             }
 
-                        });
+                            // Init Buttons
+                            btnApplyFilter.setOnClickListener(v13 -> {
+                                if (sectionSelected) {
+                                    getHomeworks(selectedSection);
+                                    binding.selectSectionMsg.setVisibility(View.GONE);
+                                    dialog.dismiss();
+                                    filterApplied = true;
+                                } else {
+                                    Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
+                                }
 
-                        btnCloseFilter.setOnClickListener(v14 -> dialog.dismiss());
+                            });
 
-                        filterTimetableSection.setOnItemClickListener((parent, view121, position, id) -> {
-                            sectionSelected = true;
-                            selectedSection = allSections.get(position);
-                        });
+                            // Close button
+                            btnCloseFilter.setOnClickListener(v14 -> dialog.dismiss());
 
-                        builder.setView(view12);
-                        dialog = builder.create(); // creating our dialog
-                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        dialog.show();
-                        // Show rounded corners
-                        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-                        dialog.getWindow().setAttributes(params);
+                            // Sections spinner
+                            filterTimetableSection.setOnItemClickListener((parent, view121, position, id) -> {
+                                sectionSelected = true;
+                                selectedSection = allSections.get(position);
+                            });
+
+                            builder.setView(view12);
+                            dialog = builder.create(); // creating our dialog
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            dialog.show();
+                            // Show rounded corners
+                            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                            dialog.getWindow().setAttributes(params);
+                        }
                     }
                 });
                 break;
@@ -379,10 +384,8 @@ public class HomeworksFragment extends Fragment {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
             int position = viewHolder.getAdapterPosition();
             Homework currentHomework = adapter.getHomeworks().get(position);
-
             switch (direction) {
                 case ItemTouchHelper.LEFT: // Swipe left to right <- : Delete item
                     if (currentHomework.getTeacherEmail().equals(currentUser.getCurrentTeacher().getEmail())) {
@@ -411,7 +414,6 @@ public class HomeworksFragment extends Fragment {
                                     }
                                     loadingDialog.dismiss();
                                 }
-
                                 @Override
                                 public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                                     Toast.makeText(getActivity(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
