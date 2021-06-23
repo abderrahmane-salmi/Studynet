@@ -91,7 +91,7 @@ public class NavigationActivity extends AppCompatActivity {
 
         MenuItem btnLogout = binding.navigationView.getMenu().findItem(R.id.nav_logout);
         btnLogout.setOnMenuItemClickListener(item -> {
-            if (currentUser != null && currentUser.getUserType() != null){
+            if (currentUser != null && currentUser.getUserType() != null) {
                 loadingDialog.show();
                 if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT)) {
                     //This user is a teacher, unregister this device from the backend.

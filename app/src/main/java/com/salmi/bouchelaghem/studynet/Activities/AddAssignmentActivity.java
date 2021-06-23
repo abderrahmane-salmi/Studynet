@@ -32,18 +32,22 @@ public class AddAssignmentActivity extends AppCompatActivity {
 
     private ActivityAddAssignmentBinding binding;
 
+    // Sections
     private ArrayList<String> sections;
     private String section;
     private boolean sectionSelected = false;
 
+    // Modules
     private ArrayList<Module> modules;
     private Module module;
     private boolean moduleSelected = false;
 
+    // Module types
     private ArrayList<String> moduleTypes;
     private String moduleType;
     private boolean moduleTypeSelected = false;
 
+    // Groups
     private String[] groupsArray; // All groups as an array
     private List<String> selectedGroupsString; // The groups selected by the user (as a string)
     private ArrayList<Integer> selectedGroupsInt; // The groups selected by the user (as a int)
@@ -75,7 +79,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
         setupSectionsSpinner();
 
         binding.btnSave.setOnClickListener(v -> {
-            if (sectionSelected && moduleSelected && moduleTypeSelected && groupSelected){
+            if (sectionSelected && moduleSelected && moduleTypeSelected && groupSelected) {
                 Assignment assignment = new Assignment();
                 assignment.setId(-1);
                 assignment.setSectionCode(section);
@@ -84,27 +88,25 @@ public class AddAssignmentActivity extends AppCompatActivity {
                 assignment.setModuleType(moduleType);
                 assignment.setConcernedGroups(selectedGroupsInt);
                 ArrayList<Assignment> tempAssignments = AddTeacherActivity.getTeacher().getAssignments();
-                if(!tempAssignments.contains(assignment)){
+                if (!tempAssignments.contains(assignment)) {
                     AddTeacherActivity.getTeacher().getAssignments().add(assignment);
                     Toast.makeText(AddAssignmentActivity.this, getString(R.string.assignment_added), Toast.LENGTH_SHORT).show();
                     finish();
-                }
-                else
-                {
+                } else {
                     Toast.makeText(AddAssignmentActivity.this, getString(R.string.assignment_already_exists), Toast.LENGTH_LONG).show();
                 }
 
             } else {
-                if (!sectionSelected){
+                if (!sectionSelected) {
                     binding.txtSectionTextLayout.setError(getString(R.string.empty_section_msg));
                 }
-                if (!moduleSelected){
+                if (!moduleSelected) {
                     binding.txtModuleLayout.setError(getString(R.string.empty_module_msg));
                 }
-                if (!moduleTypeSelected){
+                if (!moduleTypeSelected) {
                     binding.txtModuleTypeTextLayout.setError(getString(R.string.empty_type_msg));
                 }
-                if (!groupSelected){
+                if (!groupSelected) {
                     binding.txtGroup.setError(getString(R.string.empty_group_msg));
                 }
             }
@@ -230,9 +232,9 @@ public class AddAssignmentActivity extends AppCompatActivity {
         call.enqueue(new Callback<Section>() {
             @Override
             public void onResponse(@NonNull Call<Section> call, @NonNull Response<Section> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     Section section = response.body();
-                    if (section != null){
+                    if (section != null) {
                         groupsArray = new String[section.getNbGroups()];
                         for (int grp = 0; grp < section.getNbGroups(); grp++) {
                             groupsArray[grp] = String.valueOf(grp + 1);
@@ -245,14 +247,14 @@ public class AddAssignmentActivity extends AppCompatActivity {
                     }
                 } else {
                     binding.txtGroup.setEnabled(false);
-                    Toast.makeText(AddAssignmentActivity.this, getString(R.string.error)+response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddAssignmentActivity.this, getString(R.string.error) + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Section> call, @NonNull Throwable t) {
                 binding.txtGroup.setEnabled(false);
-                Toast.makeText(AddAssignmentActivity.this, getString(R.string.error)+t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddAssignmentActivity.this, getString(R.string.error) + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -268,7 +270,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Module>>() {
             @Override
             public void onResponse(@NonNull Call<List<Module>> call, @NonNull Response<List<Module>> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     assert response.body() != null;
                     modules = new ArrayList<>(response.body());
 
@@ -280,13 +282,13 @@ public class AddAssignmentActivity extends AppCompatActivity {
                     ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddAssignmentActivity.this, R.layout.dropdown_item, modulesNames);
                     binding.txtModuleSpinner.setAdapter(arrayAdapter);
                 } else {
-                    Toast.makeText(AddAssignmentActivity.this, getString(R.string.error)+response.code(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddAssignmentActivity.this, getString(R.string.error) + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Module>> call, @NonNull Throwable t) {
-                Toast.makeText(AddAssignmentActivity.this, getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddAssignmentActivity.this, getString(R.string.error) + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

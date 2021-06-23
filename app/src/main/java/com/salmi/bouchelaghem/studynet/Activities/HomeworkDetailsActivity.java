@@ -43,13 +43,13 @@ public class HomeworkDetailsActivity extends AppCompatActivity {
 
         binding.txtHomeworkSection.setText(homework.getSection());
         // Homework's groups
-        if (homework.getConcernedGroups().size() > 1){ // There are more then 1 grp
+        if (homework.getConcernedGroups().size() > 1) { // There are more then 1 grp
             int nbGroups = homework.getConcernedGroups().size();
             binding.txtHomeworksGroups.setText("");
-            for (int i=0; i<nbGroups-1; i++){
+            for (int i = 0; i < nbGroups - 1; i++) {
                 binding.txtHomeworksGroups.append(homework.getConcernedGroups().get(i) + ", ");
             }
-            binding.txtHomeworksGroups.append(String.valueOf(homework.getConcernedGroups().get(nbGroups-1))); // The last group doesn't have a ',' after it
+            binding.txtHomeworksGroups.append(String.valueOf(homework.getConcernedGroups().get(nbGroups - 1))); // The last group doesn't have a ',' after it
 
             binding.textView3.setText(R.string.groups);
         } else { // There is only one grp

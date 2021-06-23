@@ -23,6 +23,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@SuppressWarnings("ConstantConditions")
 public class ResetPasswordActivity extends AppCompatActivity {
 
     private ActivityResetPasswordBinding binding;
@@ -53,23 +54,20 @@ public class ResetPasswordActivity extends AppCompatActivity {
         binding.btnGoBackFromReset.setOnClickListener(v -> finish());
 
         binding.btnResetPassword.setOnClickListener(v -> {
-            if (validateEmail()){
+            if (validateEmail()) {
                 String email = binding.txtEmail.getEditText().getText().toString().trim();
                 //Create the json object to send to the api
                 JsonObject emailJson = new JsonObject();
-                emailJson.addProperty("email",email);
+                emailJson.addProperty("email", email);
                 Call<ResponseBody> changePasswordEmailCall = api.change_password_email(emailJson);
                 loadingDialog.show();
                 changePasswordEmailCall.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                        if(response.code() == Utils.HttpResponses.HTTP_200_OK)
-                        {
+                        if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
                             Toast.makeText(ResetPasswordActivity.this, getString(R.string.password_reset_email_sent), Toast.LENGTH_LONG).show();
                             showConfirmationFragment();
-                        }
-                        else
-                        {
+                        } else {
                             binding.txtEmail.setError(getString(R.string.email_does_not_exist));
                         }
                         loadingDialog.dismiss();
@@ -88,15 +86,15 @@ public class ResetPasswordActivity extends AppCompatActivity {
         binding.btnConfirmReset.setOnClickListener(v -> showConfirmationFragment());
     }
 
-    private void showConfirmationFragment(){
+    private void showConfirmationFragment() {
         ResetPasswordConfirmationFragment fragment = new ResetPasswordConfirmationFragment();
         fragment.show(getSupportFragmentManager(), "ResetPasswordConfirmationFragment");
     }
 
-    public boolean validateEmail(){
+    public boolean validateEmail() {
         String email = binding.txtEmail.getEditText().getText().toString().trim();
 
-        if (email.isEmpty()){
+        if (email.isEmpty()) {
             binding.txtEmail.setError(getString(R.string.email_msg1));
             return false;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
