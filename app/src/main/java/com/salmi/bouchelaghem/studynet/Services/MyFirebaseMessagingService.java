@@ -14,7 +14,6 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 
-import java.util.Map;
 import java.util.Random;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -29,13 +28,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        if (remoteMessage.getNotification() != null){
+        if (remoteMessage.getNotification() != null) {
             RemoteMessage.Notification notification = remoteMessage.getNotification();
-            showNotification(notification.getTitle(), notification.getBody(), remoteMessage.getData());
+            showNotification(notification.getTitle(), notification.getBody());
         }
     }
 
-    private void showNotification(String title, String body, Map<String, String> data) {
+    private void showNotification(String title, String body) {
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

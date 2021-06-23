@@ -34,10 +34,10 @@ public class AssignmentsAdapter extends RecyclerView.Adapter<AssignmentsAdapter.
         holder.binding.txtModuleTypes.setText(assignment.getModuleType());
 
         // Groups
-        if (assignment.getConcernedGroups().size() > 1){ // There are more then 1 grp
+        if (assignment.getConcernedGroups().size() > 1) { // There are more then 1 grp
             int nbGroups = assignment.getConcernedGroups().size();
             holder.binding.txtGroups.setText("");
-            for (int grp=0; grp<nbGroups-1; grp++){
+            for (int grp = 0; grp < nbGroups - 1; grp++) {
                 holder.binding.txtGroups.append((grp + 1) + ", ");
             }
             holder.binding.txtGroups.append(String.valueOf(nbGroups)); // The last group doesn't have a ',' after it
@@ -61,7 +61,7 @@ public class AssignmentsAdapter extends RecyclerView.Adapter<AssignmentsAdapter.
         notifyDataSetChanged();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         LayoutAssignmentBinding binding;
 

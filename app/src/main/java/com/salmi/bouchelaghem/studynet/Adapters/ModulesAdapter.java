@@ -35,7 +35,7 @@ public class ModulesAdapter extends RecyclerView.Adapter<ModulesAdapter.ViewHold
         holder.binding.subjectMainLayout.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(activity, R.id.fragment);
             // I added this condition to prevent the user from opening the same fragment twice (when clicking super
-            if (Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.subjectDetailsFragment){
+            if (Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.subjectDetailsFragment) {
                 Module module = modules.get(holder.getAdapterPosition());
                 SubjectsFragmentDirections.ActionNavSubjectsToSubjectDetailsFragment action = SubjectsFragmentDirections.actionNavSubjectsToSubjectDetailsFragment(module);
                 Navigation.createNavigateOnClickListener(action).onClick(holder.binding.getRoot());
@@ -52,10 +52,10 @@ public class ModulesAdapter extends RecyclerView.Adapter<ModulesAdapter.ViewHold
         holder.binding.txtSubjectCode.setText(module.getCode());
         holder.binding.txtSubjectName.setText(module.getName());
         holder.binding.txtSubjectTypes.setText("");
-        for (int i=0; i<module.getTypes().size()-1; i++){
+        for (int i = 0; i < module.getTypes().size() - 1; i++) {
             holder.binding.txtSubjectTypes.append(module.getTypes().get(i) + ", ");
         }
-        holder.binding.txtSubjectTypes.append(module.getTypes().get(module.getTypes().size()-1));
+        holder.binding.txtSubjectTypes.append(module.getTypes().get(module.getTypes().size() - 1));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ModulesAdapter extends RecyclerView.Adapter<ModulesAdapter.ViewHold
         notifyDataSetChanged();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         LayoutSubjectBinding binding;
 

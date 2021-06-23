@@ -326,7 +326,7 @@ public class TeachersFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<List<Department>> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.error) + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

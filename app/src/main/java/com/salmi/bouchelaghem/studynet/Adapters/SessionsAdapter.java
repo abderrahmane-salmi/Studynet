@@ -47,10 +47,10 @@ public class SessionsAdapter extends RecyclerView.Adapter<SessionsAdapter.ViewHo
         Session session = sessions.get(position);
 
         // Session's groups
-        if (session.getConcernedGroups().size() > 1){ // There are more then 1 grp
+        if (session.getConcernedGroups().size() > 1) { // There are more then 1 grp
             int nbGroups = session.getConcernedGroups().size();
             holder.binding.txtClassGroup.setText("");
-            for (int grp=0; grp<nbGroups-1; grp++){
+            for (int grp = 0; grp < nbGroups - 1; grp++) {
                 holder.binding.txtClassGroup.append((grp + 1) + ", ");
             }
             holder.binding.txtClassGroup.append(String.valueOf(nbGroups)); // The last group doesn't have a ',' after it
@@ -68,8 +68,8 @@ public class SessionsAdapter extends RecyclerView.Adapter<SessionsAdapter.ViewHo
         holder.binding.txtClassType.setText(session.getModuleType());
 
         CurrentUser currentUser = CurrentUser.getInstance();
-        if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT)){
-            if (session.getTeacherEmail().equals(currentUser.getCurrentTeacher().getEmail())){
+        if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT)) {
+            if (session.getTeacherEmail().equals(currentUser.getCurrentTeacher().getEmail())) {
                 holder.binding.imgBookmark.setVisibility(View.VISIBLE);
             }
         }
@@ -90,7 +90,7 @@ public class SessionsAdapter extends RecyclerView.Adapter<SessionsAdapter.ViewHo
         return sessions;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         LayoutClassBinding binding;
 

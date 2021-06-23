@@ -47,7 +47,7 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
             context.startActivity(intent);
         });
 
-        if (currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT)){
+        if (currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT)) {
             // If its a student then show the check button
             holder.binding.checkMark.setVisibility(View.VISIBLE);
             // Init the check button
@@ -55,7 +55,7 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
                 // Read the current homework's check state
                 Homework homework = homeworks.get(holder.getAdapterPosition());
                 boolean isChecked = readCheckState(homework.getId());
-                if (isChecked){
+                if (isChecked) {
                     // Mark the homework as unchecked
                     saveCheckState(false, homework.getId());
                     // Play the anim in reverse
@@ -92,11 +92,11 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         holder.binding.homeworkDate.setText(formatter.format(homework.getLocalDateDueDate()));
 
-        if (currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT)){
+        if (currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT)) {
             // Read the current homework's check state
             boolean isChecked = readCheckState(homework.getId());
 
-            if (isChecked){
+            if (isChecked) {
                 // Show that the homework is checked
                 // Animation
                 holder.binding.btnCompleteHomework.setProgress((float) 0.9);
@@ -106,8 +106,8 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
                 holder.binding.imageView2.setImageResource(R.drawable.ic_checked);
                 DrawableCompat.setTint(DrawableCompat.wrap(holder.binding.imageView2.getDrawable()), ContextCompat.getColor(context, R.color.primary_color));
             }
-        } else if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT)){
-            if (homework.getTeacherEmail().equals(currentUser.getCurrentTeacher().getEmail())){
+        } else if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT)) {
+            if (homework.getTeacherEmail().equals(currentUser.getCurrentTeacher().getEmail())) {
                 holder.binding.imgBookmark.setVisibility(View.VISIBLE);
             }
         }
@@ -131,7 +131,7 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
     private void saveCheckState(boolean isChecked, int homeworkId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Utils.HOMEWORK, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (isChecked){
+        if (isChecked) {
             // Add the homework to the completed homeworks list
             editor.putString(String.valueOf(homeworkId), String.valueOf(homeworkId));
         } else {
@@ -146,7 +146,7 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
         return sharedPreferences.contains(String.valueOf(homeworkId));
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         LayoutHomeworkBinding binding;
 
