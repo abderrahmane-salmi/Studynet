@@ -156,7 +156,6 @@
     <string name="update_teacher">Update teacher</string>
     <string name="no_changes_msg">There are no changes to save</string>
     <string name="empty_grade_msg">Please choose a grade</string>
-    <string name="could_not_logout">Could not logout</string>
     <string name="connection_failed">Connection failed, please check your internet access and try again</string>
     <string name="sections">Sections</string>
     <string name="back">Back</string>

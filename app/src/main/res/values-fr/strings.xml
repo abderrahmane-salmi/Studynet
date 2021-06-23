@@ -136,7 +136,6 @@
     <string name="update_teacher">Mettre à jour l\'enseignant</string>
     <string name="no_changes_msg">Il n\'y a pas de changements à sauvegarder</string>
     <string name="empty_grade_msg">Veuillez choisir un grade</string>
-    <string name="could_not_logout">Déconnexion échoué</string>
     <string name="connection_failed">Connexion échoué, veuillez verifier votre accès à internet puis réessayez</string>
     <string name="sections">Sections</string>
     <string name="back">Retour</string>
