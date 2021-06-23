@@ -108,53 +108,54 @@ public class TeachersFragment extends Fragment {
             context.btnFilter.setVisibility(View.VISIBLE);
             context.btnFilter.setOnClickListener(v -> {
                 if (departments != null) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    View view12 = View.inflate(context, R.layout.popup_admin_teachers_filter, null);
-                    // Init Views
-                    ImageView btnCloseFilter = view12.findViewById(R.id.btnCloseFilter);
-                    AutoCompleteTextView filterDepartmentsSpinner = view12.findViewById(R.id.filterTimetableSection);
-                    MaterialButton btnApplyFilter = view12.findViewById(R.id.btnApplyFilter);
+                    // Show the filter just once
+                    if (dialog == null || !dialog.isShowing()) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        View view12 = View.inflate(context, R.layout.popup_admin_teachers_filter, null);
+                        // Init Views
+                        ImageView btnCloseFilter = view12.findViewById(R.id.btnCloseFilter);
+                        AutoCompleteTextView filterDepartmentsSpinner = view12.findViewById(R.id.filterTimetableSection);
+                        MaterialButton btnApplyFilter = view12.findViewById(R.id.btnApplyFilter);
 
-                    // Init departments spinner
-                    if (!departmentsCodes.isEmpty()) {
-                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, departmentsCodes);
-                        filterDepartmentsSpinner.setAdapter(arrayAdapter);
-                    }
-
-                    if (filterApplied) {
-                        restoreFilterState(filterDepartmentsSpinner); // set the filter values to the last filter applied
-                    }
-
-                    // Init Buttons
-                    btnApplyFilter.setOnClickListener(v13 -> {
-
-                        if (departmentSelected) {
-
-                            getDepartmentTeachers(selectedDepartment);
-                            binding.selectSectionMsg.setVisibility(View.GONE);
-                            dialog.dismiss();
-                            filterApplied = true;
-
-                        } else {
-                            Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
+                        // Init departments spinner
+                        if (!departmentsCodes.isEmpty()) {
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, departmentsCodes);
+                            filterDepartmentsSpinner.setAdapter(arrayAdapter);
                         }
 
-                    });
+                        // set the filter values to the last filter applied
+                        if (filterApplied) {
+                            restoreFilterState(filterDepartmentsSpinner);
+                        }
 
-                    btnCloseFilter.setOnClickListener(v14 -> dialog.dismiss());
+                        // Init Buttons
+                        btnApplyFilter.setOnClickListener(v13 -> {
+                            if (departmentSelected) {
+                                getDepartmentTeachers(selectedDepartment);
+                                binding.selectSectionMsg.setVisibility(View.GONE);
+                                dialog.dismiss();
+                                filterApplied = true;
+                            } else {
+                                Toast.makeText(getActivity(), getString(R.string.no_filter_msg), Toast.LENGTH_SHORT).show();
+                            }
 
-                    filterDepartmentsSpinner.setOnItemClickListener((parent, view121, position, id) -> {
-                        departmentSelected = true;
-                        selectedDepartment = departmentsCodes.get(position);
-                    });
+                        });
 
-                    builder.setView(view12);
-                    dialog = builder.create(); // creating our dialog
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    dialog.show();
-                    // Show rounded corners
-                    WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-                    dialog.getWindow().setAttributes(params);
+                        btnCloseFilter.setOnClickListener(v14 -> dialog.dismiss());
+
+                        filterDepartmentsSpinner.setOnItemClickListener((parent, view121, position, id) -> {
+                            departmentSelected = true;
+                            selectedDepartment = departmentsCodes.get(position);
+                        });
+
+                        builder.setView(view12);
+                        dialog = builder.create(); // creating our dialog
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialog.show();
+                        // Show rounded corners
+                        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                        dialog.getWindow().setAttributes(params);
+                    }
                 }
             });
         } else if (userType.equals(Utils.STUDENT_ACCOUNT)) {
@@ -325,7 +326,7 @@ public class TeachersFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<List<Department>> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.error) + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

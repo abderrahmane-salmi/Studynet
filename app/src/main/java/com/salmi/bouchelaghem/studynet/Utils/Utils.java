@@ -1,9 +1,6 @@
 package com.salmi.bouchelaghem.studynet.Utils;
 
-import android.content.ContentUris;
-
 import com.google.gson.JsonObject;
-import com.salmi.bouchelaghem.studynet.Models.Student;
 
 public class Utils {
 
@@ -13,7 +10,6 @@ public class Utils {
     // Tables
     public static final String HOMEWORK = "Homework";
     public static final String TEACHER = "Teacher";
-    public static final String ASSIGNMENT = "Assignment";
     public static final String SESSION = "Session";
 
     // Fields
@@ -32,29 +28,18 @@ public class Utils {
 
     //Shared preferences data
     public static final String SHARED_PREFERENCES_USER_DATA = "userData";
-    public static final String SHARED_PREFERENCES_CURRENT_USER = "currentUser";
     public static final String SHARED_PREFERENCES_LOGGED_IN = "loggedIn";
-    public static final String SHARED_PREFERENCES_USER_TYPE = "userType";
     public static final String SHARED_PREFERENCES_TOKEN = "token";
 
     // Homework filter
-    // TODO: take this to a string array (so we can translate it)
     public static final String YESTERDAY = "Yesterday";
-    public static final String TODAY = "Today";
-    public static final String TOMORROW = "Tomorrow";
-    public static final String THIS_WEEK = "This week";
-    public static final String ALL = "All";
-
-    // Class types
-    public static final String COURS = "Cours";
-    public static final String TD = "TD";
-    public static final String TP = "TP";
 
     // Action types
     public static final String ACTION = "Action";
     public static final String ACTION_ADD = "Add";
     public static final String ACTION_UPDATE = "Update";
-    public static final String ACTION_DELETE = "Delete";
+
+    // Notifications
     public static final String NOTIFICATION_CHANNEL_ID = "1";
     public static final CharSequence NOTIFICATION_CHANNEL_NAME = "1";
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Studynet</string>
+    <string name="app_name" translatable="false">Studynet</string>
 
     <string-array name="days">
         <item>Saturday</item>
@@ -24,7 +24,7 @@
         <item>MCB</item>
         <item>MCA</item>
         <item>PR</item>
-        <item>Doc</item>
+        <item>DOC</item>
     </string-array>
 
     <string-array name="languages">
@@ -74,7 +74,6 @@
     <string name="due_date">Due Date</string>
     <string name="due_time">Due Time</string>
     <string name="notes">Notes</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="no_subjects_msg">No Subjects</string>
     <string name="subject_details">Subject Details</string>
     <string name="no_teachers_msg">No Teachers</string>
@@ -83,9 +82,9 @@
     <string name="teacher_details">Teacher Details</string>
     <string name="close">CLOSE</string>
     <string name="contact1">Contact:</string>
-    <string name="developer_email1">abderrahmane.salmi.pro@gmail.com</string>
+    <string name="developer_email1" translatable="false">abderrahmane.salmi.pro@gmail.com</string>
     <string name="developer_2">Developer 2:</string>
-    <string name="developer_email2">bouchlaghem@gmail.com</string>
+    <string name="developer_email2" translatable="false">bouchlaghemyanis7@gmail.com</string>
     <string name="developer_1">Developer 1:</string>
     <string name="logout_msg">You have logged out successfully</string>
     <string name="time_table">Time Table</string>
@@ -151,13 +150,12 @@
     <string name="no_internet_connection">No internet connection</string>
     <string name="try_again">Try again</string>
     <string name="email_taken">This email is already taken</string>
-    <string name="unknown_error">An unknown error occurred</string>
+    <string name="unknown_error">An unknown error occurred, Please try again later.</string>
     <string name="new_teacher">New Teacher</string>
     <string name="grade">Grade</string>
     <string name="update_teacher">Update teacher</string>
     <string name="no_changes_msg">There are no changes to save</string>
     <string name="empty_grade_msg">Please choose a grade</string>
-    <string name="could_not_logout">Could not logout</string>
     <string name="connection_failed">Connection failed, please check your internet access and try again</string>
     <string name="sections">Sections</string>
     <string name="back">Back</string>
@@ -173,7 +171,7 @@
     <string name="session_expired">Session expired, please login again.</string>
     <string name="no_sections_in_department">No sections were found in this department</string>
     <string name="email_msg3">Please try to use another email</string>
-    <string name="loading">Loading …</string>
+    <string name="loading">Loading…</string>
     <string name="logged_in_msg">You have logged in successfully</string>
     <string name="assignment_already_exists">This assignment already exists</string>
     <string name="email_password_incorrect">The email or password you entered is incorrect</string>
@@ -191,17 +189,17 @@
     <string name="general">General</string>
     <string name="about">About</string>
     <string name="change_app_language">Change the app\'s language</string>
-    <string name="key_language">LANGUAGE</string>
+    <string name="key_language" translatable="false">LANGUAGE</string>
     <string name="report_bugs">Report bugs</string>
     <string name="report_bugs_msg">Report any bugs or issues you\'ve encountered</string>
-    <string name="key_report_bugs">REPORT_BUGS</string>
+    <string name="key_report_bugs" translatable="false">REPORT_BUGS</string>
     <string name="account">Account</string>
     <string name="change_password">Change password</string>
     <string name="change_password_msg">Change your account\'s password</string>
-    <string name="key_change_password">CHANGE_PASSWORD</string>
+    <string name="key_change_password" translatable="false">CHANGE_PASSWORD</string>
     <string name="logout_all">Logout all</string>
     <string name="logout_all_msg">Logout from all your logged in sessions</string>
-    <string name="key_logout_all">LOGOUT_ALL</string>
+    <string name="key_logout_all" translatable="false">LOGOUT_ALL</string>
     <string name="Homeworks">Homeworks</string>
     <string name="old_password">Old password</string>
     <string name="new_password">New password</string>
@@ -215,7 +213,7 @@
     <string name="edit_your_homework_msg">You can only edit your own homeworks.</string>
     <string name="homework_edited_success">Homework updated successfully</string>
     <string name="saturday">Saturday</string>
-    <string name="key_change_section">CHANGE_SECTION</string>
+    <string name="key_change_section" translatable="false">CHANGE_SECTION</string>
     <string name="change_section">Change section and group</string>
     <string name="change_section_msg">Change your section and your group</string>
     <string name="password_changed_successfully">Your password has been changed successfully</string>
@@ -232,4 +230,12 @@
     <string name="confirm">Confirm</string>
     <string name="comment_empty_msg">Comment can\'t be empty</string>
     <string name="session_reported_successfully">The session has been reported successfully, the teacher has been notified.</string>
+    <string name="teacher_created_msg">Teacher was created successfully</string>
+    <string name="teacher_updated_msg">Teacher was updated successfully</string>
+    <string name="onboarding_title1">Welcome</string>
+    <string name="onboarding_title2">Stay Organized</string>
+    <string name="onboarding_title3">Always Prepared</string>
+    <string name="onboarding_description1">Welcome to Studynet, your online school planner, where you\'ll be able to manage your timetable and all your school homeworks in one place.</string>
+    <string name="onboarding_description2">With Studynet you can organize all your classes and homeworks, see all your subjects for the semester, get in touch with your teachers and so much more.</string>
+    <string name="onboarding_description3">Stay prepared for your homeworks and never miss another due date or class again, you\'ll get notified about due dates and reminders about all your upcoming classes.</string>
 </resources>

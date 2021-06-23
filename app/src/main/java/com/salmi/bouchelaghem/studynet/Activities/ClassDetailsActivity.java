@@ -67,7 +67,7 @@ public class ClassDetailsActivity extends AppCompatActivity {
 
         // Day
         List<String> days = Arrays.asList(getResources().getStringArray(R.array.days));
-        binding.classDay.setText(days.get(session.getDay()-1));
+        binding.classDay.setText(days.get(session.getDay() - 1));
 
         // Time
         binding.classStartHour.setText(session.getLocalTimeStartTime().toString());
@@ -77,13 +77,13 @@ public class ClassDetailsActivity extends AppCompatActivity {
         binding.classSection.setText(session.getSection());
 
         // Session's groups
-        if (session.getConcernedGroups().size() > 1){ // There are more then 1 grp
+        if (session.getConcernedGroups().size() > 1) { // There are more then 1 grp
             int nbGroups = session.getConcernedGroups().size();
             binding.classGroup.setText("");
-            for (int i=0; i<nbGroups-1; i++){
+            for (int i = 0; i < nbGroups - 1; i++) {
                 binding.classGroup.append(session.getConcernedGroups().get(i) + ", ");
             }
-            binding.classGroup.append(String.valueOf(session.getConcernedGroups().get(nbGroups-1))); // The last group doesn't have a ',' after it
+            binding.classGroup.append(String.valueOf(session.getConcernedGroups().get(nbGroups - 1))); // The last group doesn't have a ',' after it
 
             binding.textView3.setText(R.string.groups);
         } else { // There is only one grp
@@ -99,7 +99,7 @@ public class ClassDetailsActivity extends AppCompatActivity {
         binding.classMeetingLink.setText(session.getMeetingLink());
 
         // Other meeting info
-        if (!session.getMeetingNumber().isEmpty() && !session.getMeetingPassword().isEmpty()){
+        if (!session.getMeetingNumber().isEmpty() && !session.getMeetingPassword().isEmpty()) {
             // Show other meeting info
             binding.otherMeetingInfoGroup.setVisibility(View.VISIBLE);
 
@@ -109,7 +109,7 @@ public class ClassDetailsActivity extends AppCompatActivity {
         }
 
         // Notes
-        if (!session.getComment().isEmpty()){
+        if (!session.getComment().isEmpty()) {
             binding.classNotesGroup.setVisibility(View.VISIBLE);
             binding.txtClassNotes.setText(session.getComment());
         }

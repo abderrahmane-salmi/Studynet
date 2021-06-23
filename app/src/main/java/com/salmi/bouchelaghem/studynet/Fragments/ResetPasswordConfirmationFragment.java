@@ -25,6 +25,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@SuppressWarnings("ConstantConditions")
 public class ResetPasswordConfirmationFragment extends BottomSheetDialogFragment {
 
     private FragmentResetPasswordConfirmationBinding binding;
@@ -52,13 +53,13 @@ public class ResetPasswordConfirmationFragment extends BottomSheetDialogFragment
         loadingDialog = new CustomLoadingDialog(requireContext());
 
         binding.btnSave.setOnClickListener(v -> {
-            if (validateConfirmationCode() & validateNewPassword()){
+            if (validateConfirmationCode() & validateNewPassword()) {
                 String password = binding.txtNewPassword.getEditText().getText().toString();
                 String code = binding.txtConfirmationCode.getEditText().getText().toString();
                 //Create the json object to send to the api
                 JsonObject codeAndNewPasswordJson = new JsonObject();
-                codeAndNewPasswordJson.addProperty("password",password);
-                codeAndNewPasswordJson.addProperty("token",code);
+                codeAndNewPasswordJson.addProperty("password", password);
+                codeAndNewPasswordJson.addProperty("token", code);
                 //Make the call to the api
                 Call<ResponseBody> changePasswordCall = api.confirm_change_password_email(codeAndNewPasswordJson);
                 loadingDialog.show();
@@ -96,12 +97,10 @@ public class ResetPasswordConfirmationFragment extends BottomSheetDialogFragment
         }
     }
 
-    private class PasswordResetCallback implements Callback<ResponseBody>
-    {
+    private class PasswordResetCallback implements Callback<ResponseBody> {
         @Override
         public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-            switch(response.code())
-            {
+            switch (response.code()) {
                 case Utils.HttpResponses.HTTP_200_OK:
                     Toast.makeText(getContext(), getString(R.string.password_changed_successfully), Toast.LENGTH_SHORT).show();
                     loadingDialog.dismiss();

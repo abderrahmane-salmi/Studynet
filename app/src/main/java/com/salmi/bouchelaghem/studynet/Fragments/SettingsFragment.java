@@ -1,13 +1,10 @@
 package com.salmi.bouchelaghem.studynet.Fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -30,7 +27,6 @@ import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
 import com.salmi.bouchelaghem.studynet.Utils.StudynetAPI;
 import com.salmi.bouchelaghem.studynet.Utils.Utils;
 
-import java.util.Locale;
 import java.util.Objects;
 
 import okhttp3.ResponseBody;
@@ -40,6 +36,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@SuppressLint("IntentReset")
 public class SettingsFragment extends PreferenceFragmentCompat {
 
     // Studynet Api
@@ -84,16 +81,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         assert languageList != null;
         languageList.setOnPreferenceChangeListener((preference, newValue) -> {
             String selectedLanguage = (String) newValue;
-            if (preference.getKey().equals(getString(R.string.key_language))){
+            if (preference.getKey().equals(getString(R.string.key_language))) {
                 //Use the default prefs to save the language:
                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(requireContext());
                 SharedPreferences.Editor editor = sp.edit();
-                switch (selectedLanguage){
+                switch (selectedLanguage) {
                     case "1":
-                        editor.putString(getString(R.string.key_language),"1");
+                        editor.putString(getString(R.string.key_language), "1");
                         break;
                     case "2":
-                        editor.putString(getString(R.string.key_language),"2");
+                        editor.putString(getString(R.string.key_language), "2");
                         break;
                 }
                 editor.apply();
@@ -104,12 +101,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         // Buttons
-        if (currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT)){
+        if (currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT)) {
             assert btnChangeSection != null;
             btnChangeSection.setVisible(true);
             btnChangeSection.setOnPreferenceClickListener(preference -> {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-                if (Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.nav_change_section){
+                if (Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.nav_change_section) {
                     navController.navigate(R.id.action_nav_settings_to_changeSectionFragment);
                 }
                 return true;
@@ -117,29 +114,25 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         }
 
         assert btnReportBugs != null;
-        btnReportBugs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @SuppressLint("IntentReset")
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                // The intent does not have a URI, so declare the "text/plain" MIME type
-                emailIntent.setData(Uri.parse("mailto:"));
-                emailIntent.setType("text/plain");
-                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.developer_email1)}); // recipient
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name)+": Bug Report");
-                try {
-                    startActivity(emailIntent);
-                } catch (ActivityNotFoundException exception){
-                    // There is no third app to open our intent, so do nothing
-                }
-                return true;
+        btnReportBugs.setOnPreferenceClickListener(preference -> {
+            Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            // The intent does not have a URI, so declare the "text/plain" MIME type
+            emailIntent.setData(Uri.parse("mailto:"));
+            emailIntent.setType("text/plain");
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.developer_email1)}); // recipient
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + ": Bug Report");
+            try {
+                startActivity(emailIntent);
+            } catch (ActivityNotFoundException exception) {
+                // There is no third app to open our intent, so do nothing
             }
+            return true;
         });
 
         assert btnChangePassword != null;
         btnChangePassword.setOnPreferenceClickListener(preference -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-            if (Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.nav_change_password){
+            if (Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.nav_change_password) {
                 navController.navigate(R.id.action_nav_settings_to_changePasswordFragment);
             }
             return true;
@@ -154,27 +147,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
     }
 
-    // Change the device's language
-    public static void setLocale(Activity activity, Locale locale) {
-        Locale.setDefault(locale);
-        Resources resources = activity.getResources();
-        Configuration config = resources.getConfiguration();
-        config.setLocale(locale);
-        resources.updateConfiguration(config, resources.getDisplayMetrics());
-    }
-
-    private class LogoutAllCallback implements Callback<ResponseBody>
-    {
-
+    private class LogoutAllCallback implements Callback<ResponseBody> {
         @Override
         public void onResponse(@NonNull Call<ResponseBody> call, Response<ResponseBody> response) {
-            switch(response.code())
-            {
+            switch (response.code()) {
 
                 case Utils.HttpResponses.HTTP_204_NO_CONTENT: //Logout successful.
                 case Utils.HttpResponses.HTTP_401_UNAUTHORIZED: //Expired token, logout anyway since this token cannot be used.
-                    if(currentUser.getUserType() == Utils.STUDENT_ACCOUNT)
-                    {
+                    if (currentUser.getUserType().equals(Utils.STUDENT_ACCOUNT)) {
                         //This user is a student, unsubscribe this device from his section's notifications.
                         String section = currentUser.getCurrentStudent().getSection().getCode();
                         FirebaseMessaging.getInstance().unsubscribeFromTopic(section.replace(' ', '_'));
@@ -182,7 +162,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     currentUser.logout();
                     //Save that the user is no longer logged in locally.
                     SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
-                    prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN,false);
+                    prefsEditor.putBoolean(Utils.SHARED_PREFERENCES_LOGGED_IN, false);
                     prefsEditor.apply();
                     //Take the user to the login page.
                     startActivity(new Intent(getActivity(), LoginActivity.class));

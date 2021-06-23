@@ -1,9 +1,5 @@
 package com.salmi.bouchelaghem.studynet.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,10 +7,12 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonObject;
-import com.salmi.bouchelaghem.studynet.Models.Student;
 import com.salmi.bouchelaghem.studynet.R;
 import com.salmi.bouchelaghem.studynet.Utils.CurrentUser;
 import com.salmi.bouchelaghem.studynet.Utils.CustomLoadingDialog;
@@ -30,6 +28,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@SuppressWarnings("ConstantConditions")
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
@@ -149,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                         Utils.loginStudent(responseData.getAsJsonObject(Utils.STUDENT_ACCOUNT));
                         //Subscribe this device to this student's section's push notifications.
                         String sectionCode = currentUser.getCurrentStudent().getSection().getCode();
-                        FirebaseMessaging.getInstance().subscribeToTopic(sectionCode.replace(' ','_'));
+                        FirebaseMessaging.getInstance().subscribeToTopic(sectionCode.replace(' ', '_'));
                     } else {
                         if (responseData.has(Utils.TEACHER_ACCOUNT)) {
                             //It's a teacher
@@ -158,8 +157,8 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseMessaging.getInstance().getToken().addOnSuccessListener(FCMToken -> {
                                 //Send the FCMToken to the backend to enable targeted notifications for this teacher.
                                 JsonObject fcmTokenJson = new JsonObject();
-                                fcmTokenJson.addProperty("FCM_token",FCMToken);
-                                Call<ResponseBody> registerFcmCall = api.registerFCM(fcmTokenJson,"Token " + currentUser.getToken());
+                                fcmTokenJson.addProperty("FCM_token", FCMToken);
+                                Call<ResponseBody> registerFcmCall = api.registerFCM(fcmTokenJson, "Token " + currentUser.getToken());
                                 registerFcmCall.enqueue(new FCMTokenRegisterCallback<>());
                             });
                         } else {
@@ -208,9 +207,7 @@ public class LoginActivity extends AppCompatActivity {
         prefsEditor.apply();
     }
 
-    public class FCMTokenRegisterCallback<T> implements Callback<T>
-    {
-
+    public static class FCMTokenRegisterCallback<T> implements Callback<T> {
         @Override
         public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
             //Do nothing

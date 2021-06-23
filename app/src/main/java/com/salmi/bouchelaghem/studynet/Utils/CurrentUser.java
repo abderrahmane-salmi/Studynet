@@ -22,12 +22,15 @@ public class CurrentUser extends Application {
         super.onCreate();
         AndroidThreeTen.init(this);
     }
+
     public static void setInstance(CurrentUser instance) {
         CurrentUser.instance = instance;
     }
 
-    /** This class is a singleton */
-    public static CurrentUser getInstance(){
+    /**
+     * This class is a singleton
+     */
+    public static CurrentUser getInstance() {
         if (instance == null)
             instance = new CurrentUser();
         return instance;
@@ -36,9 +39,10 @@ public class CurrentUser extends Application {
     public CurrentUser() {
     }
 
-    /** Remove all the data. */
-    public void logout()
-    {
+    /**
+     * Remove all the data.
+     */
+    public void logout() {
 
         userType = null;
         currentStudent = null;
@@ -46,6 +50,7 @@ public class CurrentUser extends Application {
         currentAdmin = null;
         token = null;
     }
+
     public String getUserType() {
         return userType;
     }
@@ -68,10 +73,6 @@ public class CurrentUser extends Application {
 
     public void setCurrentTeacher(Teacher currentTeacher) {
         this.currentTeacher = currentTeacher;
-    }
-
-    public Admin getCurrentAdmin() {
-        return currentAdmin;
     }
 
     public void setCurrentAdmin(Admin currentAdmin) {

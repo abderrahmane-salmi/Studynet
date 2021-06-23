@@ -49,10 +49,9 @@ public class OnboardingActivity extends AppCompatActivity {
         });
 
 
-
         btnGetStarted.setOnClickListener(v -> {
-            if (onboardingViewPager.getCurrentItem()+1 < adapter.getItemCount()){ // if we didn't reach the end yet
-                onboardingViewPager.setCurrentItem(onboardingViewPager.getCurrentItem()+1); // go to next item
+            if (onboardingViewPager.getCurrentItem() + 1 < adapter.getItemCount()) { // if we didn't reach the end yet
+                onboardingViewPager.setCurrentItem(onboardingViewPager.getCurrentItem() + 1); // go to next item
             } else {
                 startActivity(new Intent(OnboardingActivity.this, LoginActivity.class)); // take the user to another activity
                 finish();
@@ -67,22 +66,22 @@ public class OnboardingActivity extends AppCompatActivity {
         layoutOnboardingIndicators = findViewById(R.id.layoutOnboardingIndicators);
     }
 
-    void setupOnboardingItems(){
+    void setupOnboardingItems() {
         List<OnboardingItem> itemsList = new ArrayList<>();
 
         OnboardingItem firstItem = new OnboardingItem();
-        firstItem.setTitle("Welcome");
-        firstItem.setDescription("Welcome to Studynet, your online school planner, where you'll be able to manage your timetable and all your school homeworks in one place.");
+        firstItem.setTitle(getString(R.string.onboarding_title1));
+        firstItem.setDescription(getString(R.string.onboarding_description1));
         firstItem.setImage(R.drawable.get_started_vector1);
 
         OnboardingItem secondItem = new OnboardingItem();
-        secondItem.setTitle("Stay Organized");
-        secondItem.setDescription("With Studynet you can organize all your classes and homeworks, see all your subjects for the semester, get in touch with your teachers and so much more.");
+        secondItem.setTitle(getString(R.string.onboarding_title2));
+        secondItem.setDescription(getString(R.string.onboarding_description2));
         secondItem.setImage(R.drawable.get_started_vector2);
 
         OnboardingItem thirdItem = new OnboardingItem();
-        thirdItem.setTitle("Always Prepared");
-        thirdItem.setDescription("Stay prepared for your homeworks and never miss another due date or class again, you'll get notified about due dates and reminders about all your upcoming classes.");
+        thirdItem.setTitle(getString(R.string.onboarding_title3));
+        thirdItem.setDescription(getString(R.string.onboarding_description3));
         thirdItem.setImage(R.drawable.get_started_vector3);
 
         itemsList.add(firstItem);
@@ -92,12 +91,12 @@ public class OnboardingActivity extends AppCompatActivity {
         adapter = new OnboardingAdapter(itemsList);
     }
 
-    private void setupOnboardingIndicators(){
+    private void setupOnboardingIndicators() {
         ImageView[] indicators = new ImageView[adapter.getItemCount()];
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(8,0,8,0);
+        layoutParams.setMargins(8, 0, 8, 0);
 
-        for (int i=0; i<indicators.length; i++){
+        for (int i = 0; i < indicators.length; i++) {
             indicators[i] = new ImageView(getApplicationContext());
             indicators[i].setImageDrawable(ContextCompat.getDrawable(
                     getApplicationContext(),
@@ -109,17 +108,17 @@ public class OnboardingActivity extends AppCompatActivity {
         }
     }
 
-    private void setupCurrentOnboardingIndicator(int index){
+    private void setupCurrentOnboardingIndicator(int index) {
         int childCount = layoutOnboardingIndicators.getChildCount();
-        for (int i=0; i<childCount; i++){
+        for (int i = 0; i < childCount; i++) {
             ImageView imageView = (ImageView) layoutOnboardingIndicators.getChildAt(i);
-            if (i == index){
+            if (i == index) {
                 imageView.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.onboarding_indicator_active));
             } else {
                 imageView.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.onboarding_indicator_inactive));
             }
         }
-        if (index == adapter.getItemCount()-1){
+        if (index == adapter.getItemCount() - 1) {
             btnGetStarted.setText(R.string.get_started);
         } else {
             btnGetStarted.setText(R.string.next);
@@ -136,6 +135,6 @@ public class OnboardingActivity extends AppCompatActivity {
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, getString(R.string.click_back_again_msg), Toast.LENGTH_SHORT).show();
 
-        new Handler().postDelayed(() -> doubleBackToExitPressedOnce=false, 2000);
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
 }

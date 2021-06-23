@@ -33,6 +33,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@SuppressWarnings("ConstantConditions")
 public class SignUpActivity extends AppCompatActivity {
 
     private ActivitySignUpBinding binding;
@@ -340,7 +341,7 @@ public class SignUpActivity extends AppCompatActivity {
                             saveCurrentUser();
                             String sectionCode = CurrentUser.getInstance().getCurrentStudent().getSection().getCode();
                             //Subscribe this device to this student's section notifications
-                            FirebaseMessaging.getInstance().subscribeToTopic(sectionCode.replace(' ','_'));
+                            FirebaseMessaging.getInstance().subscribeToTopic(sectionCode.replace(' ', '_'));
                             //Take him to the navigation activity.
                             Toast.makeText(SignUpActivity.this, getString(R.string.signed_up_msg), Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(SignUpActivity.this, NavigationActivity.class));

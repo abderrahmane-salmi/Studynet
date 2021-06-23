@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.salmi.bouchelaghem.studynet.R;
 
+@SuppressLint("IntentReset")
 public class ContactUsFragment extends DialogFragment {
 
     @NonNull
@@ -32,39 +33,31 @@ public class ContactUsFragment extends DialogFragment {
         TextView btnContactDeveloper2 = view.findViewById(R.id.btnContactDeveloper2);
         TextView btnCloseContactUs = view.findViewById(R.id.btnCloseContactUs);
 
-        btnContactDeveloper1.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("IntentReset")
-            @Override
-            public void onClick(View v) {
-                Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                // The intent does not have a URI, so declare the "text/plain" MIME type
-                emailIntent.setData(Uri.parse("mailto:"));
-                emailIntent.setType("text/plain");
-                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.developer_email1)}); // recipient
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name)+": Client want to contact you");
-                try {
-                    startActivity(emailIntent);
-                } catch (ActivityNotFoundException exception){
-                    // There is no third app to open our intent, so do nothing
-                }
+        btnContactDeveloper1.setOnClickListener(v -> {
+            Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            // The intent does not have a URI, so declare the "text/plain" MIME type
+            emailIntent.setData(Uri.parse("mailto:"));
+            emailIntent.setType("text/plain");
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.developer_email1)}); // recipient
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + ": Client want to contact you");
+            try {
+                startActivity(emailIntent);
+            } catch (ActivityNotFoundException exception) {
+                // There is no third app to open our intent, so do nothing
             }
         });
 
-        btnContactDeveloper2.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("IntentReset")
-            @Override
-            public void onClick(View v) {
-                Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                // The intent does not have a URI, so declare the "text/plain" MIME type
-                emailIntent.setData(Uri.parse("mailto:"));
-                emailIntent.setType("text/plain");
-                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.developer_email1)}); // recipient
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name)+": Client want to contact you");
-                try {
-                    startActivity(emailIntent);
-                } catch (ActivityNotFoundException exception){
-                    // There is no third app to open our intent, so do nothing
-                }
+        btnContactDeveloper2.setOnClickListener(v -> {
+            Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            // The intent does not have a URI, so declare the "text/plain" MIME type
+            emailIntent.setData(Uri.parse("mailto:"));
+            emailIntent.setType("text/plain");
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.developer_email1)}); // recipient
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + ": Client want to contact you");
+            try {
+                startActivity(emailIntent);
+            } catch (ActivityNotFoundException exception) {
+                // There is no third app to open our intent, so do nothing
             }
         });
 
@@ -73,7 +66,7 @@ public class ContactUsFragment extends DialogFragment {
         builder.setView(view);
         Dialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        WindowManager.LayoutParams params =   dialog.getWindow().getAttributes();
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
         dialog.getWindow().setAttributes(params);
 
         return dialog;

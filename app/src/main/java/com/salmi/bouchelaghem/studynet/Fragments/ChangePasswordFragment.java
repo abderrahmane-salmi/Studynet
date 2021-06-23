@@ -24,6 +24,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@SuppressWarnings("ConstantConditions")
 public class ChangePasswordFragment extends BottomSheetDialogFragment {
 
     private FragmentChangePasswordBinding binding;
@@ -52,10 +53,10 @@ public class ChangePasswordFragment extends BottomSheetDialogFragment {
         loadingDialog = new CustomLoadingDialog(requireContext());
 
         binding.btnSave.setOnClickListener(v -> {
-            if (validateOldPassword() & validateNewPassword()){
+            if (validateOldPassword() & validateNewPassword()) {
                 String oldPassword = binding.txtOldPassword.getEditText().getText().toString();
                 String newPassword = binding.txtNewPassword.getEditText().getText().toString();
-                if(!oldPassword.equals(newPassword)) {
+                if (!oldPassword.equals(newPassword)) {
                     //Create the json object to send to the api
                     JsonObject oldNewPasswordJson = new JsonObject();
                     oldNewPasswordJson.addProperty("old_password", oldPassword);
@@ -65,9 +66,7 @@ public class ChangePasswordFragment extends BottomSheetDialogFragment {
                     Call<ResponseBody> changePasswordCall = api.change_password(oldNewPasswordJson, "Token " + currentUser.getToken());
                     loadingDialog.show();
                     changePasswordCall.enqueue(new PasswordResetCallback());
-                }
-                else
-                {
+                } else {
                     Toast.makeText(getActivity(), getString(R.string.old_new_password_same), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -106,18 +105,14 @@ public class ChangePasswordFragment extends BottomSheetDialogFragment {
         }
     }
 
-    private class PasswordResetCallback implements Callback<ResponseBody>
-    {
+    private class PasswordResetCallback implements Callback<ResponseBody> {
         @Override
-        public void onResponse(@NonNull Call<ResponseBody> call,@NonNull Response<ResponseBody> response) {
-            if(response.code() == Utils.HttpResponses.HTTP_200_OK)
-            {
+        public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+            if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
                 Toast.makeText(getActivity(), getString(R.string.password_changed_successfully), Toast.LENGTH_SHORT).show();
                 loadingDialog.dismiss();
                 dismiss();
-            }
-            else
-            {
+            } else {
                 Toast.makeText(getActivity(), getString(R.string.invalid_old_password), Toast.LENGTH_SHORT).show();
                 loadingDialog.dismiss();
             }
@@ -125,7 +120,7 @@ public class ChangePasswordFragment extends BottomSheetDialogFragment {
         }
 
         @Override
-        public void onFailure(@NonNull Call<ResponseBody> call,@NonNull Throwable t) {
+        public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
             Toast.makeText(getActivity(), getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
             loadingDialog.dismiss();
         }

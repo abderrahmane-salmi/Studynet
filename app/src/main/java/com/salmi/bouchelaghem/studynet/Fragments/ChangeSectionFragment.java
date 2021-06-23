@@ -78,7 +78,7 @@ public class ChangeSectionFragment extends BottomSheetDialogFragment {
 
                 JsonObject sectionJson = new JsonObject();
                 sectionJson.addProperty("section", section);
-                sectionJson.addProperty("group",group);
+                sectionJson.addProperty("group", group);
                 Call<Section> changeSectionCall = api.changeSection(sectionJson, "Token " + currentUser.getToken());
                 loadingDialog.show();
                 changeSectionCall.enqueue(new Callback<Section>() {
@@ -93,6 +93,9 @@ public class ChangeSectionFragment extends BottomSheetDialogFragment {
                             //Update the data in memory.
                             currentUser.getCurrentStudent().setSection(response.body());
                             Toast.makeText(requireContext(), getString(R.string.section_changed_successfully), Toast.LENGTH_SHORT).show();
+                            //Update the section and the group locally.
+                            currentUser.getCurrentStudent().setSection(response.body());
+                            currentUser.getCurrentStudent().setGroup(Integer.parseInt(group));
                             loadingDialog.dismiss();
                             dismiss();
                         } else {
@@ -177,15 +180,33 @@ public class ChangeSectionFragment extends BottomSheetDialogFragment {
                                 sections.add(sec.getCode());
                             }
                         }
+                        Section studentSection = currentUser.getCurrentStudent().getSection();
                         // Set up spinner
                         ArrayAdapter<String> sectionsAdapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, sections);
                         binding.txtSectionSpinner.setAdapter(sectionsAdapter);
-                        binding.txtSectionSpinner.setText(currentUser.getCurrentStudent().getSection().getCode(),false);
+                        binding.txtSectionSpinner.setText(studentSection.getCode(), false);
+                        sectionSelected = true;
+                        section = studentSection.getCode();
+                        //Get section groups
+                        groups.clear();
+                        if (studentSection.getNbGroups() > 0) {
+                            for (int i = 1; i <= studentSection.getNbGroups(); i++) {
+                                groups.add(String.valueOf(i));
+                            }
+                            ArrayAdapter<String> groupsAdapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, groups);
+                            binding.txtGroupSpinner.setAdapter(groupsAdapter);
+                            binding.txtGroupSpinner.setText(String.valueOf(currentUser.getCurrentStudent().getGroup()), false);
+                            groupSelected = true;
+                            group = String.valueOf(currentUser.getCurrentStudent().getGroup());
+                        }
+
                     } else {
                         Toast.makeText(getContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                        loadingDialog.dismiss();
                     }
                 } else {
                     Toast.makeText(requireContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                    loadingDialog.dismiss();
                 }
             }
 

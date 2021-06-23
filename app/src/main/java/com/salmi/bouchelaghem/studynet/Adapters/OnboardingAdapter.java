@@ -40,7 +40,7 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
         return onboardingItems.size();
     }
 
-    static class OnboardingViewHolder extends RecyclerView.ViewHolder{
+    static class OnboardingViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView textTitle;
         private final TextView textDescription;
@@ -53,7 +53,7 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
             imgOnboarding = itemView.findViewById(R.id.imgOnboarding);
         }
 
-        void setOnboardingData(OnboardingItem item){
+        void setOnboardingData(OnboardingItem item) {
             textTitle.setText(item.getTitle());
             textDescription.setText(item.getDescription());
             imgOnboarding.setImageResource(item.getImage());

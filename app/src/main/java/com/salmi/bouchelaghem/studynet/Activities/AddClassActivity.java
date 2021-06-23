@@ -38,6 +38,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@SuppressWarnings("ConstantConditions")
 public class AddClassActivity extends AppCompatActivity {
 
     private ActivityAddClassBinding binding;
@@ -45,18 +46,22 @@ public class AddClassActivity extends AppCompatActivity {
     // Fields
     private Session session;
 
+    // Sections
     private String section;
     private final List<String> sections = new ArrayList<>();
     private boolean sectionSelected = false;
 
+    // Modules
     private String module;
     private final List<String> modules = new ArrayList<>();
     private boolean moduleSelected = false;
 
+    // Module types
     private String moduleType;
     private final List<String> moduleTypes = new ArrayList<>();
     private boolean moduleTypeSelected = false;
 
+    // Groups
     private String[] groupsArray; // All groups as an array
     private List<Integer> groups = new ArrayList<>(); // All groups as a list
     private final List<String> selectedGroupsString = new ArrayList<>(); // The groups selected by the user (as a string)
@@ -64,11 +69,12 @@ public class AddClassActivity extends AppCompatActivity {
     private boolean[] groupsStates; // We need this just for the dialog
     private boolean groupSelected = false;
 
-    private String dayName;
+    // Class day
     private int day;
     private List<String> days;
     private boolean daySelected = false;
 
+    // Class time
     private LocalTime startTime;
     private LocalTime endTime;
 
@@ -405,7 +411,6 @@ public class AddClassActivity extends AppCompatActivity {
         binding.classDay.setOnItemClickListener((parent, view12, position, id) -> {
             // Get selected item
             daySelected = true;
-            dayName = days.get(position);
             day = position + 1;
             binding.classDayTextLayout.setError(null);
         });
@@ -671,17 +676,13 @@ public class AddClassActivity extends AppCompatActivity {
         }
     }
 
-    private class UpdateSessionCallback implements Callback<Session>
-    {
+    private class UpdateSessionCallback implements Callback<Session> {
         @Override
-        public void onResponse(@NonNull Call<Session> call,@NonNull Response<Session> response) {
-            if(response.code() == Utils.HttpResponses.HTTP_200_OK)
-            {
+        public void onResponse(@NonNull Call<Session> call, @NonNull Response<Session> response) {
+            if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
                 Toast.makeText(getApplicationContext(), getString(R.string.session_updated), Toast.LENGTH_SHORT).show();
                 finish();
-            }
-            else
-            {
+            } else {
                 Toast.makeText(getApplicationContext(), getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
             }
             loadingDialog.dismiss();

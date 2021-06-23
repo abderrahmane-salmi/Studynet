@@ -37,7 +37,7 @@ public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.ViewHo
         holder.binding.teacherMainLayout.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(activity, R.id.fragment);
             // I added this condition to prevent the user from opening the same fragment twice (when clicking super
-            if (Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.teacherDetailsFragment){
+            if (Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.teacherDetailsFragment) {
                 Teacher teacher = teachers.get(holder.getAdapterPosition());
                 NavDirections action = TeachersFragmentDirections.actionNavTeachersToTeacherDetailsFragment(teacher);
                 Navigation.createNavigateOnClickListener(action).onClick(holder.binding.getRoot());
@@ -52,7 +52,7 @@ public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Teacher teacher = teachers.get(position);
 
-        holder.binding.txtTeacherName.setText(teacher.getLastName()+" "+teacher.getFirstName());
+        holder.binding.txtTeacherName.setText(teacher.getLastName() + " " + teacher.getFirstName());
         holder.binding.txtTeacherInfo.setText(teacher.getEmail());
     }
 
@@ -70,7 +70,7 @@ public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.ViewHo
         return teachers;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         LayoutTeacherBinding binding;
 

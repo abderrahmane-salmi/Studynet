@@ -47,16 +47,20 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@SuppressWarnings("ConstantConditions")
 public class AddTeacherActivity extends AppCompatActivity {
 
     private ActivityAddTeacherBinding binding;
 
+    // Grade
     private String grade;
     private List<String> grades = new ArrayList<>();
 
+    // Department
     private String department;
     private final List<String> departments = new ArrayList<>();
 
+    // Section
     private String[] sectionsArray; // All sections as an array
     private ArrayList<String> selectedSections = new ArrayList<>(); // The sections selected by the user
     private boolean[] sectionsStates; // We need this just for the dialog
@@ -70,6 +74,7 @@ public class AddTeacherActivity extends AppCompatActivity {
     private StudynetAPI api;
     private final CurrentUser currentUser = CurrentUser.getInstance();
 
+    // Teacher
     private static Teacher teacher;
     private Teacher ogTeacher;
 
@@ -759,7 +764,7 @@ public class AddTeacherActivity extends AppCompatActivity {
 
         @Override
         public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-            if (response.code() == Utils.HttpResponses.HTTP_201_CREATED) {
+            if (response.code() == Utils.HttpResponses.HTTP_201_CREATED && response.body() != null) {
                 String selectedDepartment = TeachersFragment.getSelectedDepartment();
                 if (selectedDepartment != null) {
                     if (selectedDepartment.equals(department)) {
@@ -772,7 +777,7 @@ public class AddTeacherActivity extends AppCompatActivity {
                         Collections.sort(teachers, (o1, o2) -> o1.getLastName().compareToIgnoreCase(o2.getLastName()));
                     }
                 }
-                Toast.makeText(AddTeacherActivity.this, "Teacher successfully created.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddTeacherActivity.this, getString(R.string.teacher_created_msg), Toast.LENGTH_SHORT).show();
                 loadingDialog.dismiss();
                 finish();
             } else {
@@ -795,13 +800,13 @@ public class AddTeacherActivity extends AppCompatActivity {
 
         @Override
         public void onResponse(@NonNull Call<JsonObject> call, Response<JsonObject> response) {
-            if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
+            if (response.code() == Utils.HttpResponses.HTTP_200_OK && response.body() != null) {
                 // Update the teacher in the teachers fragment
                 int index = TeachersFragment.getTeachers().indexOf(ogTeacher);
                 Teacher updatedTeacher = Serializers.TeacherDeserializer(response.body());
                 TeachersFragment.getTeachers().set(index, updatedTeacher);
 
-                Toast.makeText(AddTeacherActivity.this, "Teacher successfully updated.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddTeacherActivity.this, getString(R.string.teacher_updated_msg), Toast.LENGTH_SHORT).show();
                 loadingDialog.dismiss();
                 finish();
             } else {

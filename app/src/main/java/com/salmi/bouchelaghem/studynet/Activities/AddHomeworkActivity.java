@@ -44,23 +44,28 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@SuppressWarnings("ConstantConditions")
 public class AddHomeworkActivity extends AppCompatActivity {
 
     private ActivityAddHomeworkBinding binding;
 
     // Fields
+    // Sections
     private String section;
     private final List<String> sections = new ArrayList<>();
     private boolean sectionSelected = false;
 
+    // Modules
     private String module;
     private final List<String> modules = new ArrayList<>();
     private boolean moduleSelected = false;
 
+    // Module types
     private String moduleType;
     private final List<String> moduleTypes = new ArrayList<>();
     private boolean moduleTypeSelected = false;
 
+    // Groups
     private String[] groupsArray; // All groups as an array
     private List<Integer> groups = new ArrayList<>(); // All groups as a list
     private final List<String> selectedGroupsString = new ArrayList<>(); // The groups selected by the user (as a string)
@@ -68,6 +73,7 @@ public class AddHomeworkActivity extends AppCompatActivity {
     private boolean[] groupsStates; // We need this just for the dialog
     private boolean groupSelected = false;
 
+    // Homework date + time
     private LocalDate dueDate;
     private LocalTime dueTime;
 
@@ -117,7 +123,7 @@ public class AddHomeworkActivity extends AppCompatActivity {
                 // When the user clicks on save we create a new homework
                 binding.btnSave.setOnClickListener(v -> {
                     if (sectionSelected & moduleSelected & moduleTypeSelected & groupSelected & validateTitle()
-                    & dueDate != null & dueTime != null){
+                            & dueDate != null & dueTime != null) {
 
                         String title = binding.txtHomeworkTitle.getEditText().getText().toString().trim();
                         String notes = binding.txtHomeworkNotes.getEditText().getText().toString().trim();
@@ -135,28 +141,28 @@ public class AddHomeworkActivity extends AppCompatActivity {
                         //Get the jsonObject that will be sent to the api
                         JsonObject homeworkJson = Serializers.HomeworkSerializer(homework);
 
-                        Call<Homework> createHomeworkCall = api.createHomework(homeworkJson,"Token " + currentUser.getToken());
+                        Call<Homework> createHomeworkCall = api.createHomework(homeworkJson, "Token " + currentUser.getToken());
 
                         loadingDialog.show();
                         createHomeworkCall.enqueue(new CreateHomeworkCallback());
 
                     } else {
-                        if (!sectionSelected){
+                        if (!sectionSelected) {
                             binding.txtHomeworkSectionLayout.setError(getString(R.string.empty_section_msg));
                         }
-                        if (!moduleSelected){
+                        if (!moduleSelected) {
                             binding.txtHomeworkSubjectLayout.setError(getString(R.string.empty_module_msg));
                         }
-                        if (!moduleTypeSelected){
+                        if (!moduleTypeSelected) {
                             binding.txtHomeworkSubjectTypeLayout.setError(getString(R.string.empty_type_msg));
                         }
-                        if (!groupSelected){
+                        if (!groupSelected) {
                             binding.txtHomeworkGroup.setError("");
                         }
-                        if (dueDate == null){
+                        if (dueDate == null) {
                             binding.btnSelectDueDate.setError("");
                         }
-                        if (dueTime == null){
+                        if (dueTime == null) {
                             binding.btnSelectDueTime.setError("");
                         }
                     }
@@ -177,7 +183,7 @@ public class AddHomeworkActivity extends AppCompatActivity {
                 // When the user clicks on save we update an existing session
                 binding.btnSave.setOnClickListener(v -> {
                     if (sectionSelected & moduleSelected & moduleTypeSelected & groupSelected & validateTitle()
-                            & dueDate != null & dueTime != null){
+                            & dueDate != null & dueTime != null) {
 
                         String title = binding.txtHomeworkTitle.getEditText().getText().toString().trim();
                         String notes = binding.txtHomeworkNotes.getEditText().getText().toString().trim();
@@ -189,10 +195,10 @@ public class AddHomeworkActivity extends AppCompatActivity {
                         currentHomework.setComment(notes);
                         currentHomework.setAssignment(selectedAssignment.getId());
 
-                        if (!ogHomework.equals(currentHomework)){
+                        if (!ogHomework.equals(currentHomework)) {
                             //Get the jsonObject that will be sent to the api
                             JsonObject updatedHomeworkJson = Serializers.HomeworkSerializer(currentHomework);
-                            Call<Homework> updateHomeworkCall = api.updateHomework(currentHomework.getId(),updatedHomeworkJson, "Token " + currentUser.getToken());
+                            Call<Homework> updateHomeworkCall = api.updateHomework(currentHomework.getId(), updatedHomeworkJson, "Token " + currentUser.getToken());
                             loadingDialog.show();
                             updateHomeworkCall.enqueue(new UpdateHomeworkCallback());
                         } else {
@@ -200,22 +206,22 @@ public class AddHomeworkActivity extends AppCompatActivity {
                         }
 
                     } else {
-                        if (!sectionSelected){
+                        if (!sectionSelected) {
                             binding.txtHomeworkSectionLayout.setError(getString(R.string.empty_section_msg));
                         }
-                        if (!moduleSelected){
+                        if (!moduleSelected) {
                             binding.txtHomeworkSubjectLayout.setError(getString(R.string.empty_module_msg));
                         }
-                        if (!moduleTypeSelected){
+                        if (!moduleTypeSelected) {
                             binding.txtHomeworkSubjectTypeLayout.setError(getString(R.string.empty_type_msg));
                         }
-                        if (!groupSelected){
+                        if (!groupSelected) {
                             binding.txtHomeworkGroup.setError("");
                         }
-                        if (dueDate == null){
+                        if (dueDate == null) {
                             binding.btnSelectDueDate.setError("");
                         }
-                        if (dueTime == null){
+                        if (dueTime == null) {
                             binding.btnSelectDueTime.setError("");
                         }
                     }
@@ -357,9 +363,9 @@ public class AddHomeworkActivity extends AppCompatActivity {
         binding.btnSelectDueDate.setOnClickListener(v -> {
             MaterialDatePicker<Long> picker;
             if (dueDate != null) { // If we have already a selected date
-                picker = openDatePicker(dueDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toEpochSecond()* 1000L);
+                picker = openDatePicker(dueDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toEpochSecond() * 1000L);
                 /* I added one day to the date *plusDays(1)* when showing it because the date picker is always showing
-                * the date one day behind, so this is the only solution I found for now*/
+                 * the date one day behind, so this is the only solution I found for now*/
             } else { // Else: make today's date the default date
                 picker = openDatePicker(MaterialDatePicker.todayInUtcMilliseconds());
             }
@@ -484,7 +490,7 @@ public class AddHomeworkActivity extends AppCompatActivity {
         binding.sectionsSpinner.setAdapter(arrayAdapter);
     }
 
-    private void fillFields(Homework homework){
+    private void fillFields(Homework homework) {
         // Section
         sectionSelected = true;
         section = homework.getSection();
@@ -558,10 +564,10 @@ public class AddHomeworkActivity extends AppCompatActivity {
     }
 
     // Validation methods
-    public boolean validateTitle(){
+    public boolean validateTitle() {
         String data = binding.txtHomeworkTitle.getEditText().getText().toString().trim();
 
-        if (data.isEmpty()){
+        if (data.isEmpty()) {
             binding.txtHomeworkTitle.setError(getString(R.string.empty_title_msg));
             return false;
         } else {
@@ -570,18 +576,14 @@ public class AddHomeworkActivity extends AppCompatActivity {
         }
     }
 
-    private class CreateHomeworkCallback implements Callback<Homework>
-    {
+    private class CreateHomeworkCallback implements Callback<Homework> {
         @Override
         public void onResponse(@NonNull Call<Homework> call, Response<Homework> response) {
-            if(response.code() == Utils.HttpResponses.HTTP_201_CREATED)
-            {
+            if (response.code() == Utils.HttpResponses.HTTP_201_CREATED) {
                 Toast.makeText(AddHomeworkActivity.this, getString(R.string.homework_created_success), Toast.LENGTH_SHORT).show();
                 loadingDialog.dismiss();
                 finish();
-            }
-            else
-            {
+            } else {
                 Toast.makeText(AddHomeworkActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
                 loadingDialog.dismiss();
             }
@@ -594,25 +596,21 @@ public class AddHomeworkActivity extends AppCompatActivity {
         }
     }
 
-    private class UpdateHomeworkCallback implements Callback<Homework>
-    {
+    private class UpdateHomeworkCallback implements Callback<Homework> {
         @Override
-        public void onResponse(@NonNull Call<Homework> call,@NonNull Response<Homework> response) {
-            if(response.code() == Utils.HttpResponses.HTTP_200_OK)
-            {
+        public void onResponse(@NonNull Call<Homework> call, @NonNull Response<Homework> response) {
+            if (response.code() == Utils.HttpResponses.HTTP_200_OK) {
                 Toast.makeText(AddHomeworkActivity.this, getString(R.string.homework_edited_success), Toast.LENGTH_SHORT).show();
                 loadingDialog.dismiss();
                 finish();
-            }
-            else
-            {
+            } else {
                 Toast.makeText(AddHomeworkActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
                 loadingDialog.dismiss();
             }
         }
 
         @Override
-        public void onFailure(@NonNull Call<Homework> call,@NonNull Throwable t) {
+        public void onFailure(@NonNull Call<Homework> call, @NonNull Throwable t) {
             Toast.makeText(AddHomeworkActivity.this, getString(R.string.connection_failed), Toast.LENGTH_SHORT).show();
             loadingDialog.dismiss();
         }

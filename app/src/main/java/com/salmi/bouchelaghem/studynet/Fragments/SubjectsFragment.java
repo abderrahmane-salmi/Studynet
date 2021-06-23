@@ -97,8 +97,8 @@ public class SubjectsFragment extends Fragment {
         call.enqueue(new Callback<List<Module>>() {
             @Override
             public void onResponse(@NonNull Call<List<Module>> call, @NonNull Response<List<Module>> response) {
-                if (response.isSuccessful()){
-                    if (response.body() != null){
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
                         modules = new ArrayList<>(response.body());
                         if (!modules.isEmpty()) {
                             adapter.setModules(modules);
@@ -126,7 +126,7 @@ public class SubjectsFragment extends Fragment {
                 // Stop loading animation
                 binding.loadingAnimation.setVisibility(View.GONE);
                 binding.loadingAnimation.cancelAnimation();
-                Toast.makeText(getContext(), getString(R.string.error)+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.error) + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

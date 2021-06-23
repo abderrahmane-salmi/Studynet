@@ -15,6 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.salmi.bouchelaghem.studynet.Models.Teacher;
 import com.salmi.bouchelaghem.studynet.databinding.FragmentTeacherDetailsBinding;
 
+@SuppressLint("IntentReset")
 public class TeacherDetailsFragment extends BottomSheetDialogFragment {
 
     private FragmentTeacherDetailsBinding binding;
@@ -30,20 +31,16 @@ public class TeacherDetailsFragment extends BottomSheetDialogFragment {
 
         fillFields(teacher);
 
-        binding.btnContactTeacher.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("IntentReset")
-            @Override
-            public void onClick(View v) {
-                Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                // The intent does not have a URI, so declare the "text/plain" MIME type
-                emailIntent.setData(Uri.parse("mailto:"));
-                emailIntent.setType("text/plain");
-                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{teacher.getEmail()}); // recipient
-                try {
-                    startActivity(emailIntent);
-                } catch (ActivityNotFoundException exception){
-                    // There is no third app to open our intent, so do nothing
-                }
+        binding.btnContactTeacher.setOnClickListener(v -> {
+            Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            // The intent does not have a URI, so declare the "text/plain" MIME type
+            emailIntent.setData(Uri.parse("mailto:"));
+            emailIntent.setType("text/plain");
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{teacher.getEmail()}); // recipient
+            try {
+                startActivity(emailIntent);
+            } catch (ActivityNotFoundException exception) {
+                // There is no third app to open our intent, so do nothing
             }
         });
 
