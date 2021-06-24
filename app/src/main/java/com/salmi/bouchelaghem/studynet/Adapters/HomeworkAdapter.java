@@ -109,6 +109,8 @@ public class HomeworkAdapter extends RecyclerView.Adapter<HomeworkAdapter.ViewHo
         } else if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT)) {
             if (homework.getTeacherEmail().equals(currentUser.getCurrentTeacher().getEmail())) {
                 holder.binding.imgBookmark.setVisibility(View.VISIBLE);
+            } else {
+                holder.binding.imgBookmark.setVisibility(View.GONE);
             }
         }
     }

@@ -71,6 +71,8 @@ public class SessionsAdapter extends RecyclerView.Adapter<SessionsAdapter.ViewHo
         if (currentUser.getUserType().equals(Utils.TEACHER_ACCOUNT)) {
             if (session.getTeacherEmail().equals(currentUser.getCurrentTeacher().getEmail())) {
                 holder.binding.imgBookmark.setVisibility(View.VISIBLE);
+            } else {
+                holder.binding.imgBookmark.setVisibility(View.GONE);
             }
         }
 
