@@ -30,11 +30,11 @@
         android:id="@+id/textDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_marginTop="8dp"
+        android:fontFamily="@font/tabularasa_regular"
+        android:gravity="center"
         android:textColor="@color/onboarding_secondary_text_color"
-        android:textSize="17sp"
-        android:fontFamily="@font/tabularasa_regular"/>
+        android:textSize="17sp" />
 
 
 </LinearLayout>
