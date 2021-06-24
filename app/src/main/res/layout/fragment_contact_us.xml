@@ -88,7 +88,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bouchlaghem Yanis"
+                android:text="Bouchlaghem Abdelghani Yanis"
                 android:fontFamily="@font/tabularasa_medium"
                 android:textSize="16sp" />
 

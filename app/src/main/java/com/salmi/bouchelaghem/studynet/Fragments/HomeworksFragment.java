@@ -433,24 +433,25 @@ public class HomeworksFragment extends Fragment {
                             adapter.notifyItemChanged(position); // To reset the item on the screen
                         });
                         builder.create().show();
-                        break;
                     } else {
                         Toast.makeText(getContext(), getString(R.string.delete_your_homework_msg), Toast.LENGTH_SHORT).show();
                         adapter.notifyItemChanged(position); // To reset the item on the screen
+
                     }
+                    break;
 
                 case ItemTouchHelper.RIGHT: // Swipe right to left -> : Edit item
+                    // To reset the item on the screen
                     if (currentHomework.getTeacherEmail().equals(currentUser.getCurrentTeacher().getEmail())) {
                         Intent intent = new Intent(getContext(), AddHomeworkActivity.class);
                         intent.putExtra(Utils.ACTION, Utils.ACTION_UPDATE);
                         intent.putExtra(Utils.HOMEWORK, currentHomework);
                         startActivity(intent);
-                        adapter.notifyItemChanged(position); // To reset the item on the screen
-                        break;
                     } else {
                         Toast.makeText(getContext(), getString(R.string.edit_your_homework_msg), Toast.LENGTH_SHORT).show();
-                        adapter.notifyItemChanged(position); // To reset the item on the screen
                     }
+                    adapter.notifyItemChanged(position); // To reset the item on the screen
+                    break;
             }
         }
 
