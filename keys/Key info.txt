@@ -1,0 +1,2 @@
+Alias: Studynet Key0
+Password: Studynet
