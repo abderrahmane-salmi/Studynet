@@ -44,7 +44,7 @@ Specifying the assigned sections and subjects for the teacher :
 
 <img src="https://i.imgur.com/QqJ4wyo.jpg" alt="Teacher creation2" width="300"/>
 
-The admins can oversee the organization of the classes and can report any class that is deemed problematic for any reason. The teacher that created the reported class will instantly receive a push notification informing him of the report.
+The admins can oversee the organization of the classes and can report any class that is deemed problematic for any reason. The teacher that created the reported class will instantly receive a push notification informing them of the report.
 
 <img src="https://i.imgur.com/LIfVav7.jpg" alt="Teacher creation2" width="300"/>
 <img src="https://i.imgur.com/iFb7U6k.jpg" alt="Teacher creation2" width="300"/>
